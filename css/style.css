@@ -1,4 +1,9 @@
 /* Styles for CS50w Project 0 */
+
+.navbar {
+	background-color: #f1f1f1!important;
+}
+
 .image-container {
 	min-width: 1176px;
 }
@@ -9,8 +14,8 @@
 
 .logo {
 	display: block;
-	margin-top: 12.75em;
-	margin-bottom: 1em;
+	margin-top: 7em;
+	margin-bottom: 2em;
 	margin-right: auto;
 	margin-left: auto;
 }
@@ -18,9 +23,9 @@
 .logo-subtext {
 	color: #4285f4;
 	font: 16px/16px roboto-regular, arial, sans-serif;
-	left: 260px;
+	left: 265px;
 	position: relative;
-	top: -40px;
+	top: -45px;
 	white-space: nowrap;
 	margin-bottom: ;
 }

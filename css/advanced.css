@@ -1,0 +1,54 @@
+/* Styles for CS50w Project 0 */
+
+.navbar {
+	background-color: #f1f1f1!important;
+}
+
+.title {
+	color: #d93025;
+	font-size: 20px;
+	border-bottom: 1px solid #ebebeb;
+	padding: 25px 35px;
+	margin-left: -15px;
+	margin-right: -15px;
+	margin-bottom: 2em;
+}
+
+input[type="text"] {
+	-webkit-border-radius: 1px;
+	-moz-border-radius: 1px;
+	border-radius: 1px;
+	border: 1px solid #d9d9d9;
+		border-top-color: rgb(217, 217, 217);
+		border-top-style: solid;
+		border-top-width: 1px;
+	border-top: 1px solid #c0c0c0;
+	font-size: 13px;
+	height: 25px;
+	padding: 1px 8px;
+}
+
+.btn {
+	height: 36px;
+	line-height: 27px;
+	background-color: #f8f9fa;
+	border: 1px solid #f8f9fa;
+	border-radius: 4px;
+	color: #3c4043;
+	cursor: pointer;
+	font-family: arial,sans-serif;
+	font-size: 14px;
+	margin: 11px 4px;
+	min-width: 54px;
+	padding: 0 16px;
+	text-align: center;
+}
+
+.btn:hover {
+	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+	background-color: #f8f9fa;
+	border: 1px solid #dadce0;
+	color: #202124;
+}
+
+
