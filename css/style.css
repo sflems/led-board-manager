@@ -1,10 +1,28 @@
 /* Styles for CS50w Project 0 */
+.image-container {
+	min-width: 1176px;
+}
+
+.image-search {
+	margin-bottom: -25px;
+}
+
 .logo {
 	display: block;
 	margin-top: 12.75em;
+	margin-bottom: 1em;
 	margin-right: auto;
 	margin-left: auto;
-	padding-bottom: 1.75em;
+}
+
+.logo-subtext {
+	color: #4285f4;
+	font: 16px/16px roboto-regular, arial, sans-serif;
+	left: 260px;
+	position: relative;
+	top: -40px;
+	white-space: nowrap;
+	margin-bottom: ;
 }
 
 input[type="text"] {
@@ -48,3 +66,12 @@ input[type="text"]:hover {
 	padding: 0 16px;
 	text-align: center;
 }
+
+.btn:hover {
+	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+	background-color: #f8f9fa;
+	border: 1px solid #dadce0;
+	color: #202124;
+}
+
+
