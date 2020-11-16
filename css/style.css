@@ -1,4 +1,44 @@
-#Styles for CS50w Project 0
-.container {
-	margin-top: 45%;
+/* Styles for CS50w Project 0 */
+.logo {
+	display: block;
+	margin-top: 12.75em;
+	margin-right: auto;
+	margin-left: auto;
+	padding-bottom: 1.75em;
+}
+
+input[type="text"] {
+	border: 1px solid #dfe1e5;
+	box-shadow: none;
+	border-radius: 24px;
+	height: 44px;
+	width: 582px;
+	min-width: auto;
+	padding: 0 2em;
+	margin-bottom: 1em;
+}
+
+input[type="text"]:hover {
+	box-shadow: 0 1px 6px rgba(32,33,36,.28);
+	border-color: rgba(223,225,229,0);
+}
+
+.submit-row {
+	margin 0 0.5em 0 0.5em;
+}
+
+.btn {
+	height: 36px;
+	line-height: 27px;
+	background-color: #f8f9fa;
+	border: 1px solid #f8f9fa;
+	border-radius: 4px;
+	color: #3c4043;
+	cursor: pointer;
+	font-family: arial,sans-serif;
+	font-size: 14px;
+	margin: 11px 4px;
+	min-width: 54px;
+	padding: 0 16px;
+	text-align: center;
 }
