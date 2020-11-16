@@ -1,7 +1,15 @@
 /* Styles for CS50w Project 0 */
+body {
+    font-family: arial,sans-serif;
+}
+
+.text-muted {
+	color: #555;
+}
 
 .navbar {
 	background-color: #f1f1f1!important;
+	padding: 0 20px;
 }
 
 .image-container {
