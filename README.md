@@ -1,2 +1,2 @@
 # sflems
-CS50w 2020 - Project 0 - Search
+CS50w 2020 - Project 1 - Wiki
