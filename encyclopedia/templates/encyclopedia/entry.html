@@ -5,11 +5,10 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Wiki</h1>
-		{% if entry %}
-			<div>{{  entry|safe  }}<div>
-		{% else  %}
-			<p>The requested page was not found.</p>
-		{% endif %}
+	{% if entry %}
+		<div>{{  entry|safe  }}<div>
+	{% else  %}
+		<p>The requested page was not found.</p>
+	{% endif %}
 
 {% endblock %}
