@@ -6,9 +6,9 @@
 
 {% block body %}
     <h1>Create a New Page</h1>
-	<form action="{% url 'wiki:add' %} method="POST">
-		<input type="text" name="Title" placeholder="Title">
-		<input type="text" name="markdown" placeholder="Entry">
+	<form action="{% url 'wiki:add' %}" class="col-7" method="POST">
+		{% csrf_token %}
+		{{  form  }}
 		<input type="submit" value="Submit Entry">
 	</form>
 

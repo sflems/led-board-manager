@@ -13,12 +13,12 @@ h1 {
 }
 
 textarea {
-    height: 90vh;
+    height: 50vh;
     width: 80%;
 }
 
 .main {
-    padding: 10px;
+    padding: 3em;
 }
 
 .search {
@@ -30,9 +30,25 @@ textarea {
 .sidebar {
     background-color: #f0f0f0;
     height: 100vh;
-    padding: 20px;
+    padding: 3em;
+}
+
+@media (max-width: 767px) {
+	.sidebar {
+		height: 19vh;
+	}
 }
 
 .sidebar h2 {
-    margin-top: 5px;
+    margin-top: 10px;
+}
+
+#id_title {
+	width: 100%;
+	margin-bottom: 1em;
+}
+
+#id_content {
+	width: 100%;
+	margin-bottom: 1em;
 }
