@@ -36,7 +36,11 @@ def search(request):
                 if query.lower() == entry.lower():
                     title = entry
                     entry = util.get_entry(title)
-                    return HttpResponseRedirect(reverse("entry", args=[title]))
+                    return render(request, "encyclopedia/entry.html", {
+                    "entry": markdown2.markdown(entry),
+                    "random": random.choice(util.list_entries()),
+                    "form": SearchForm()
+                })
                 # Check for partial matches
                 if query.lower() in entry.lower():
                     results.append(entry)
