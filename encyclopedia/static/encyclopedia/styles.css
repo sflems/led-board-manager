@@ -35,7 +35,7 @@ textarea {
 
 @media (max-width: 767px) {
 	.sidebar {
-		height: 19vh;
+		height: 100%;
 	}
 }
 
@@ -51,4 +51,10 @@ textarea {
 #id_content {
 	width: 100%;
 	margin-bottom: 1em;
+}
+
+.entry-error {
+	margin-top: 1em;
+	display: inline-block;
+	font-size: 200%;
 }

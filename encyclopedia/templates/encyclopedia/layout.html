@@ -10,10 +10,12 @@
     </head>
     <body>
         <div class="row">
-            <div class="sidebar col-lg-2 col-md-3">
+            <div class="sidebar col-lg-3 col-md-4">
                 <h2>Wiki</h2>
-                <form>
+                <form action="{% url 'wiki:search' %}" method="POST">
+					{% csrf_token %}
                     <input class="search" type="text" name="q" placeholder="Search Encyclopedia">
+					<input type="submit" name="submit"/>
                 </form>
                 <div>
                     <a href="{% url 'wiki:index' %}">Home</a>
@@ -27,7 +29,7 @@
                 {% block nav %}
                 {% endblock %}
             </div>
-            <div class="main col-lg-10 col-md-9">
+            <div class="main col-lg-9 col-md-8">
                 {% block body %}
                 {% endblock %}
             </div>

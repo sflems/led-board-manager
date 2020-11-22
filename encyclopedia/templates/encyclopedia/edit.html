@@ -5,15 +5,14 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Create a New Page</h1>
-	<form action="{% url 'wiki:add' %}" class="col-7" method="POST">
+    <h1>Edit An Entry</h1>
+	<form action="{% url 'wiki:edit' %}" class="col-7" method="POST">
 		{% csrf_token %}
 		{{  form  }}
-		<input type="submit" value="Submit Entry"/>
+		<input type="submit" value="Submit Changes"/>
 	</form>
 	{% if error %}
 		<strong class="entry-error">{{  error  }}</strong<>
 	{% endif %}
 	
-
 {% endblock %}
