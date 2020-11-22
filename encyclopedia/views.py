@@ -73,8 +73,7 @@ def entry(request, title):
             "random": random.choice(util.list_entries()),
             "form": SearchForm()
            })
-    return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries(),
+    return render(request, "encyclopedia/error.html", {
         "random": random.choice(util.list_entries()),
         "form": SearchForm()
     })
