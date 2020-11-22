@@ -8,7 +8,7 @@
     <h1>Edit An Entry</h1>
 	<form action="{% url 'wiki:edit' %}" class="col-7" method="POST">
 		{% csrf_token %}
-		{{  form  }}
+		{{  editform  }}
 		<input type="submit" value="Submit Changes"/>
 	</form>
 	{% if error %}
