@@ -78,36 +78,40 @@ def entry(request, title):
         "form": SearchForm()
     })
     
-def add(request):
-    entryform = NewEntryForm(request.POST)
-    if request.method == "POST":   
+def add(request): 
+    if request.method == "POST":
+        entryform = NewEntryForm(request.POST)
         if entryform.is_valid():
             title = entryform.cleaned_data["title"]
             content = entryform.cleaned_data["content"]
-            if not title.lower() in util.list_entries():
-                util.save_entry(title, content)
-                return render(request, "encyclopedia/entry.html", {
-                    "entry": markdown2.markdown(content),
-                    "random": random.choice(util.list_entries()),
-                    "form": SearchForm()
-                })
-            else:
-                return render (request, "encyclopedia/add.html", {
+            allentries = util.list_entries()
+            for entry in allentries:
+                if entry.lower() == title.lower():
+                    return render (request, "encyclopedia/add.html", {
                     "form": SearchForm(),
                     "entryform": entryform,
-                    "error": "Error: An entry with this title already exists."
-                })    
+                    "error": "Error: An entry with this title already exists.",
+                    "random": random.choice(util.list_entries()),
+                    })
+            
+            util.save_entry(title, content)
+            return render(request, "encyclopedia/entry.html", {
+                "entry": markdown2.markdown(content),
+                "random": random.choice(util.list_entries()),
+                "form": SearchForm()
+            })   
         else:
             return render (request, "encyclopedia/add.html", {
                 "form": SearchForm(),
-                "entryform": entryform
+                "entryform": entryform,
+                "random": random.choice(util.list_entries()),
             })
     
     return render(request, "encyclopedia/add.html", {
         "form": SearchForm(),
         "entries": util.list_entries(),
         "random": random.choice(util.list_entries()),
-        "entryform": entryform,
+        "entryform": NewEntryForm(),
     })
     
 def edit(request):
