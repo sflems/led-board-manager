@@ -9,6 +9,7 @@ class Listing(models.Model):
     description = models.TextField(max_length=1000, blank=False)
     image_URL = models.URLField(blank=True)
     start_bid = models.DecimalField(max_digits=12, decimal_places=2, default="00.00")    
+    current_bid = models.ForeignKey('Bid', on_delete=models.CASCADE, related_name='listings', null=True) 
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateField(null=True, blank=False)
     last_updated = models.DateField(auto_now=True)
