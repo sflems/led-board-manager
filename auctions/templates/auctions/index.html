@@ -2,6 +2,8 @@
 
 {% block body %}
     <h2>Active Listings</h2>
-
-    TODO
+		{% for listing in listings %}
+			<img src="{{ listing.image_URL }}" style="max-height:200px"/>
+			<a href="{{  listing  }}">{{ listing.title }}</a> <strong>Current Bid: ${{ listing.start_bid }}</strong>
+		{% endfor %}
 {% endblock %}
