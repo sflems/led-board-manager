@@ -1,17 +1,17 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django import forms
 
-from .models import User, Listing, Bid, Comment, Watchlist
-
+from .models import *
 
 def index(request):
     return render(request, "auctions/index.html", {
         "listings": Listing.objects.all()
     })
-
 
 def login_view(request):
     if request.method == "POST":
@@ -63,3 +63,43 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+def listing_view(request, listing_id): 
+
+    listing = Listing.objects.get(pk=listing_id)
+    form = BidForm(request.POST, instance=listing)
+    
+    if request.method == "POST":
+        if form.is_valid():
+            new_bid = form.cleaned_data["bid"]
+            if listing.current_bid and listing.current_bid.bid < new_bid:
+                bid = Bid(bid=new_bid, user=request.user)
+                bid.save()
+                listing.current_bid = bid
+                listing.save()
+                return render (request, "auctions/listing.html", {
+                    "listing": listing,
+                    "form": form,
+                    "message": "Bid succeeded."
+                })
+            elif listing.start_bid < new_bid:
+                bid = Bid(bid=new_bid, user=request.user)
+                bid.save()
+                listing.current_bid = bid
+                listing.save()
+                return render (request, "auctions/listing.html", {
+                    "listing": listing,
+                    "form": form,
+                    "message": "Bid succeeded."
+                 })
+            else:
+                return render (request, "auctions/listing.html", {
+                    "listing": listing,
+                    "form": form,
+                    "message": "Error: Bid must be greater than current bid."
+                })
+
+    return render(request, "auctions/listing.html", {
+        "listing": listing,
+        "form": BidForm(),
+    })
