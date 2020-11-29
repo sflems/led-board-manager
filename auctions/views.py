@@ -141,6 +141,20 @@ def listing_view(request, listing_id):
         })
 
 @login_required    
+def close_listing(request, listing_id):
+    if request.method == "POST":
+        listing = Listing.objects.get(pk=listing_id)
+        listing.is_active = 0
+        listing.save()
+    
+    return render(request, "auctions/listing.html", {
+            "listing": listing,
+            "form": BidForm(),
+            "commentform": CommentForm(),
+
+        })
+
+@login_required    
 def create(request):
     if request.method == "POST":
         listingform = ListingForm(request.POST)

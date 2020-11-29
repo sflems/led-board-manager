@@ -27,7 +27,10 @@
 					<input type="submit" value="Submit Bid"/>
 				</form>
 			{% elif user.is_authenticated and listing.is_active and user == listing.user %}
-				<strong>Close Listing</strong>
+				<form action="{% url 'close_listing' listing.id %}" method="POST">
+					{% csrf_token %}
+					<input type="submit" value="Close Listing"/>
+				</form>
 			{% elif user.is_authenticated and listing.current_bid.user == user %}
 				<strong>You won!</strong> <br>
 				<p>Auction has ended.</p>
