@@ -120,10 +120,10 @@ def listing_view(request, listing_id):
                  })
         
         try:
-            watchlist = Watchlist.objects.get(user=request.user)
+            watchlist = Watchlist.objects.get(user=request.user) # Query watchlist
         except Watchlist.DoesNotExist:
-            watchlist = Watchlist(user=request.user)
-            watchlist.save()
+            watchlist = Watchlist(user=request.user) 
+            watchlist.save() # If no watchlist found for user, create one.
 
         return render(request, "auctions/listing.html", {
             "listing": listing,

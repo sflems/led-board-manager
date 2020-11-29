@@ -4,7 +4,7 @@
 	{% if user.is_authenticated %}
 		<div class="row">
 			<div class="col">
-				<h2>{{ watchlist.user }} Watchlist</h2>
+				<h2>{{ watchlist.user|title }}'s Watchlist</h2>
 				<ol>
 					{% for item in watchlist.items.all %}
 						<li><a href="{% url 'listing' item.id %}">{{ item.title }}</a></li>
