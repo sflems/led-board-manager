@@ -74,7 +74,7 @@ class CommentForm(ModelForm):
             "comment": _("New comment"),
         }    
 class Watchlist(models.Model):
-    items = models.ManyToManyField(Listing, related_name="item_list")
+    items = models.ManyToManyField(Listing, related_name="item_list", blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='watcher')
 
     def __str__(self):

@@ -70,61 +70,75 @@ def listing_view(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     form = BidForm(request.POST, instance=listing)
     commentform = CommentForm(request.POST, instance=listing)
-    
-    if request.method == "POST":
-        if form.is_valid():
-            new_bid = form.cleaned_data["bid"]
-            if listing.current_bid and listing.current_bid.bid < new_bid:
-                bid = Bid(listing=listing, bid=new_bid, user=request.user)
-                bid.save()
-                listing.current_bid = bid
-                listing.save()
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            if form.is_valid():
+                new_bid = form.cleaned_data["bid"]
+                if listing.current_bid and listing.current_bid.bid < new_bid:
+                    bid = Bid(listing=listing, bid=new_bid, user=request.user)
+                    bid.save()
+                    listing.current_bid = bid
+                    listing.save()
+                    return render (request, "auctions/listing.html", {
+                        "listing": listing,
+                        "form": form,
+                        "commentform": CommentForm(),
+                        "message": "Bid successful."
+                    })
+                elif listing.start_bid < new_bid:
+                    bid = Bid(listing=listing, bid=new_bid, user=request.user)
+                    bid.save()
+                    listing.current_bid = bid
+                    listing.save()
+                    return render (request, "auctions/listing.html", {
+                        "listing": listing,
+                        "form": form,
+                        "commentform": CommentForm(),
+                        "message": "Bid successful."
+                     })
+                else:
+                    return render (request, "auctions/listing.html", {
+                        "listing": listing,
+                        "form": form,
+                        "commentform": CommentForm(),
+                        "message": "Error: Bid must be greater than current bid."
+                    })
+        
+            if commentform.is_valid():
+                comment = Comment(listing_title=listing, comment=commentform.cleaned_data["comment"], user=request.user)
+                comment.save()
                 return render (request, "auctions/listing.html", {
                     "listing": listing,
-                    "form": form,
-                    "commentform": CommentForm(),
-                    "message": "Bid successful."
+                    "commentform": commentform,
+                    "message": "Comment posted."
                 })
-            elif listing.start_bid < new_bid:
-                bid = Bid(listing=listing, bid=new_bid, user=request.user)
-                bid.save()
-                listing.current_bid = bid
-                listing.save()
-                return render (request, "auctions/listing.html", {
-                    "listing": listing,
-                    "form": form,
-                    "commentform": CommentForm(),
-                    "message": "Bid successful."
-                 })
             else:
                 return render (request, "auctions/listing.html", {
                     "listing": listing,
-                    "form": form,
-                    "commentform": CommentForm(),
-                    "message": "Error: Bid must be greater than current bid."
-                })
-    if request.method == "POST":
-        if commentform.is_valid():
-            comment = Comment(listing_title=listing, comment=commentform.cleaned_data["comment"], user=request.user)
-            comment.save()
-            return render (request, "auctions/listing.html", {
-                "listing": listing,
-                "commentform": commentform,
-                "message": "Comment posted."
-            })
-        else:
-            return render (request, "auctions/listing.html", {
-                "listing": listing,
-                "commentform": commentform,
-                "message": "Comment Failed."
-             })
-    return render(request, "auctions/listing.html", {
-        "listing": listing,
-        "watchlist": Watchlist.objects.get(user=request.user),
-        "form": BidForm(),
-        "commentform": CommentForm(),
+                    "commentform": commentform,
+                    "message": "Comment Failed."
+                 })
         
-    })
+        try:
+            watchlist = Watchlist.objects.get(user=request.user)
+        except Watchlist.DoesNotExist:
+            watchlist = Watchlist(user=request.user)
+            watchlist.save()
+
+        return render(request, "auctions/listing.html", {
+            "listing": listing,
+            "watchlist": watchlist,
+            "form": BidForm(),
+            "commentform": CommentForm(),
+
+        })
+        
+    return render(request, "auctions/listing.html", {
+            "listing": listing,
+            "form": BidForm(),
+            "commentform": CommentForm(),
+
+        })
 
 @login_required    
 def create(request):
@@ -149,12 +163,14 @@ def create(request):
         return render(request, "auctions/create.html", {
             "listingform": ListingForm(),
         })
-    
+        
+@login_required     
 def watchlist(request):
     return render(request, "auctions/watchlist.html", {
         "watchlist": Watchlist.objects.get(user=request.user),
     })
     
+@login_required     
 def watchlist_add(request, listing_id):
     watchlist = Watchlist.objects.get(user=request.user)
     listing = Listing.objects.get(pk=listing_id)
@@ -165,8 +181,10 @@ def watchlist_add(request, listing_id):
         "watchlist": watchlist,
         "message": "Item successfully added to watchlist.",
     })
-    
+
+@login_required     
 def watchlist_remove(request, listing_id):
+    
     watchlist = Watchlist.objects.get(user=request.user)
     listing = Listing.objects.get(pk=listing_id)
     watchlist.items.remove(listing)
