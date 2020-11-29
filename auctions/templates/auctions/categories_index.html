@@ -6,7 +6,7 @@
 		<ul class="listings">
 			{% for listing in listings %}
 				<li>
-					<img src="{{ listing.image_URL }}" style="max-height:200px"/>
+					<img src="{{ listing.image_URL }}" style="max-height:200px; max-width:100%"/>
 					<a href="{% url 'listing' listing.id %}">{{ listing.title }}</a>
 					{% if listing.current_bid %}
 						<strong>Current Bid: ${{ listing.current_bid }}</strong>
