@@ -11,7 +11,7 @@ from .models import *
 
 def index(request):
     return render(request, "auctions/index.html", {
-        "listings": Listing.objects.all()
+        "listings": Listing.objects.filter(is_active=1)
     })
 
 def login_view(request):
@@ -167,8 +167,9 @@ def create(request):
                 user = request.user,)
             newlisting.save()
             
+            
             return render (request, "auctions/listing.html", {
-                        "listing": newlisting,
+                        "listing": newlisting.id,
                         "form": BidForm(),
                         "commentform": CommentForm(),
                         "message": "Listing created successfully."
@@ -218,7 +219,7 @@ def categories(request):
     
 def categories_index(request, category_id):
     category = Category.objects.get(pk=category_id)
-    listings = Listing.objects.filter(category=category_id)
+    listings = Listing.objects.filter(category=category_id).filter(is_active=1)
     return render(request, "auctions/categories_index.html", {
         "listings": listings,
         "category": category,

@@ -11,6 +11,7 @@
 					</div>
 					<div class="col">
 						<a href="{% url 'listing' listing.id %}">{{ listing.title }}</a>
+						<p>Listed by: {{ listing.user|title }}</p>
 					</div>
 					<div class="col-2">
 						{% if listing.current_bid %}
@@ -18,6 +19,7 @@
 						{% else %}
 							<strong>Current Bid: ${{ listing.start_bid }}</strong>
 						{% endif %}
+						<p>No. of bids: {{ listing.bid_list.all.count }}</p>
 					</div>
 					<hr>
 				</li>

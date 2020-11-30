@@ -6,9 +6,13 @@
 			<div class="col">
 				<h2>{{ watchlist.user|title }}'s Watchlist</h2>
 				<ol>
-					{% for item in watchlist.items.all %}
-						<li><a href="{% url 'listing' item.id %}">{{ item.title }}</a></li>
-					{% endfor %}
+					{% if watchlist.items.all %}
+						{% for item in watchlist.items.all %}
+							<li><a href="{% url 'listing' item.id %}">{{ item.title }}</a></li>
+						{% endfor %}
+					{% else %}
+						<p>Watchlist is empty. <a href="{% url 'index' %}">View Active Listings</a></p>
+					{% endif %}
 				</ol>
 			</div>
 		</div>

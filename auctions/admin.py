@@ -12,6 +12,7 @@ class BidAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = ("listing_title", "comment", "user")
     list_display_links = ("comment",)    
+
     
 # Register your models here.
 admin.site.register(User)

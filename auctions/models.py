@@ -20,7 +20,7 @@ class Listing(models.Model):
     title = models.CharField(max_length=128, blank=False, unique=True)
     description = models.TextField(max_length=1000, blank=False)
     image_URL = models.URLField(blank=True)
-    category = models.ForeignKey('Category', on_delete=models.SET_NULL, related_name='categories', blank=True, null=True,)
+    category = models.ManyToManyField('Category', related_name='categories', blank=True,)
     start_bid = models.DecimalField(max_digits=12, decimal_places=2, default="00.00")
     current_bid = models.OneToOneField('Bid', on_delete=models.SET_NULL, related_name='current_bid', blank=True, null=True,)
     created = models.DateTimeField(auto_now_add=True)
