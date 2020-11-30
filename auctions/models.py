@@ -22,7 +22,7 @@ class Listing(models.Model):
     image_URL = models.URLField(blank=True)
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, related_name='categories', blank=True, null=True,)
     start_bid = models.DecimalField(max_digits=12, decimal_places=2, default="00.00")
-    current_bid = models.OneToOneField('Bid', on_delete=models.SET_NULL, related_name='current_bid', blank=True, null=True, default=start_bid)
+    current_bid = models.OneToOneField('Bid', on_delete=models.SET_NULL, related_name='current_bid', blank=True, null=True,)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=1)
@@ -60,7 +60,7 @@ class BidForm(ModelForm):
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='authors')
     listing_title = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='comment_list')
-    comment = models.CharField(max_length=500, blank=False)
+    comment = models.TextField(max_length=500, blank=False)
     created = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
@@ -74,7 +74,7 @@ class CommentForm(ModelForm):
             "comment": _("New comment"),
         }    
 class Watchlist(models.Model):
-    items = models.ManyToManyField(Listing, related_name="item_list", blank=True, null=True)
+    items = models.ManyToManyField(Listing, related_name="item_list", blank=True,)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='watcher')
 
     def __str__(self):

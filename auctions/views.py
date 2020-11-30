@@ -159,15 +159,16 @@ def create(request):
     if request.method == "POST":
         listingform = ListingForm(request.POST)
         if listingform.is_valid():
-            new_listing = Listing(
-                                title = listingform.cleaned_data["title"],
-                                description = listingform.cleaned_data["description"],
-                                image_URL = listingform.cleaned_data["image_URL"],
-                                start_bid = listingform.cleaned_data["start_bid"],
-                                user = request.user)
-            new_listing.save()
+            newlisting = Listing(title = listingform.cleaned_data["title"],
+                description = listingform.cleaned_data["description"],
+                image_URL = listingform.cleaned_data["image_URL"],
+                category = listingform.cleaned_data["category"],
+                start_bid = listingform.cleaned_data["start_bid"],
+                user = request.user,)
+            newlisting.save()
+            
             return render (request, "auctions/listing.html", {
-                        "listing": new_listing,
+                        "listing": newlisting,
                         "form": BidForm(),
                         "commentform": CommentForm(),
                         "message": "Listing created successfully."
