@@ -119,11 +119,11 @@ def listing_view(request, listing_id):
                     "message": "Comment Failed."
                  })
         
-        try:
-            watchlist = Watchlist.objects.get(user=request.user) # Query watchlist
-        except Watchlist.DoesNotExist:
+        try: # Query watchlist
+            watchlist = Watchlist.objects.get(user=request.user) 
+        except Watchlist.DoesNotExist: # If no watchlist found for user, create one.
             watchlist = Watchlist(user=request.user) 
-            watchlist.save() # If no watchlist found for user, create one.
+            watchlist.save() 
 
         return render(request, "auctions/listing.html", {
             "listing": listing,
@@ -149,6 +149,7 @@ def close_listing(request, listing_id):
     
     return render(request, "auctions/listing.html", {
             "listing": listing,
+            "watchlist": Watchlist.objects.get(user=request.user),
             "form": BidForm(),
             "commentform": CommentForm(),
 
@@ -167,9 +168,9 @@ def create(request):
                 user = request.user,)
             newlisting.save()
             
-            
             return render (request, "auctions/listing.html", {
-                        "listing": newlisting.id,
+                        "listing": newlisting,
+                        "watchlist": Watchlist.objects.get(user=request.user),
                         "form": BidForm(),
                         "commentform": CommentForm(),
                         "message": "Listing created successfully."
