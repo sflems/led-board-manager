@@ -7,8 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // By default load the inbox
   load_mailbox('inbox');
-
-  // TODO: Load appropriate mail for each mailbox
 });
 
 
@@ -33,7 +31,7 @@ function send_email() {
 	let body = document.querySelector('#compose-body').value;
 			
 	//Send Post request to emails URL with new email JSON data
-	fetch('emails', {
+	fetch('/emails', {
 		method: 'POST',
 		body: JSON.stringify({
 			recipients: recipients,
@@ -58,10 +56,49 @@ function load_mailbox(mailbox) {
   document.querySelector('#compose-view').style.display = 'none';
 
   // Show the mailbox name
-  document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3> `
+  document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
+  // Sent mail
+  if (mailbox == 'sent') {
+		
+		fetch('/emails/sent')
+		.then(response => response.json())
+		.then(emails => {
+			// Print emails
+			console.log(emails);
+			
+			// ... do something else with emails ...
+			load_mail(emails);
+		});
+		
+  };
+  
+  // Inbox mail
+  if (mailbox == 'inbox') {
+		
+		fetch('/emails/inbox')
+		.then(response => response.json())
+		.then(emails => {
+			// Print emails
+			console.log(emails);
+			
+			// ... do something else with emails ...
+			load_mail(emails);
+		});
+  };
+}
 
-;
+function load_mail(emails) {
+	emails.forEach(email => {
+		const element = document.createElement('div');
+		element.innerHTML = `<div class="col-2">${email.id}</div>`;
+		element.classList.add("row");
+		element.addEventListener('click', function() {
+			//Change style for Read email here
+			element.classList.add("read-email");
+		});
+		document.querySelector('#emails-view').append(element);
+	});
 }
 
 
