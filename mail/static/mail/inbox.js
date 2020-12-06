@@ -56,8 +56,25 @@ function load_mailbox(mailbox) {
   document.querySelector('#compose-view').style.display = 'none';
 
   // Show the mailbox name
-  document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
-
+  document.querySelector('#emails-view').innerHTML = `
+	<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>
+	<div class="emails-list"></div>
+  `;
+  
+  // Inbox mail
+  if (mailbox == 'inbox') {
+		
+		fetch('/emails/inbox')
+		.then(response => response.json())
+		.then(emails => {
+			// Print emails
+			console.log(emails);
+			
+			// ... do something else with emails ...
+			load_mail(emails);
+		});
+  };
+  
   // Sent mail
   if (mailbox == 'sent') {
 		
@@ -73,32 +90,124 @@ function load_mailbox(mailbox) {
 		
   };
   
-  // Inbox mail
-  if (mailbox == 'inbox') {
+  // Archived mail
+  if (mailbox == 'archive') {
 		
-		fetch('/emails/inbox')
+		fetch('/emails/archive')
 		.then(response => response.json())
 		.then(emails => {
 			// Print emails
 			console.log(emails);
 			
-			// ... do something else with emails ...
-			load_mail(emails);
+			// Load emails if they exist, else return empty
+			if (load_mail(emails) != []) {load_mail(emails)};
+			
+			const element = document.createElement('div');
+			element.innerHTML = `
+				<div class="col">Mailbox is empty.</div>
+			`;
+			element.classList.add("row","emails");
+			element.addEventListener('click', function() {
+				//Change style for Read email here
+				element.classList.add("read-email");
+			});
+			document.querySelector('.emails-list').append(element);
+			
 		});
+		
   };
 }
 
+// Loads all mail for /emails/<str:mailbox> request
 function load_mail(emails) {
 	emails.forEach(email => {
 		const element = document.createElement('div');
-		element.innerHTML = `<div class="col-2">${email.id}</div>`;
-		element.classList.add("row");
+		element.innerHTML = `
+			<div class="col-3">${email.sender}</div>
+			<div class="col-6">${email.subject}</div>
+			<div class="col-2">${email.timestamp}</div>
+			<div class="col-1">${email.read}</div>
+		`;
+		element.classList.add("row","emails");
+		element.addEventListener('click', function() {
+			//Change style for Read email here
+			element.classList.add("read-email");
+
+			//Change style for Read email here
+			mark_read(email);
+			load_email(email);
+		});
+		document.querySelector('.emails-list').append(element);
+	});
+}
+
+// Loads a single email
+function load_email(email) {
+	fetch(`/emails/${email.id}`)
+	.then(response => response.json())
+	.then(email => {
+		// Print email
+		console.log(email);
+
+		// ... do something else with email ...
+		const element = document.createElement('div');
+		element.innerHTML = `
+			<div class="row"><div class="col from">From: ${email.sender}</div></div>
+			<div class="row"><div class="col subject">Subject: ${email.subject}</div></div>
+			<div class="row"><div class="col message">Message:<br><br>${email.body}</div></div>
+		`;
 		element.addEventListener('click', function() {
 			//Change style for Read email here
 			element.classList.add("read-email");
 		});
-		document.querySelector('#emails-view').append(element);
+		document.querySelector('#emails-view').innerHTML = element.innerHTML;
 	});
 }
 
+// Marks email by id as read
+function mark_read(email) {
+	if (email.read != true) {
+		fetch(`/emails/${email.id}`, {
+			method: 'PUT',
+			body: JSON.stringify({
+				read: true
+			})
+		})
+	};
+}
 
+// Marks email by id as unread
+function mark_unread(email) {
+	if (email.read == true) {
+		fetch(`/emails/${email.id}`, {
+			method: 'PUT',
+			body: JSON.stringify({
+				read: false
+			})
+		})
+	};
+}
+
+// Archives email by id
+function archive(email) {
+	if (email.archived != true) {
+		fetch(`/emails/${email.id}`, {
+			method: 'PUT',
+			body: JSON.stringify({
+				archived: true
+			})
+		})
+	};
+}
+
+// Archives email by id
+function remove_archive(email) {
+	if (email.archived == true) {
+		fetch(`/emails/${email.id}`, {
+			method: 'PUT',
+			body: JSON.stringify({
+				archived: false
+			})
+		})
+	};
+}
