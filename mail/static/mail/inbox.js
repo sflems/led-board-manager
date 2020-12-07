@@ -104,13 +104,9 @@ function load_mailbox(mailbox) {
 			
 			const element = document.createElement('div');
 			element.innerHTML = `
-				<div class="col">Mailbox is empty.</div>
+				<div class="col">No mail currently archived.</div>
 			`;
 			element.classList.add("row","emails");
-			element.addEventListener('click', function() {
-				//Change style for Read email here
-				element.classList.add("read-email");
-			});
 			document.querySelector('.emails-list').append(element);
 			
 		});
@@ -129,11 +125,9 @@ function load_mail(emails) {
 			<div class="col-1">${email.read}</div>
 		`;
 		element.classList.add("row","emails");
+		if (email.read == false) {element.classList.add("read-mail")};
 		element.addEventListener('click', function() {
-			//Change style for Read email here
-			element.classList.add("read-email");
-
-			//Change style for Read email here
+			//Open individual emails and mark them as read
 			mark_read(email);
 			load_email(email);
 		});
@@ -153,7 +147,9 @@ function load_email(email) {
 		const element = document.createElement('div');
 		element.innerHTML = `
 			<div class="row"><div class="col from">From: ${email.sender}</div></div>
+			<div class="row"><div class="col from">To: ${email.recipients}</div></div>
 			<div class="row"><div class="col subject">Subject: ${email.subject}</div></div>
+			<div class="row"><div class="col from">Date: ${email.timestamp}</div></div>
 			<div class="row"><div class="col message">Message:<br><br>${email.body}</div></div>
 		`;
 		element.addEventListener('click', function() {

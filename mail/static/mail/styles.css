@@ -4,8 +4,13 @@ textarea {
 
 .emails {
 	padding: 1em 0;
+	cursor: pointer;
 }
 
 .message {
 	padding: 3em 15px;
+}
+
+.read-mail {
+	background-color: #eee;
 }
