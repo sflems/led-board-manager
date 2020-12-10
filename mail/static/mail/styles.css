@@ -2,6 +2,10 @@ textarea {
     min-height: 400px;
 }
 
+.from {
+	padding-top:1em;
+}
+
 .emails {
 	padding: 1em 0;
 	cursor: pointer;
@@ -11,6 +15,6 @@ textarea {
 	padding: 3em 15px;
 }
 
-.read-mail {
+.read-email {
 	background-color: #eee;
 }

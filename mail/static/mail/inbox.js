@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
   document.querySelector('#compose').addEventListener('click', compose_email);
+
   
   // By default load the inbox
   load_mailbox('inbox');
@@ -21,6 +22,27 @@ function compose_email() {
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
 
+  document.querySelector('#compose-form').onsubmit = send_email;
+}
+
+function reply(email) {
+
+  // Show compose view and hide other views
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#compose-view').style.display = 'block';
+
+  // Clear out composition fields
+  document.querySelector('#compose-recipients').value = `${email.sender}`;
+  
+  // Check if subject already contains Re:
+  if (email.subject.toLowerCase().startsWith("re:") != true) {
+	  document.querySelector('#compose-subject').value = `Re: ${email.subject}`;
+  } else {
+	  document.querySelector('#compose-subject').value = `${email.subject}`; 
+  }
+  
+  document.querySelector('#compose-body').value = `\n On ${email.timestamp}, ${email.sender} wrote: \"${email.body}\"\n`;
+  
   document.querySelector('#compose-form').onsubmit = send_email;
 }
 
@@ -70,7 +92,7 @@ function load_mailbox(mailbox) {
 			// Print emails
 			console.log(emails);
 			
-			// ... do something else with emails ...
+			// Load all emails
 			load_mail(emails);
 		});
   };
@@ -85,7 +107,26 @@ function load_mailbox(mailbox) {
 			console.log(emails);
 			
 			// ... do something else with emails ...
-			load_mail(emails);
+			emails.forEach(email => {
+				const element = document.createElement('div');
+				element.innerHTML = `
+					<div id="sender" class="col-3">${email.recipients}</div>
+					<div class="col-6">${email.subject}</div>
+					<div class="col-3">${email.timestamp}</div>
+				`;
+				element.classList.add("row","emails");
+				if (email.read === false) {element.classList.add("read-mail")};
+				element.addEventListener('click', function() {
+					//Open individual emails and mark them as read
+					mark_read(email);
+					load_email(email);
+				});
+				if (email.read === true) {
+					//Change style for Read email here
+					element.classList.add("read-email");
+				};
+				document.querySelector('.emails-list').append(element);		
+			});			
 		});
 		
   };
@@ -99,39 +140,45 @@ function load_mailbox(mailbox) {
 			// Print emails
 			console.log(emails);
 			
-			// Load emails if they exist, else return empty
-			if (load_mail(emails) != []) {load_mail(emails)};
-			
-			const element = document.createElement('div');
-			element.innerHTML = `
-				<div class="col">No mail currently archived.</div>
-			`;
-			element.classList.add("row","emails");
-			document.querySelector('.emails-list').append(element);
-			
+			// Load archived emails if they exist, else return empty
+			if (load_mail(emails) != []) {
+				load_mail(emails);
+				
+				
+			} else {			
+				const element = document.createElement('div');
+				element.innerHTML = `
+					<div class="col">No mail currently archived.</div>
+				`;
+				element.classList.add("row","emails");
+				document.querySelector('.emails-list').append(element);
+			};			
 		});
 		
   };
 }
 
-// Loads all mail for /emails/<str:mailbox> request
+// Loads all emails
 function load_mail(emails) {
 	emails.forEach(email => {
 		const element = document.createElement('div');
 		element.innerHTML = `
-			<div class="col-3">${email.sender}</div>
+			<div id="sender" class="col-3">${email.sender}</div>
 			<div class="col-6">${email.subject}</div>
-			<div class="col-2">${email.timestamp}</div>
-			<div class="col-1">${email.read}</div>
+			<div class="col-3">${email.timestamp}</div>
 		`;
 		element.classList.add("row","emails");
-		if (email.read == false) {element.classList.add("read-mail")};
+		if (email.read === false) {element.classList.add("read-mail")};
 		element.addEventListener('click', function() {
 			//Open individual emails and mark them as read
 			mark_read(email);
 			load_email(email);
 		});
-		document.querySelector('.emails-list').append(element);
+		if (email.read === true) {
+			//Change style for Read email here
+			element.classList.add("read-email");
+		};
+		document.querySelector('.emails-list').append(element);		
 	});
 }
 
@@ -145,18 +192,25 @@ function load_email(email) {
 
 		// ... do something else with email ...
 		const element = document.createElement('div');
-		element.innerHTML = `
+		if (email.archived != true) {
+			element.innerHTML = `<button class="btn btn-sm btn-outline-primary" id="archive-mail">Archive</button>`;
+			document.querySelector('#emails-view').innerHTML = element.innerHTML;
+			document.querySelector('#archive-mail').addEventListener('click', () => archive(email));
+		} else {
+			element.innerHTML = `<button class="btn btn-sm btn-outline-primary" id="archive-remove">Unarchive</button>`;
+			document.querySelector('#emails-view').innerHTML = element.innerHTML;
+			document.querySelector('#archive-remove').addEventListener('click', () => remove_archive(email));
+		};
+		
+		document.querySelector('#emails-view').insertAdjacentHTML('beforeend', `
+			<button class="btn btn-sm btn-outline-primary" id="reply">Reply</button>
 			<div class="row"><div class="col from">From: ${email.sender}</div></div>
-			<div class="row"><div class="col from">To: ${email.recipients}</div></div>
+			<div class="row"><div class="col to">To: ${email.recipients}</div></div>
 			<div class="row"><div class="col subject">Subject: ${email.subject}</div></div>
 			<div class="row"><div class="col from">Date: ${email.timestamp}</div></div>
 			<div class="row"><div class="col message">Message:<br><br>${email.body}</div></div>
-		`;
-		element.addEventListener('click', function() {
-			//Change style for Read email here
-			element.classList.add("read-email");
-		});
-		document.querySelector('#emails-view').innerHTML = element.innerHTML;
+		`);
+		document.querySelector('#reply').addEventListener('click', () => reply(email));
 	});
 }
 
@@ -193,6 +247,8 @@ function archive(email) {
 				archived: true
 			})
 		})
+		// Then load the inbox
+		load_mailbox('inbox');
 	};
 }
 
@@ -205,5 +261,7 @@ function remove_archive(email) {
 				archived: false
 			})
 		})
+		// Then load the inbox
+		load_mailbox('inbox');
 	};
 }
