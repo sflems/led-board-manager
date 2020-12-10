@@ -41,7 +41,7 @@ function reply(email) {
 	  document.querySelector('#compose-subject').value = `${email.subject}`; 
   }
   
-  document.querySelector('#compose-body').value = `\n On ${email.timestamp}, ${email.sender} wrote: \"${email.body}\"\n`;
+  document.querySelector('#compose-body').value = '\n' + `\"On ${email.timestamp}, ${email.sender} wrote:\n\n ${email.body}\"` + '\n';
   
   document.querySelector('#compose-form').onsubmit = send_email;
 }
@@ -67,7 +67,7 @@ function send_email() {
 		console.log(result);
 	});
 
-	load_mailbox('sent');
+	load_mailbox('inbox');
 	return false;
 }
 
@@ -107,26 +107,30 @@ function load_mailbox(mailbox) {
 			console.log(emails);
 			
 			// ... do something else with emails ...
-			emails.forEach(email => {
+			if (emails.length != 0) {
+				emails.forEach(email => {
+					const element = document.createElement('div');
+					element.innerHTML = `
+						<div id="sender" class="col-3">${email.recipients}</div>
+						<div class="col-6">${email.subject}</div>
+						<div class="col-3">${email.timestamp}</div>
+					`;
+					element.classList.add("row","emails");
+					element.addEventListener('click', function() {
+						//Open individual emails
+						load_email(email);
+					});
+
+					document.querySelector('.emails-list').append(element);		
+				});
+			} else {
 				const element = document.createElement('div');
 				element.innerHTML = `
-					<div id="sender" class="col-3">${email.recipients}</div>
-					<div class="col-6">${email.subject}</div>
-					<div class="col-3">${email.timestamp}</div>
+					<div class="col">No mail to display.</div>
 				`;
 				element.classList.add("row","emails");
-				if (email.read === false) {element.classList.add("read-mail")};
-				element.addEventListener('click', function() {
-					//Open individual emails and mark them as read
-					mark_read(email);
-					load_email(email);
-				});
-				if (email.read === true) {
-					//Change style for Read email here
-					element.classList.add("read-email");
-				};
-				document.querySelector('.emails-list').append(element);		
-			});			
+				document.querySelector('.emails-list').append(element);
+			}
 		});
 		
   };
@@ -141,18 +145,7 @@ function load_mailbox(mailbox) {
 			console.log(emails);
 			
 			// Load archived emails if they exist, else return empty
-			if (load_mail(emails) != []) {
-				load_mail(emails);
-				
-				
-			} else {			
-				const element = document.createElement('div');
-				element.innerHTML = `
-					<div class="col">No mail currently archived.</div>
-				`;
-				element.classList.add("row","emails");
-				document.querySelector('.emails-list').append(element);
-			};			
+			load_mail(emails);		
 		});
 		
   };
@@ -160,26 +153,35 @@ function load_mailbox(mailbox) {
 
 // Loads all emails
 function load_mail(emails) {
-	emails.forEach(email => {
+	if (emails.length != 0) {
+		emails.forEach(email => {
+			const element = document.createElement('div');
+			element.innerHTML = `
+				<div id="sender" class="col-3">${email.sender}</div>
+				<div class="col-6">${email.subject}</div>
+				<div class="col-3">${email.timestamp}</div>
+			`;
+			element.classList.add("row","emails");
+			if (email.read === false) {element.classList.add("read-mail")};
+			element.addEventListener('click', function() {
+				//Open individual emails and mark them as read
+				mark_read(email);
+				load_email(email);
+			});
+			if (email.read === true) {
+				//Change style for Read email here
+				element.classList.add("read-email");
+			};
+			document.querySelector('.emails-list').append(element);		
+		});
+	} else {
 		const element = document.createElement('div');
 		element.innerHTML = `
-			<div id="sender" class="col-3">${email.sender}</div>
-			<div class="col-6">${email.subject}</div>
-			<div class="col-3">${email.timestamp}</div>
+			<div class="col">No mail to display.</div>
 		`;
 		element.classList.add("row","emails");
-		if (email.read === false) {element.classList.add("read-mail")};
-		element.addEventListener('click', function() {
-			//Open individual emails and mark them as read
-			mark_read(email);
-			load_email(email);
-		});
-		if (email.read === true) {
-			//Change style for Read email here
-			element.classList.add("read-email");
-		};
-		document.querySelector('.emails-list').append(element);		
-	});
+		document.querySelector('.emails-list').append(element);
+	}
 }
 
 // Loads a single email
@@ -202,13 +204,15 @@ function load_email(email) {
 			document.querySelector('#archive-remove').addEventListener('click', () => remove_archive(email));
 		};
 		
+		var display_body = email.body.replace(/\n/g, "<br >");
+		
 		document.querySelector('#emails-view').insertAdjacentHTML('beforeend', `
 			<button class="btn btn-sm btn-outline-primary" id="reply">Reply</button>
 			<div class="row"><div class="col from">From: ${email.sender}</div></div>
 			<div class="row"><div class="col to">To: ${email.recipients}</div></div>
 			<div class="row"><div class="col subject">Subject: ${email.subject}</div></div>
 			<div class="row"><div class="col from">Date: ${email.timestamp}</div></div>
-			<div class="row"><div class="col message">Message:<br><br>${email.body}</div></div>
+			<div class="row"><div class="col message">Message:<br><br>${display_body}</div></div>
 		`);
 		document.querySelector('#reply').addEventListener('click', () => reply(email));
 	});
