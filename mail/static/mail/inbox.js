@@ -65,9 +65,8 @@ function send_email() {
 	.then(result => {
 		// Print result
 		console.log(result);
+		load_mailbox('sent');
 	});
-
-	load_mailbox('inbox');
 	return false;
 }
 
@@ -251,8 +250,12 @@ function archive(email) {
 				archived: true
 			})
 		})
-		// Then load the inbox
-		load_mailbox('inbox');
+		.then(result => {
+			// Print result
+			console.log(result);
+			load_mailbox('archive');
+		})
+		return false;
 	};
 }
 
@@ -265,7 +268,11 @@ function remove_archive(email) {
 				archived: false
 			})
 		})
-		// Then load the inbox
-		load_mailbox('inbox');
+		.then(result => {
+			// Print result
+			console.log(result);
+			load_mailbox('inbox');
+		})
+		return false;
 	};
 }
