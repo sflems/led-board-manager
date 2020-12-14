@@ -1,5 +1,10 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+	<ul>
+		{% for user in users %}
+			<li>{{ user.username }}</li>
+		{% endfor %}
+	</ul>
+    
 {% endblock %}
