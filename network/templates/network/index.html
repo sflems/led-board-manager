@@ -1,9 +1,12 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
+
 	<ul>
-		{% for user in users %}
-			<li>{{ user.username }}</li>
+		{% for post in posts %}
+			<div id="post_{{ post.id }}">
+				{{ post }}
+			</div>
 		{% endfor %}
 	</ul>
     

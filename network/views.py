@@ -3,13 +3,33 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 from .models import *
 
 
 def index(request):
     return render(request, "network/index.html", {
-        "users": User.objects.all(),
+        "posts": Post.objects.filter(is_active=1),
+    })
+
+@login_required  
+def following(request):
+
+    if not FollowingList.objects.get(user=request.user) == []:
+        following = FollowingList.objects.get(user=request.user)
+        posts = []
+        
+        for user in following.followed_users.all(): 
+            for post in Post.objects.filter(author=user):
+                posts.append(post)
+        
+        return render(request, "network/index.html", {
+        "posts": posts,
+        })
+
+    return render(request, "network/index.html", {
+        "posts": "No followed users to show posts for.",
     })
 
 

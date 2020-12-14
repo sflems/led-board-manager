@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Profile, Location
+from .models import User, Profile, Location, Post, Comment, FollowingList
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "location")
@@ -8,10 +8,19 @@ class ProfileAdmin(admin.ModelAdmin):
 class LocationAdmin(admin.ModelAdmin):
     list_display = ("city", "province", "country",)
     
+class PostAdmin(admin.ModelAdmin):
+    list_display = ("id", "title", "author",)
+    list_display_links = ("title",)
     
-
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ("post", "comment", "user")
+    list_display_links = ("comment",) 
+    
     
 # Register your models here.
 admin.site.register(User)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Location, LocationAdmin)
+admin.site.register(Post, PostAdmin)
+admin.site.register(Comment, CommentAdmin)
+admin.site.register(FollowingList)
