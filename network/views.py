@@ -1,9 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
-from django.db import IntegrityError
+from django.contrib.auth.decorators import login_required
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
+
+from django.core.exceptions import *
+from django.db import IntegrityError
 
 from .models import *
 
@@ -16,21 +19,21 @@ def index(request):
 @login_required  
 def following(request):
 
-    if not FollowingList.objects.get(user=request.user) == []:
-        following = FollowingList.objects.get(user=request.user)
-        posts = []
-        
-        for user in following.followed_users.all(): 
-            for post in Post.objects.filter(author=user):
-                posts.append(post)
-        
-        return render(request, "network/index.html", {
-        "posts": posts,
-        })
+    try:
+        if not FollowingList.objects.get(user=request.user) == []:
+            following = FollowingList.objects.get(user=request.user).followed_users.all()
+            
+            posts = Post.objects.filter(author__in=following)
+                    
+            return render(request, "network/following.html", {
+            "posts": posts,
+            "following": following,
+            })
 
-    return render(request, "network/index.html", {
-        "posts": "No followed users to show posts for.",
-    })
+    except ObjectDoesNotExist:
+        return render(request, "network/following.html", {
+            "message": "No followed users to show posts for.",
+        })
 
 
 def login_view(request):

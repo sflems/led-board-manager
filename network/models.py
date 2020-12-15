@@ -11,15 +11,24 @@ class User(AbstractUser):
     pass
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     about = models.TextField(max_length=300, blank=True)
-    location = models.ForeignKey('Location', on_delete=models.SET_NULL, null=True)
+    location = models.ForeignKey('Location', on_delete=models.SET_NULL, null=True, blank=True)
     
     class Meta:
         verbose_name_plural = "Profiles"
         
     def __str__(self):
         return f"{self.user.username}'s Profile"
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
 
 class Location(models.Model):
     city = models.TextField(max_length=300, blank=True)
