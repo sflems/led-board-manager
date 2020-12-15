@@ -6,51 +6,39 @@
         <title>{% block title %}Social Network{% endblock %}</title>
 		
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+		<link href="{% static 'network/styles.css' %}" rel="stylesheet">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 		
-		<link href="{% static 'network/styles.css' %}" rel="stylesheet">
-		
-       	<meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
 
 		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-			<a class="navbar-brand" style="color:rgba(255,255,255,.5)" href=""><strong>Network</strong></a>
+			<a class="navbar-brand" style="color:rgba(255,255,255,.5)" href="{% url 'index' %}"><strong>Network</strong></a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="collapsibleNavbar">		
 				<ul class="navbar-nav">
 					{% if user.is_authenticated %}
-						<li class="nav-item">
-							<a class="nav-link" href="{% url 'index' %}"><strong>{{ user.username }}</strong></a>
-						</li>
+						<button class="btn btn-sm btn-dark" id="profile"><strong>{{ user.username }}</strong></button>
 					{% endif %}
-						<li class="nav-item">
-							<a class="nav-link" href="{% url 'index' %}">All Posts</a>
-						</li>
+						<button class="btn btn-sm btn-dark" id="index">All Posts</button>
 					{% if user.is_authenticated %}
-						<li class="nav-item">
-							<a class="nav-link" href="{% url 'following' %}">Following</a>
-						</li>
+						<button class="btn btn-sm btn-dark" onclick="location.href='{% url 'following' %}';" id="following">Following</button>
 					{% endif %}
 				</ul>
 			</div>
 			<div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
 				<ul class="navbar-nav">
 					{% if user.is_authenticated %}
-						<li class="nav-item">
-							<a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-						</li>
+						<button class="btn btn-sm btn-dark" onclick="location.href='{% url 'logout' %}';">Log Out</button>
 					{% else %}
-						<li class="nav-item">
-							<a class="nav-link" href="{% url 'login' %}">Log In</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{% url 'register' %}">Register</a>
-						</li>
+						<button class="btn btn-sm btn-dark" onclick="location.href='{% url 'login' %}';">Log In</button>
+						<button class="btn btn-sm btn-dark" onclick="location.href='{% url 'register' %}';">Register</button>
 					{% endif %}
 				</ul>
 			</div>
@@ -61,5 +49,9 @@
             {% block body %}
             {% endblock %}
         </div>
+		
+		{% block script %}
+			<script src="{% static 'network/network.js' %}"></script>
+		{% endblock %}
     </body>
 </html>

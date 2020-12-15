@@ -1,15 +1,19 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
-<div>
 	<div>{{ message }}</div>
 
-	<ul>
-		{% for post in posts %}
-			<div id="post_{{ post.id }}">
-				{{ post }}
-			</div>
-		{% endfor %}
-	</ul>
-</div>  
+	<div id="profile-view">
+	</div>
+
+	<div id="posts-view">
+		<ul>
+			{% for post in posts %}
+				<div id="post_{{ post.id }}">
+					{{ post }}
+				</div>
+			{% endfor %}
+		</ul>
+	</div>  
 {% endblock %}

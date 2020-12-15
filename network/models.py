@@ -53,6 +53,10 @@ class Post(models.Model):
     def __str__(self):
         return f"{self.title} by {self.author.username}"
         
+    def serialize(self):
+        pass
+        '''TODO: Define serialize() for Post. See Project 3's mail.models.Email for reference'''
+        
 class PostForm(ModelForm):
     class Meta:
         model = Post

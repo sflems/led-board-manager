@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -15,6 +15,36 @@ def index(request):
     return render(request, "network/index.html", {
         "posts": Post.objects.filter(is_active=1),
     })
+    
+@login_required
+def view(request, view):
+
+    # Filter emails returned based on mailbox
+    if view == "all_posts":
+        posts = Post.objects.all()
+    
+    elif view == "following":
+        try:
+            if not FollowingList.objects.get(user=request.user) == []:
+                following = FollowingList.objects.get(user=request.user).followed_users.all()
+                
+                posts = Post.objects.filter(author__in=following)
+                        
+                return render(request, "network/following.html", {
+                "posts": posts,
+                "following": following,
+                })
+
+        except ObjectDoesNotExist:
+            return render(request, "network/following.html", {
+                "message": "No followed users to show posts for.",
+            })
+    else:
+        return JsonResponse({"error": "No posts found."}, status=400)
+
+    # Return posts in reverse chronologial order
+    posts = posts.order_by("-created").all()
+    return JsonResponse([post.serialize() for post in posts], safe=False)
 
 @login_required  
 def following(request):
