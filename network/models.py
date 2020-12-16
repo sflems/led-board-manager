@@ -45,7 +45,7 @@ class Post(models.Model):
     title = models.CharField(max_length=128, blank=False, unique=True)
     content = models.TextField(max_length=1000, blank=False)
     image_URL = models.URLField(blank=True)
-    created = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=1)
     author = models.ForeignKey(User, blank=False, on_delete=models.CASCADE, related_name='post_authors')
@@ -54,8 +54,17 @@ class Post(models.Model):
         return f"{self.title} by {self.author.username}"
         
     def serialize(self):
-        pass
         '''TODO: Define serialize() for Post. See Project 3's mail.models.Email for reference'''
+        return {
+            "id": self.id,
+            "title": self.title,
+            "content": self.content,
+            "image_URL": self.image_URL,
+            "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
+            "modified": self.modified,
+            "is_active": self.is_active,
+            "author": self.author.username
+        }
         
 class PostForm(ModelForm):
     class Meta:
@@ -80,7 +89,7 @@ class CommentForm(ModelForm):
         }
 
 class FollowingList(models.Model):
-    followed_users = models.ManyToManyField(User)
+    followed_users = models.ManyToManyField(User, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follower")
 
     def __str__(self):

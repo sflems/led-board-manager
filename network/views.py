@@ -1,14 +1,16 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.http import JsonResponse
+from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.urls import reverse
 
 from django.core.exceptions import *
 from django.db import IntegrityError
 
 from .models import *
+import json
 
 
 def index(request):
@@ -19,31 +21,24 @@ def index(request):
 @login_required
 def view(request, view):
 
+    posts = {}
+    
     # Filter emails returned based on mailbox
     if view == "all_posts":
-        posts = Post.objects.all()
+        posts = Post.objects.all().order_by("-timestamp").all()
     
     elif view == "following":
         try:
             if not FollowingList.objects.get(user=request.user) == []:
                 following = FollowingList.objects.get(user=request.user).followed_users.all()
-                
                 posts = Post.objects.filter(author__in=following)
-                        
-                return render(request, "network/following.html", {
-                "posts": posts,
-                "following": following,
-                })
 
         except ObjectDoesNotExist:
-            return render(request, "network/following.html", {
-                "message": "No followed users to show posts for.",
-            })
+            return JsonResponse({"error": "No followed users to show posts for."}, status=400)
     else:
         return JsonResponse({"error": "No posts found."}, status=400)
 
     # Return posts in reverse chronologial order
-    posts = posts.order_by("-created").all()
     return JsonResponse([post.serialize() for post in posts], safe=False)
 
 @login_required  

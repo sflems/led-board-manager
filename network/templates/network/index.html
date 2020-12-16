@@ -4,16 +4,9 @@
 {% block body %}
 	<div>{{ message }}</div>
 
-	<div id="profile-view">
+	<div id="profile-view" class="container">
 	</div>
 
-	<div id="posts-view">
-		<ul>
-			{% for post in posts %}
-				<div id="post_{{ post.id }}">
-					{{ post }}
-				</div>
-			{% endfor %}
-		</ul>
+	<div id="posts-view" class="container">
 	</div>  
 {% endblock %}

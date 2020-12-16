@@ -28,7 +28,7 @@
 					{% endif %}
 						<button class="btn btn-sm btn-dark" id="index">All Posts</button>
 					{% if user.is_authenticated %}
-						<button class="btn btn-sm btn-dark" onclick="location.href='{% url 'following' %}';" id="following">Following</button>
+						<button class="btn btn-sm btn-dark" id="following">Following</button>
 					{% endif %}
 				</ul>
 			</div>
@@ -45,7 +45,7 @@
 		</nav>
 		<br><br>
         
-        <div class="body container">
+        <div class="body">
             {% block body %}
             {% endblock %}
         </div>

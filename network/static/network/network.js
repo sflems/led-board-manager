@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Use buttons to toggle between views
   document.querySelector('#index').addEventListener('click', () => load_views('all_posts'));
+  document.querySelector('#following').addEventListener('click', () => load_views('following'));
   
-  // By default all posts
-  load_posts('all_posts');
+  // By default load all posts view
+  load_views('all_posts');
 });
 
 function load_views(view) {
@@ -12,14 +13,16 @@ function load_views(view) {
   document.querySelector('#posts-view').style.display = 'block';
   document.querySelector('#profile-view').style.display = 'none';
 
-  // Show the mailbox name
-  document.querySelector('#posts-view').prepend = `
-	<h3>Network Posts</h3>
-	<div class="posts-list"></div>
-  `;
+
   
   // Get all posts and load them
   if (view == 'all_posts') {
+	  
+		// Show the view name
+		document.querySelector('#posts-view').innerHTML = `
+			<h3>Network - Posts</h3>
+			<div class="posts-list"></div>
+		`;
 		
 		fetch('/views/all_posts')
 		.then(response => response.json())
@@ -34,6 +37,12 @@ function load_views(view) {
   
   // Get posts from all followed users and load them
   if (view == 'following') {
+	  
+		// Show the view name
+		document.querySelector('#posts-view').innerHTML = `
+			<h3>Following List - Recent Posts</h3>
+			<div class="posts-list"></div>
+		`;
 		
 		fetch('/views/following')
 		.then(response => response.json())
@@ -49,14 +58,13 @@ function load_views(view) {
 
 // Loads all posts
 function load_posts(posts) {
-	if (posts.length != 0) {
+	if (posts.length > 0) {
 		posts.forEach(post => {
-			
 			const element = document.createElement('div');
 			element.innerHTML = `
-				<div class="col-3-sm">${post.title}</div>
-				<div class="col-6-sm">${post.content}</div>
-				<div class="col-3-sm">${post.author}</div>
+				<div class="col-3">${post.title}</div>
+				<div class="col-6">${post.content}</div>
+				<div class="col-3">${post.author}</div>
 			`;
 			element.classList.add("row","posts");
 			document.querySelector('.posts-list').append(element);		
