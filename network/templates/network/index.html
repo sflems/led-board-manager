@@ -7,6 +7,23 @@
 	<div id="profile-view" class="container">
 	</div>
 
-	<div id="posts-view" class="container">
+	<div id="compose-view" class="container">
+		{% block create-form %}
+		{% endblock %}
+	</div>
+<br>
+	<div id="posts-view-full" class="container">
+		<div id="posts-view">
+			{% for post in posts %}
+				<h3>Network - Posts</h3>
+				<div class="posts-list">
+					<div class="row posts">
+						<div class="col-3">{{ post.title }}</div>
+						<div class="col-6">{{ post.content }}</div>
+						<div class="col-3">{{ post.author }}</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
 	</div>  
 {% endblock %}

@@ -47,13 +47,28 @@ function load_views(view) {
 		fetch('/views/following')
 		.then(response => response.json())
 		.then(posts => {
-			// Print posts
-			console.log(posts);
-			
-			// Load all posts
-			load_posts(posts);
+			// If error thrown(response status is not in the range 200-299 inclusive), display error
+			if (Response.ok !== true) {
+				console.log(posts.error);
+				const element = document.createElement('div');
+				element.innerHTML = `
+					<div class="col">${posts.error}</div>
+				`;
+				element.classList.add("row","posts");
+				document.querySelector('.posts-list').append(element);
+			// Otherwise load the posts
+			} else {
+				// Print posts
+				console.log(posts);
+				
+				// Load all posts
+				load_posts(posts);
+			}
 		});
   };
+
+  // TODO: Implement Profiles View
+
 }
 
 // Loads all posts

@@ -14,9 +14,6 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     about = models.TextField(max_length=300, blank=True)
     location = models.ForeignKey('Location', on_delete=models.SET_NULL, null=True, blank=True)
-    
-    class Meta:
-        verbose_name_plural = "Profiles"
         
     def __str__(self):
         return f"{self.user.username}'s Profile"
@@ -34,9 +31,6 @@ class Location(models.Model):
     city = models.TextField(max_length=300, blank=True)
     province = models.TextField(max_length=2, blank=True)
     country = models.TextField(max_length=30, blank=False)
-    
-    class Meta:
-        verbose_name_plural = "Locations"
         
     def __str__(self):
         return f"{self.city.title()}, {self.province.upper()}, {self.country.title()}"
@@ -49,12 +43,15 @@ class Post(models.Model):
     modified = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=1)
     author = models.ForeignKey(User, blank=False, on_delete=models.CASCADE, related_name='post_authors')
+    likes = models.ManyToManyField(User, blank=True)
     
     def __str__(self):
-        return f"{self.title} by {self.author.username}"
+        return f"{self.id}: {self.title} by {self.author.username}"
+
+    def like_count(self):
+        return self.likes.count()
         
     def serialize(self):
-        '''TODO: Define serialize() for Post. See Project 3's mail.models.Email for reference'''
         return {
             "id": self.id,
             "title": self.title,
@@ -63,7 +60,8 @@ class Post(models.Model):
             "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
             "modified": self.modified,
             "is_active": self.is_active,
-            "author": self.author.username
+            "author": self.author.username,
+            "likes": self.likes.count(),
         }
         
 class PostForm(ModelForm):

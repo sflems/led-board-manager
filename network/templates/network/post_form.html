@@ -1,0 +1,14 @@
+{% extends 'network/index.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block create-form %}
+
+<!-- // TODO: Autofill User Selection -->
+
+	<form method="post">
+		{% csrf_token %}
+		{{ form|crispy }}
+		<button type="submit" class="btn btn-success">Create Post</button>
+	</form>
+{% endblock %}
