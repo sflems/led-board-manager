@@ -73,7 +73,7 @@ def UpdatePost(request, post_id):
             "error": "PUT request required."
         }, status=400)
         
-@csrf_exempt
+
 @login_required
 def CreatePost(request):
 

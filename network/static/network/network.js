@@ -84,7 +84,7 @@ function load_posts(posts) {
 			const element = document.createElement('div');
 			element.innerHTML = `
 				<div id="post" class="col">
-					<p id="post-content" class="mb-2 lead truncate">${ post.content.replace(/\n/g, "<br >") }</p>
+					<p id="post-content" class="mb-2 lead truncate">${ post.content.trim().replace(/\n/g, "<br >") }</p>
 					<h4 class="mb-2 font-weight-light text-right">- ${ post.author }</h4>
 					<p class="mb-0 text-muted text-right">${ post.timestamp }</p>
 				</div>
@@ -109,10 +109,13 @@ function load_posts(posts) {
 function compose_post() {
 	// Get form data
 	let content = document.querySelector('#compose-content').value;
+	const csrftoken = Cookies.get('csrftoken');
 			
 	//Send Post request to emails URL with new email JSON data
 	fetch('/posts/create', {
 		method: 'POST',
+		mode: 'same-origin',  // Do not send CSRF token to another domain.
+		
 		body: JSON.stringify({
 			content: content,
 		})

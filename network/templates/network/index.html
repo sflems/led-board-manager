@@ -10,6 +10,7 @@
 
 	{% if user.is_authenticated %}
 	<div id="compose-view">
+		<h3> Network - Posts </h3>
 		<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm ">
 			<form method="POST" id="compose-form">
 				{% csrf_token %}
@@ -29,8 +30,8 @@
 					{% for post in posts %}
 					<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm max-h-250 position-relative">
 						<div id="post" class="col">
-							<p id="post-content" class="mb-2 lead truncate">{{ post.content|linebreaksbr }}</p>
-							<h4 class="ml-3 mb-2 font-weight-light">- {{ post.author }}</h4>
+							<p id="post-content" class="mb-2 lead truncate">{{ post.content.strip|linebreaksbr }}</p>
+							<h4 class="ml-3 mb-2 font-weight-light text-right">- {{ post.author }}</h4>
 							<p class="mb-0 text-muted text-right">{{ post.timestamp }}</p>
 						</div>
 					</div>
