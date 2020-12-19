@@ -1,29 +1,42 @@
 {% extends "network/layout.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block body %}
 	<div>{{ message }}</div>
 
-	<div id="profile-view" class="container">
+	<div id="profile-view">
 	</div>
 
-	<div id="compose-view" class="container">
-		{% block create-form %}
-		{% endblock %}
-	</div>
-<br>
-	<div id="posts-view-full" class="container">
-		<div id="posts-view">
-			{% for post in posts %}
-				<h3>Network - Posts</h3>
-				<div class="posts-list">
-					<div class="row posts">
-						<div class="col-3">{{ post.title }}</div>
-						<div class="col-6">{{ post.content }}</div>
-						<div class="col-3">{{ post.author }}</div>
-					</div>
+	{% if user.is_authenticated %}
+	<div id="compose-view">
+		<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm ">
+			<form method="POST" id="compose-form">
+				{% csrf_token %}
+				<div class="form-group">
+					<textarea id="compose-content" class="form-control mb-4" rows="5" cols="200" placeholder="Create a new post..."></textarea>
 				</div>
-			{% endfor %}
+				<button id="submit" class="btn btn-sml btn-primary float-right">Submit Post</button>
+			</form>
+		</div>
+	</div>
+	{% endif %}
+<br>
+	<div id="posts-view-full">
+		<div id="posts-view">
+			
+				<div class="posts-list">
+					{% for post in posts %}
+					<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm max-h-250 position-relative">
+						<div id="post" class="col">
+							<p id="post-content" class="mb-2 lead truncate">{{ post.content|linebreaksbr }}</p>
+							<h4 class="ml-3 mb-2 font-weight-light">- {{ post.author }}</h4>
+							<p class="mb-0 text-muted text-right">{{ post.timestamp }}</p>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			
 		</div>
 	</div>  
 {% endblock %}

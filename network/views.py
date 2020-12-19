@@ -15,8 +15,10 @@ import json
 
 
 def index(request):
+    posts = Post.objects.filter(is_active=1)
     return render(request, "network/index.html", {
-        "posts": Post.objects.filter(is_active=1),
+        "posts": posts.order_by("-timestamp"),
+        "postform": PostForm(),
     })
     
 
@@ -27,7 +29,7 @@ def view(request, view):
     # Filter emails returned based on mailbox
     if view == "all_posts":
         try:
-            posts = Post.objects.all().order_by("-timestamp").all()
+            posts = Post.objects.all().order_by("-timestamp")
         except ObjectDoesNotExist:
             return JsonResponse({"error": "No posts found."}, status=400)
     
@@ -39,13 +41,64 @@ def view(request, view):
 
         except ObjectDoesNotExist:
             return JsonResponse({"error": "No followed users to show posts for."}, status=400)
+            
+
 
     # Return posts in reverse chronologial order
     return JsonResponse([post.serialize() for post in posts], safe=False)
+    
+@csrf_exempt
+@login_required
+def UpdatePost(request, post_id):
 
-class PostCreateView(CreateView):
-    model = Post
-    fields = ("title", "content", "image_URL", 'author')
+    # Query for requested post
+    try:
+        post = Post.objects.get(user=request.user, pk=post_id)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post not found."}, status=404)
+
+
+    # Update whether email is read or should be archived
+    if request.method == "PUT":
+        data = json.loads(request.body)
+      # Fuctions to be performed on object
+        ''' if data.get("read") is not None:
+            email.read = data["read"] '''
+        email.save()
+        return HttpResponse(status=204)
+
+    # Email must be via GET or PUT
+    else:
+        return JsonResponse({
+            "error": "PUT request required."
+        }, status=400)
+        
+@csrf_exempt
+@login_required
+def CreatePost(request):
+
+    # Composing a new email must be via POST
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+
+    # Check recipient emails
+    data = json.loads(request.body)
+    content = data.get("content")
+    
+    if len(content) <= 3:
+        return JsonResponse({
+            "error": "Post length must be greater than 3 characters."
+        }, status=400)
+        
+    post = Post(
+            author=request.user,
+            content=content,
+        )
+    post.save()
+
+    return JsonResponse({"message": "Post created successfully."}, status=201)
+
+
 
 def login_view(request):
     if request.method == "POST":

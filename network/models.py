@@ -36,9 +36,7 @@ class Location(models.Model):
         return f"{self.city.title()}, {self.province.upper()}, {self.country.title()}"
         
 class Post(models.Model):
-    title = models.CharField(max_length=128, blank=False, unique=True)
-    content = models.TextField(max_length=1000, blank=False)
-    image_URL = models.URLField(blank=True)
+    content = models.TextField(max_length=10000, blank=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=1)
@@ -46,7 +44,7 @@ class Post(models.Model):
     likes = models.ManyToManyField(User, blank=True)
     
     def __str__(self):
-        return f"{self.id}: {self.title} by {self.author.username}"
+        return f"Post #{self.id} by {self.author.username} ({self.timestamp})"
 
     def like_count(self):
         return self.likes.count()
@@ -54,11 +52,9 @@ class Post(models.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "title": self.title,
             "content": self.content,
-            "image_URL": self.image_URL,
             "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
-            "modified": self.modified,
+            "modified": self.modified.strftime("%b %d %Y, %I:%M %p"),
             "is_active": self.is_active,
             "author": self.author.username,
             "likes": self.likes.count(),
@@ -67,7 +63,10 @@ class Post(models.Model):
 class PostForm(ModelForm):
     class Meta:
         model = Post
-        fields = ("title", "content", "image_URL",)
+        fields = ("content",)
+        labels = {
+            "content": _(""),
+        }
         
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comment_authors')

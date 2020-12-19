@@ -9,8 +9,8 @@ class LocationAdmin(admin.ModelAdmin):
     list_display = ("city", "province", "country",)
     
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "author",)
-    list_display_links = ("title",)
+    list_display = ("id", "author",)
+    list_display_links = ("id",)
     
 class CommentAdmin(admin.ModelAdmin):
     list_display = ("post", "comment", "user")

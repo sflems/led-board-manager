@@ -2,9 +2,17 @@ document.addEventListener('DOMContentLoaded', function() {
   // Use buttons to toggle between views
   document.querySelector('#index').addEventListener('click', () => load_views('all_posts'));
   document.querySelector('#following').addEventListener('click', () => load_views('following'));
+  document.querySelector('#compose-form').onsubmit = compose_post;
   
+  let posts_list = document.querySelectorAll('#post');
+  posts_list.forEach(post => {
+	  post.addEventListener('click', function() {
+		  post.querySelector('#post-content').classList.toggle("truncate");
+	  });
+  });
+
   // By default load all posts view
-  load_views('all_posts');
+  // load_views('all_posts');
 });
 
 function load_views(view) {
@@ -20,7 +28,6 @@ function load_views(view) {
 	  
 		// Show the view name
 		document.querySelector('#posts-view').innerHTML = `
-			<h3>Network - Posts</h3>
 			<div class="posts-list"></div>
 		`;
 		
@@ -40,7 +47,6 @@ function load_views(view) {
 	  
 		// Show the view name
 		document.querySelector('#posts-view').innerHTML = `
-			<h3>Following List - Recent Posts</h3>
 			<div class="posts-list"></div>
 		`;
 		
@@ -77,11 +83,16 @@ function load_posts(posts) {
 		posts.forEach(post => {
 			const element = document.createElement('div');
 			element.innerHTML = `
-				<div class="col-3">${post.title}</div>
-				<div class="col-6">${post.content}</div>
-				<div class="col-3">${post.author}</div>
+				<div id="post" class="col">
+					<p id="post-content" class="mb-2 lead truncate">${ post.content.replace(/\n/g, "<br >") }</p>
+					<h4 class="mb-2 font-weight-light text-right">- ${ post.author }</h4>
+					<p class="mb-0 text-muted text-right">${ post.timestamp }</p>
+				</div>
 			`;
-			element.classList.add("row","posts");
+			element.classList.add("row", "no-gutters", "border", "rounded", "overflow-hidden", "mb-4", "p-4", "shadow-sm", "max-h-250", "position-relative",);
+			element.addEventListener('click', function() {
+				element.querySelector('#post-content').classList.toggle("truncate");
+	  });
 			document.querySelector('.posts-list').append(element);		
 		});
 	} else {
@@ -89,7 +100,29 @@ function load_posts(posts) {
 		element.innerHTML = `
 			<div class="col">No posts to display.</div>
 		`;
-		element.classList.add("row","posts");
+		element.classList.add("row","no-gutters", "border", "rounded", "overflow-hidden", "mb-4", "p-4", "shadow-sm", "h-250", "position-relative",);
 		document.querySelector('.posts-list').append(element);
 	}
+}
+
+	//Submits new post form
+function compose_post() {
+	// Get form data
+	let content = document.querySelector('#compose-content').value;
+			
+	//Send Post request to emails URL with new email JSON data
+	fetch('/posts/create', {
+		method: 'POST',
+		body: JSON.stringify({
+			content: content,
+		})
+	})
+	.then(response => response.json())
+	.then(result => {
+		// Print result
+		console.log(result);
+		load_views('all_posts');
+	});
+	
+	return false;	
 }
