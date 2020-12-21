@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Use buttons to toggle between views
-    document.querySelector('#index').addEventListener('click', () => location.href='/');
+    document.querySelector('#index').addEventListener('click', () => location.href='/views/all_posts');
     document.querySelector('#following').addEventListener('click', () => location.href='/views/following');
     document.querySelector('#compose-form').onsubmit = () => {
 		compose_post();

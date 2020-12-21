@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
+import json
 from django.http import JsonResponse
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.template.response import TemplateResponse
@@ -12,14 +13,18 @@ from django.core.exceptions import *
 from django.db import IntegrityError
 
 from .models import *
-import json
+from django.core.paginator import Paginator
+
 
 
 def index(request):
     posts = Post.objects.filter(is_active=1)
-    return render(request, "network/index.html", {
-        "posts": posts.order_by("-timestamp"),
-    })
+    paginator = Paginator(posts.order_by("-timestamp"), 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Return paginated results.
+    return render(request, "network/index.html", {'page_obj': page_obj})
     
 
 def view(request, view):
@@ -29,10 +34,13 @@ def view(request, view):
     
         # Try to get posts in reverse chronologial order
         try:
-            posts = Post.objects.filter(is_active=1).order_by("-timestamp")   
-            return TemplateResponse(request, "network/index.html", {
-                "posts": posts.order_by("-timestamp"),
-            })
+                posts = Post.objects.filter(is_active=1)
+                paginator = Paginator(posts, 3)
+                page_number = request.GET.get('page')
+                page_obj = paginator.get_page(page_number)
+                
+                # Return paginated results.
+                return render(request, "network/index.html", {'page_obj': page_obj})
       
         # If no posts exist exception   
         except Post.ObjectDoesNotExist:
@@ -47,10 +55,13 @@ def view(request, view):
             if FollowingList.objects.get(user=request.user) != []:
                 following = FollowingList.objects.get(user=request.user).followed_users.all()
                 posts = Post.objects.filter(author__in=following).order_by("-timestamp")
-                
-                return TemplateResponse(request, "network/index.html", {
-                    "posts": posts,
-                })
+                paginator = Paginator(posts, 3)
+                page_number = request.GET.get('page')
+                page_obj = paginator.get_page(page_number)
+
+                # Return paginated results.
+                return render(request, "network/index.html", {'page_obj': page_obj})
+
         # If no following list exists or no followed users in list exceptions
         except FollowingList.ObjectDoesNotExist:
             return TemplateResponse(request, "network/index.html", {
@@ -84,6 +95,9 @@ def CreatePost(request):
            )
     post.save()
     posts = {Post.objects.filter(is_active=1).order_by("-timestamp"),}
+    paginator = Paginator(posts, 3)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     # Gets posts.html template, renders it as a string with post context for inserting HTML as json in following AJAX reponse.
     html = render_to_string("network/posts.html", {

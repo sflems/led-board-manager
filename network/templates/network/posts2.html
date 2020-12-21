@@ -14,9 +14,9 @@
 						{% if user.is_authenticated %}
 							<form id="like-form" action="{% url 'index' %}">
 								{% if user in post.likes.all %}
-									<button href="#" id="like-post" class="btn btn-danger mt-4 mb-2">Unlike Post</button>
+									<button href="#" id="like-post" class="btn btn-danger mt-4">Unlike Post</button>
 								{% else %}
-									<button href="#" id="like-post" class="btn btn-primary mt-4 mb-2">Like Post</button>
+									<button href="#" id="like-post" class="btn btn-primary mt-4">Like Post</button>
 								{% endif %}
 							</form>
 						{% else %}
@@ -25,10 +25,7 @@
 						<p class="ml-3 mb-0 text-muted">{{ post.like_count }} Like(s)</p>
 					</div>
 					<div class="col-sm-6">
-						<h4 class="ml-3 font-weight-light text-right">- {{ post.author }}</h4>
-						<div class="row mt-1 ml-0 mr--2">
-							<span class="col m-0 text-right"><button href="#" id="like-post" class="btn btn-primary float-right mb-2">Follow</button></span>
-						</div>
+						<h4 class="ml-3 mb-2 font-weight-light text-right">- {{ post.author }}</h4>
 						<p class="mb-0 text-muted text-right">{{ post.timestamp }}</p>
 					</div>
 				</div>
@@ -36,20 +33,20 @@
 		</div>
 	{% endfor %}
 
-	<div class="pagination container justify-content-center">
+	<div class="pagination justify-content-center">
 		<span class="step-links">
 			{% if page_obj.has_previous %}
-				<a href="?page=1">&laquo; First |</a>
-				<a href="?page={{ page_obj.previous_page_number }}"> Previous</a>
+				<a href="?page=1">&laquo; first</a>
+				<a href="?page={{ page_obj.previous_page_number }}">previous</a>
 			{% endif %}
 
-			<strong class="current">
+			<span class="current">
 				Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-			</strong>
+			</span>
 
 			{% if page_obj.has_next %}
-				<a href="?page={{ page_obj.next_page_number }}">Next |</a>
-				<a href="?page={{ page_obj.paginator.num_pages }}"> Last &raquo;</a>
+				<a href="?page={{ page_obj.next_page_number }}">next</a>
+				<a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
 			{% endif %}
 		</span>
 	</div>
