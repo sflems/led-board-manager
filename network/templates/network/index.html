@@ -9,35 +9,23 @@
 	</div>
 
 	{% if user.is_authenticated %}
-	<div id="compose-view">
-		<h3> Network - Posts </h3>
-		<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm ">
-			<form method="POST" id="compose-form">
-				{% csrf_token %}
-				<div class="form-group">
-					<textarea id="compose-content" class="form-control mb-4" rows="5" cols="200" placeholder="Create a new post..."></textarea>
-				</div>
-				<button id="submit" class="btn btn-sml btn-primary float-right">Submit Post</button>
-			</form>
+		<div id="compose-view">
+			<h3> Network - Posts </h3>
+			<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm ">
+				<form method="POST" id="compose-form">
+					{% csrf_token %}
+					<div class="form-group">
+						<textarea id="compose-content" class="form-control mb-4" rows="5" cols="200" placeholder="Create a new post..."></textarea>
+					</div>
+					<button id="submit" class="btn btn-sml btn-primary float-right">Submit Post</button>
+				</form>
+			</div>
+		</div>
+	{% endif %}
+	<br>
+	<div id="posts-view">
+		<div class="posts-list">
+			{% include "network/posts.html" with posts=posts %}	
 		</div>
 	</div>
-	{% endif %}
-<br>
-	<div id="posts-view-full">
-		<div id="posts-view">
-			
-				<div class="posts-list">
-					{% for post in posts %}
-					<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm max-h-250 position-relative">
-						<div id="post" class="col">
-							<p id="post-content" class="mb-2 lead truncate">{{ post.content.strip|linebreaksbr }}</p>
-							<h4 class="ml-3 mb-2 font-weight-light text-right">- {{ post.author }}</h4>
-							<p class="mb-0 text-muted text-right">{{ post.timestamp }}</p>
-						</div>
-					</div>
-					{% endfor %}
-				</div>
-			
-		</div>
-	</div>  
-{% endblock %}
+{% endblock body %}

@@ -1,0 +1,65 @@
+{% block posts %}
+
+		{% if error %}
+			{{ error }}
+		{% endif %}
+		{% if posts %}
+			{% for post in posts %}
+				<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm max-h-250 position-relative">
+					<div id="{{ post.id }}" class="post col">
+						<div class="row m-0">
+							<p id="post-content" class="col mb-2 lead truncate">{{ post.content.strip|linebreaksbr }}</p>
+						</div>
+						<div class="row m-0">
+							<div class="col-sm-6">
+								{% if user.is_authenticated %}
+									<form id="like-form" action="{% url 'index' %}">
+										{% if user in post.likes.all %}
+											<button href="#" id="like-post" class="btn btn-danger mt-4">Unlike Post</button>
+										{% else %}
+											<button href="#" id="like-post" class="btn btn-primary mt-4">Like Post</button>
+										{% endif %}
+									</form>
+								{% else %}
+									<a class="btn btn-outline-info" href="{% url 'login' %}?next={{request.path}}">Log in to like this article!</a><br>
+								{% endif %}
+								<p class="ml-3 mb-0 text-muted">{{ post.like_count }} Like(s)</p>
+							</div>
+							<div class="col-sm-6">
+								<h4 class="ml-3 mb-2 font-weight-light text-right">- {{ post.author }}</h4>
+								<p class="mb-0 text-muted text-right">{{ post.timestamp }}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		{% elif post %}
+			<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm max-h-250 position-relative">
+				<div id="{{ post.id }}" class="post col">
+					<div class="row m-0">
+						<p id="post-content" class="col mb-2 lead truncate">{{ post.content.strip|linebreaksbr }}</p>
+					</div>
+					<div class="row m-0">
+						<div class="col-sm-6">
+							{% if user.is_authenticated %}
+								<form id="like-form" action="{% url 'index' %}">
+									{% if user in post.likes.all %}
+										<button href="#" id="like-post" class="btn btn-danger mt-4">Unlike Post</button>
+									{% else %}
+										<button href="#" id="like-post" class="btn btn-primary mt-4">Like Post</button>
+									{% endif %}
+								</form>
+							{% else %}
+								<a class="btn btn-outline-info" href="{% url 'login' %}?next={{request.path}}">Log in to like this article!</a><br>
+							{% endif %}
+							<p class="ml-3 mb-0 text-muted">{{ post.like_count }} Like(s)</p>
+						</div>
+						<div class="col-sm-6">
+							<h4 class="ml-3 mb-2 font-weight-light text-right">- {{ post.author }}</h4>
+							<p class="mb-0 text-muted text-right">{{ post.timestamp }}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+{% endblock posts %}

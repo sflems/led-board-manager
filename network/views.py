@@ -1,10 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import CreateView
 
 from django.http import JsonResponse
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
+from django.template.response import TemplateResponse
+from django.template.loader import render_to_string
 from django.urls import reverse
 
 from django.core.exceptions import *
@@ -18,72 +19,59 @@ def index(request):
     posts = Post.objects.filter(is_active=1)
     return render(request, "network/index.html", {
         "posts": posts.order_by("-timestamp"),
-        "postform": PostForm(),
     })
     
 
 def view(request, view):
-
-    posts = {}
     
-    # Filter emails returned based on mailbox
+    # Filter posts returned based on view
     if view == "all_posts":
+    
+        # Try to get posts in reverse chronologial order
         try:
-            posts = Post.objects.all().order_by("-timestamp")
-        except ObjectDoesNotExist:
-            return JsonResponse({"error": "No posts found."}, status=400)
+            posts = Post.objects.filter(is_active=1).order_by("-timestamp")   
+            return TemplateResponse(request, "network/index.html", {
+                "posts": posts.order_by("-timestamp"),
+            })
+      
+        # If no posts exist exception   
+        except Post.ObjectDoesNotExist:
+            return TemplateResponse(request, "network/index.html", {
+                "error": "No posts found.",
+            })
     
     elif view == "following" and request.user.is_authenticated:
+    
+        # Try to get posts from followed users in reverse chronologial order
         try:
             if FollowingList.objects.get(user=request.user) != []:
                 following = FollowingList.objects.get(user=request.user).followed_users.all()
-                posts = Post.objects.filter(author__in=following)
-
-        except ObjectDoesNotExist:
-            return JsonResponse({"error": "No followed users to show posts for."}, status=400)
-            
-
-
-    # Return posts in reverse chronologial order
-    return JsonResponse([post.serialize() for post in posts], safe=False)
-    
-@csrf_exempt
-@login_required
-def UpdatePost(request, post_id):
-
-    # Query for requested post
-    try:
-        post = Post.objects.get(user=request.user, pk=post_id)
-    except Post.DoesNotExist:
-        return JsonResponse({"error": "Post not found."}, status=404)
-
-
-    # Update whether email is read or should be archived
-    if request.method == "PUT":
-        data = json.loads(request.body)
-      # Fuctions to be performed on object
-        ''' if data.get("read") is not None:
-            email.read = data["read"] '''
-        email.save()
-        return HttpResponse(status=204)
-
-    # Email must be via GET or PUT
-    else:
-        return JsonResponse({
-            "error": "PUT request required."
-        }, status=400)
-        
-
+                posts = Post.objects.filter(author__in=following).order_by("-timestamp")
+                
+                return TemplateResponse(request, "network/index.html", {
+                    "posts": posts,
+                })
+        # If no following list exists or no followed users in list exceptions
+        except FollowingList.ObjectDoesNotExist:
+            return TemplateResponse(request, "network/index.html", {
+                "error": "No followed users to show posts for.",
+            })
+        except FollowingList.EmptyResultSet:
+            return TemplateResponse(request, "network/index.html", {
+                "error": "No followed users to show posts for.",
+            })
+ 
+ 
 @login_required
 def CreatePost(request):
 
-    # Composing a new email must be via POST
+    # Composing a new post must be via POST
     if request.method != "POST":
         return JsonResponse({"error": "POST request required."}, status=400)
 
     # Check recipient emails
     data = json.loads(request.body)
-    content = data.get("content")
+    content = data.get("content", "")
     
     if len(content) <= 3:
         return JsonResponse({
@@ -93,11 +81,58 @@ def CreatePost(request):
     post = Post(
             author=request.user,
             content=content,
-        )
+           )
     post.save()
+    posts = {Post.objects.filter(is_active=1).order_by("-timestamp"),}
 
-    return JsonResponse({"message": "Post created successfully."}, status=201)
+    # Gets posts.html template, renders it as a string with post context for inserting HTML as json in following AJAX reponse.
+    html = render_to_string("network/posts.html", {
+        "post": post,
+    }, request)
 
+    return JsonResponse({
+        "message": "Post created successfully.",
+        "html": html,
+        "post": post.id,
+    }, status=200)
+ 
+ 
+@login_required
+def UpdatePost(request, post_id):
+
+    # Query for requested post
+    try:
+        post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post not found."}, status=404)
+
+
+    # Update whether post is liked
+    if request.method == "PUT":
+        data = json.loads(request.body)
+      # Fuctions to be performed on object
+        if data.get("changed") is not None:
+            if post.likes.filter(id=request.user.id).exists():
+                post.likes.remove(request.user.id)
+                post.save()
+                return JsonResponse({
+                    "message": "Post unliked successfully.",
+                    "liked": False,
+                }, status=202)
+            else:
+                post.likes.add(request.user.id)
+                post.save()
+                return JsonResponse({
+                    "message": "Post liked successfully.",
+                    "liked": True,
+                }, status=202)
+        
+
+    # Update must be via PUT
+    else:
+        return JsonResponse({
+            "error": "PUT request required."
+        }, status=400)
 
 
 def login_view(request):
