@@ -82,7 +82,7 @@ def CreatePost(request):
 
     # Check recipient emails
     data = json.loads(request.body)
-    content = data.get("content", "")
+    content = data.get("content")
     
     if len(content) <= 3:
         return JsonResponse({
@@ -94,10 +94,6 @@ def CreatePost(request):
             content=content,
            )
     post.save()
-    posts = {Post.objects.filter(is_active=1).order_by("-timestamp"),}
-    paginator = Paginator(posts, 3)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
 
     # Gets posts.html template, renders it as a string with post context for inserting HTML as json in following AJAX reponse.
     html = render_to_string("network/posts.html", {
@@ -132,6 +128,8 @@ def UpdatePost(request, post_id):
                 return JsonResponse({
                     "message": "Post unliked successfully.",
                     "liked": False,
+                    "likes": post.like_count(),
+                    "post_id": post.id,
                 }, status=202)
             else:
                 post.likes.add(request.user.id)
@@ -139,6 +137,8 @@ def UpdatePost(request, post_id):
                 return JsonResponse({
                     "message": "Post liked successfully.",
                     "liked": True,
+                    "likes": post.like_count(),
+                    "post_id": post.id,
                 }, status=202)
         
 

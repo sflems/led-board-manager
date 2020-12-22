@@ -25,7 +25,25 @@
 	<br>
 	<div id="posts-view">
 		<div class="posts-list">
-			{% include "network/posts.html" with posts=posts %}	
+			{% include "network/posts.html"%}	
 		</div>
+	</div>
+
+	<div class="pagination container justify-content-center">
+		<span class="step-links">
+			{% if page_obj.has_previous %}
+				<a href="?page=1">&laquo; First |</a>
+				<a href="?page={{ page_obj.previous_page_number }}"> Previous</a>
+			{% endif %}
+
+			<strong class="current">
+				Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+			</strong>
+
+			{% if page_obj.has_next %}
+				<a href="?page={{ page_obj.next_page_number }}">Next |</a>
+				<a href="?page={{ page_obj.paginator.num_pages }}"> Last &raquo;</a>
+			{% endif %}
+		</span>
 	</div>
 {% endblock body %}

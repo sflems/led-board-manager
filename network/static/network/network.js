@@ -48,7 +48,7 @@ function load_views(view) {
 
 function compose_post() {
 	// Get form data
-	let content = document.querySelector('#compose-content').value;
+	content = document.querySelector('#compose-content').value;
 	const csrftoken = Cookies.get('csrftoken');
 			
 	//Send Post request to postss URL with new post JSON data
@@ -65,15 +65,17 @@ function compose_post() {
 		console.log(response);
 		if (response.error) {
 			alert(response.error);
+		} else if (window.location.href.indexOf("following") > -1) {
+			alert("Post created sucessfully.");
 		} else {
 			document.querySelector('#compose-form').reset();
 			document.querySelector('#posts-view').insertAdjacentHTML("afterbegin", response.html);
 			document.querySelector('#like-form').onsubmit = () => {
 				like_post(response.post);
 				return false;
-			};
+			};			
 		};
-	})
+	});
 }
 
 // Likes a post
@@ -90,6 +92,28 @@ function like_post(post_id) {
 	.then(result => {
 		// Print result
 		console.log(result);
-		location.reload();
+		//if liked not tru then make button = unlike
+		if (result.liked != true) {
+			$("#" + result.post_id).find("#like-post").text("Like Post");
+			$("#" + result.post_id).find("#like-post").removeClass("btn-danger ml-n2");
+			$("#" + result.post_id).find("#like-post").addClass("btn-primary");
+			if (result.likes == 1) {
+				$("#" + result.post_id).find(".like-count").text("1 Like");
+			} else {
+				$("#" + result.post_id).find(".like-count").text(result.likes + " Likes");
+			};
+			
+			
+		//else button = like
+		} else {
+			$("#" + result.post_id).find("#like-post").text("Unlike Post");
+			$("#" + result.post_id).find("#like-post").removeClass("btn-primary");
+			$("#" + result.post_id).find("#like-post").addClass("btn-danger ml-n2");
+			if (result.likes == 1) {
+				$("#" + result.post_id).find(".like-count").text("1 Like");
+			} else {
+				$("#" + result.post_id).find(".like-count").text(result.likes + " Likes");
+			};
+		};
 	});
 }

@@ -3,7 +3,49 @@
 	{% if error %}
 		{{ error }}
 	{% endif %}
-	{% for post in page_obj %}
+
+	{% if not post %}
+		{% for post in page_obj %}
+			<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm max-h-250 position-relative">
+				<div id="{{ post.id }}" class="post col">
+					<div class="row m-0">
+						<p id="post-content" class="col mb-2 lead truncate">{{ post.content.strip|linebreaksbr }}</p>
+					</div>
+					<div class="row m-0">
+						<div class="col-sm-6">
+							<p class="like-count ml-3 mt-4 mb-0 text-muted">
+								{% if post.like_count == 1 %}
+									1 Like
+								{% else %}
+									{{ post.like_count }} Likes
+								{% endif %}
+							</p>
+							{% if user.is_authenticated %}
+								<form id="like-form" action="{% url 'index' %}">
+									{% if user in post.likes.all %}
+										<button href="#" id="like-post" class="btn btn-danger mt-2 ml-n2 mb-0">Unlike Post</button>
+									{% else %}
+										<button href="#" id="like-post" class="btn btn-primary mt-2 mb-0">Like Post</button>
+									{% endif %}
+								</form>
+							{% else %}
+								<a class="btn btn-light mt-2 mb-0" href="{% url 'login' %}?next={{request.path}}">Log in to like this article.</a><br>
+							{% endif %}
+						</div>
+						<div class="col-sm-6">
+							<h4 class="ml-3 font-weight-light text-right">- {{ post.author }}</h4>
+							<div class="row mt-1 ml-0">
+								{% if request.user != post.author %}
+									<span class="col m-0 text-right"><button href="#" id="like-post" class="btn btn-primary float-right mb-2">Follow</button></span>
+								{% endif %}
+							</div>
+							<p class="mb-0 text-muted text-right">{{ post.timestamp }}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	{% else %}
 		<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm max-h-250 position-relative">
 			<div id="{{ post.id }}" class="post col">
 				<div class="row m-0">
@@ -11,47 +53,38 @@
 				</div>
 				<div class="row m-0">
 					<div class="col-sm-6">
+						<p class="like-count ml-3 mt-4 mb-0 text-muted">
+							{% if post.like_count == 1 %}
+								1 Like
+							{% else %}
+								{{ post.like_count }} Likes
+							{% endif %}
+						</p>
 						{% if user.is_authenticated %}
 							<form id="like-form" action="{% url 'index' %}">
 								{% if user in post.likes.all %}
-									<button href="#" id="like-post" class="btn btn-danger mt-4 mb-2">Unlike Post</button>
+									<button href="#" id="like-post" class="btn btn-danger mt-2 ml-n2 mb-0">Unlike Post</button>
 								{% else %}
-									<button href="#" id="like-post" class="btn btn-primary mt-4 mb-2">Like Post</button>
+									<button href="#" id="like-post" class="btn btn-primary mt-2 mb-0">Like Post</button>
 								{% endif %}
 							</form>
 						{% else %}
-							<a class="btn btn-outline-info" href="{% url 'login' %}?next={{request.path}}">Log in to like this article!</a><br>
+							<a class="btn btn-light mt-2 mb-0" href="{% url 'login' %}?next={{request.path}}">Log in to like this article.</a><br>
 						{% endif %}
-						<p class="ml-3 mb-0 text-muted">{{ post.like_count }} Like(s)</p>
 					</div>
 					<div class="col-sm-6">
 						<h4 class="ml-3 font-weight-light text-right">- {{ post.author }}</h4>
-						<div class="row mt-1 ml-0 mr--2">
-							<span class="col m-0 text-right"><button href="#" id="like-post" class="btn btn-primary float-right mb-2">Follow</button></span>
+						<div class="row mt-1 ml-0">
+							{% if request.user != post.author %}
+								<span class="col m-0 text-right"><button href="#" id="like-post" class="btn btn-primary float-right mb-2">Follow</button></span>
+							{% endif %}
 						</div>
 						<p class="mb-0 text-muted text-right">{{ post.timestamp }}</p>
 					</div>
 				</div>
 			</div>
 		</div>
-	{% endfor %}
+	{% endif %}
 
-	<div class="pagination container justify-content-center">
-		<span class="step-links">
-			{% if page_obj.has_previous %}
-				<a href="?page=1">&laquo; First |</a>
-				<a href="?page={{ page_obj.previous_page_number }}"> Previous</a>
-			{% endif %}
-
-			<strong class="current">
-				Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-			</strong>
-
-			{% if page_obj.has_next %}
-				<a href="?page={{ page_obj.next_page_number }}">Next |</a>
-				<a href="?page={{ page_obj.paginator.num_pages }}"> Last &raquo;</a>
-			{% endif %}
-		</span>
-	</div>
 
 {% endblock posts %}
