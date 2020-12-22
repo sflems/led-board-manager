@@ -27,28 +27,9 @@ def index(request):
     return render(request, "network/index.html", {'page_obj': page_obj})
     
 
-def view(request, view):
+def following(request):
     
-    # Filter posts returned based on view
-    if view == "all_posts":
-    
-        # Try to get posts in reverse chronologial order
-        try:
-                posts = Post.objects.filter(is_active=1)
-                paginator = Paginator(posts, 3)
-                page_number = request.GET.get('page')
-                page_obj = paginator.get_page(page_number)
-                
-                # Return paginated results.
-                return render(request, "network/index.html", {'page_obj': page_obj})
-      
-        # If no posts exist exception   
-        except Post.ObjectDoesNotExist:
-            return TemplateResponse(request, "network/index.html", {
-                "error": "No posts found.",
-            })
-    
-    elif view == "following" and request.user.is_authenticated:
+    if request.user.is_authenticated:
     
         # Try to get posts from followed users in reverse chronologial order
         try:

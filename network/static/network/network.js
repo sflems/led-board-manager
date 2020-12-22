@@ -1,7 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Use buttons to toggle between views
-    document.querySelector('#index').addEventListener('click', () => location.href='/views/all_posts');
-    document.querySelector('#following').addEventListener('click', () => location.href='/views/following');
+    $('#index').click(function(){
+		location.href='/'
+	});
+    $('#following').click(function(){
+		location.href='/following'
+	});
     document.querySelector('#compose-form').onsubmit = () => {
 		compose_post();
 		return false;
@@ -66,10 +70,19 @@ function compose_post() {
 		if (response.error) {
 			alert(response.error);
 		} else if (window.location.href.indexOf("following") > -1) {
-			alert("Post created sucessfully.");
+			document.querySelector('#message').innerHTML = `
+				<div class="alert alert-success">
+					<strong>Success!</strong> Post successfully created.
+				</div> 
+			`;
 		} else {
 			document.querySelector('#compose-form').reset();
 			document.querySelector('#posts-view').insertAdjacentHTML("afterbegin", response.html);
+			document.querySelector('#message').innerHTML = `
+				<div class="alert alert-success">
+					<strong>Success!</strong> Post successfully created.
+				</div> 
+			`;
 			document.querySelector('#like-form').onsubmit = () => {
 				like_post(response.post);
 				return false;
