@@ -1,10 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Use buttons to toggle between views
+	$('#profile').click(function(){
+		location.href = '/profile/' + $("#profile strong").text()
+	});
     $('#index').click(function(){
-		location.href='/'
+		location.href = '/'
 	});
     $('#following').click(function(){
-		location.href='/following'
+		location.href = '/following'
 	});
     document.querySelector('#compose-form').onsubmit = () => {
 		compose_post();
