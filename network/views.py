@@ -25,6 +25,23 @@ def index(request):
     
     # Return paginated results.
     return render(request, "network/index.html", {'page_obj': page_obj})
+
+def profile(request, username):
+
+    profile = User.objects.get(username=username)
+    following = FollowingList.objects.get(user=profile).followed_users.all()
+
+    posts = Post.objects.filter(author=profile)
+    paginator = Paginator(posts.order_by("-timestamp"), 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Return paginated results.
+    return render(request, "network/profile.html", {
+        'page_obj': page_obj,
+        'profile': profile,
+        'following': following,
+    })
     
 
 def following(request):

@@ -14,9 +14,6 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     about = models.TextField(max_length=300, blank=True)
     location = models.ForeignKey('Location', on_delete=models.SET_NULL, null=True, blank=True)
-        
-    def __str__(self):
-        return f"{self.user.username}'s Profile"
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -86,8 +83,8 @@ class CommentForm(ModelForm):
         }
 
 class FollowingList(models.Model):
-    followed_users = models.ManyToManyField(User, blank=True, symmetrical=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follower")
+    followed_users = models.ManyToManyField(User, blank=True, symmetrical=False, related_name="follower")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.user}'s Following List"

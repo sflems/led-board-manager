@@ -6,16 +6,18 @@
 	<div id="message">{{ message }}</div>
 
 	<div id="profile-view">
+		{% block profile %}
+		{% endblock profile %}
 	</div>
 
 	{% if user.is_authenticated %}
 		<div id="compose-view">
-			<h3> Network - Posts </h3>
-			<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm ">
+			<h3 id="posts-title"> New Post </h3>
+			<div class="row no-gutters border rounded overflow-hidden p-4 shadow-sm ">
 				<form method="POST" id="compose-form">
 					{% csrf_token %}
 					<div class="form-group">
-						<textarea id="compose-content" class="form-control mb-4" rows="5" cols="200" placeholder="Create a new post..."></textarea>
+						<textarea id="compose-content" class="form-control mb-4" rows="5" cols="200" placeholder="What's the gist?"></textarea>
 					</div>
 					<button id="submit" class="btn btn-sml btn-primary float-right">Submit Post</button>
 				</form>
