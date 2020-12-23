@@ -28,20 +28,25 @@ def index(request):
 
 def profile(request, username):
 
-    profile = User.objects.get(username=username)
-    following = FollowingList.objects.get(user=profile).followed_users.all()
+	profile = User.objects.get(username=username)
+	
+	try:
+		if FollowingList.objects.get(user=profile).followed_users.all() != []:
+			following = FollowingList.objects.get(user=profile).followed_users.all()
+	except EmptyResultSet:
+		following = []
 
-    posts = Post.objects.filter(author=profile)
-    paginator = Paginator(posts.order_by("-timestamp"), 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    
-    # Return paginated results.
-    return render(request, "network/profile.html", {
-        'page_obj': page_obj,
-        'profile': profile,
-        'following': following,
-    })
+	posts = Post.objects.filter(author=profile)
+	paginator = Paginator(posts.order_by("-timestamp"), 10)
+	page_number = request.GET.get('page')
+	page_obj = paginator.get_page(page_number)
+	
+	# Return paginated results.
+	return render(request, "network/profile.html", {
+		'page_obj': page_obj,
+		'profile': profile,
+		'following': following,
+	})
     
 
 def following(request):
@@ -61,7 +66,7 @@ def following(request):
                 return render(request, "network/index.html", {'page_obj': page_obj})
 
         # If no following list exists or no followed users in list exceptions
-        except FollowingList.ObjectDoesNotExist:
+        except FollowingList.DoesNotExist:
             return TemplateResponse(request, "network/index.html", {
                 "error": "No followed users to show posts for.",
             })

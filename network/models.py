@@ -88,3 +88,8 @@ class FollowingList(models.Model):
 
     def __str__(self):
         return f"{self.user}'s Following List"
+
+@receiver(post_save, sender=User)
+def create_user_followinglist(sender, instance, created, **kwargs):
+    if created:
+        FollowingList.objects.create(user=instance)
