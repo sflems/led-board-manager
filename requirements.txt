@@ -1,0 +1,10 @@
+asgiref==3.3.1
+beautifulsoup4==4.9.3
+Django==2.1.2
+django-bootstrap4==2.3.1
+django-crispy-forms==1.10.0
+django-search-views==0.3.7
+markdown2==2.3.10
+pytz==2020.4
+soupsieve==2.1
+sqlparse==0.4.1
