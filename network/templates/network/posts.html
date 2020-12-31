@@ -50,11 +50,11 @@
 									</span>
 								{% endif %}
 							</div>
-							<p class="mb-0 text-muted text-right">
-								{% if post.timestamp = post.modified %}
-									{{ post.created }}
+							<p class="mb-0 text-muted font-weight-light text-right">
+								{% if post.timestamp == post.modified %}
+									Created: {{ post.timestamp }}
 								{% else %}
-									{{ post.modified }}
+									Last changed: {{ post.modified }}
 								{% endif %}
 							</p>
 						</div>
@@ -107,11 +107,11 @@
 									</span>
 								{% endif %}
 							</div>
-							<p class="mb-0 text-muted text-right">
-								{% if post.timestamp = post.modified %}
-									{{ post.created }}
+							<p class="mb-0 text-muted font-weight-light text-right">
+								{% if post.timestamp == post.modified %}
+									Created: {{ post.timestamp }}
 								{% else %}
-									{{ post.modified }}
+									Last changed: {{ post.modified }}
 								{% endif %}
 							</p>
 						</div>
