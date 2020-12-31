@@ -32,7 +32,10 @@
 								<a class="btn btn-light mt-2 mb-0" href="{% url 'login' %}?next={{request.path}}">Log in to like this article.</a><br>
 							{% endif %}
 						</div>
-						<div class="col-sm-6">
+						<div class="col-sm-6 text-right">
+							{% if request.user == post.author %}
+								<small id="edit-post" data-post_id="{{ post.id }}"class="text-right"><a href="#{{ post.id }}">Edit Post</a></small>
+							{% endif %}
 							<h4 class="ml-3 font-weight-light text-right">- {{ post.author }}</h4>
 							<div class="row mt-1 ml-0">
 								{% if request.user != post.author %}

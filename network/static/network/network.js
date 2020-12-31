@@ -29,12 +29,13 @@ document.addEventListener('DOMContentLoaded', function() {
 				return false;
 			});
 		};
+		if (post.querySelector('small#edit-post') != null) {
+			post.querySelector('small#edit-post').addEventListener('click', function() {
+				edit_post(`${post.id}`);
+				this.style.display = "none";
+			});
+		};
     });
-
-  // TODO: Implement Profiles View
-
-  // By default load all posts view
-  // load_views('all_posts');
 })
 
 function load_views(view) {
@@ -146,7 +147,47 @@ function like_post(post_id) {
 	});
 }
 
-// Likes a post
+// Creates Text Area to edit a post
+function edit_post(post_id) {
+	post = document.getElementById(post_id);
+	old_content = post.querySelector('#post-content').innerText;
+	post.querySelector('.post p').outerHTML = `
+		<form method="PUT" id="edit-form">
+			<div class="form-group">
+				<textarea id="compose-content" class="form-control mb-4" rows="5" cols="200">${old_content}</textarea>
+			</div>
+			<button id="submit" class="btn btn-sml btn-primary float-right">Submit Changes</button>
+		</form>
+	`;
+	$('#edit-form').submit(function(){
+		save_post(post_id);
+		return false;
+	});
+}
+
+// Saves an edited a post
+function save_post(post_id) {
+	content = document.getElementById(post_id).querySelector('#compose-content').value;
+	const csrftoken = Cookies.get('csrftoken');
+	
+	fetch(`/posts/${post_id}`, {
+		headers: {'X-CSRFToken': csrftoken},
+		method: 'PUT',
+		body: JSON.stringify({
+			edit: true,
+			content: content,
+		})
+	})
+	.then(response => response.json())
+	.then(result => {
+		// Print result
+		// TODO: Update post (or not), once response recieved.
+		console.log(result);
+		
+	});
+}
+
+// Follows a post
 function follow_user(username) {
 	const csrftoken = Cookies.get('csrftoken');
 	fetch(`/profile/${username}`, {
@@ -161,7 +202,7 @@ function follow_user(username) {
 		// Print result
 		console.log(result);
 		buttons = document.querySelectorAll(`button[data-user="${username}"]`);
-		//if liked not tru then make button = unlike
+		//if followed not true then make button = unfollow
 		if (result.followed != true) {
 			buttons.forEach(button => {
 				button.innerHTML = "Follow";
