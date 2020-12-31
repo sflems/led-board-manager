@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#following').click(function(){
 		location.href = '/following'
 	});
-    document.querySelector('#compose-form').onsubmit = () => {
+    $('#compose-form').submit(function(){
 		compose_post();
 		return false;
-	};  
+	});  
   
     let posts_list = document.querySelectorAll('.post');
     posts_list.forEach(post => {
@@ -23,6 +23,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	    	like_post(`${post.id}`);
 			return false;
 	    };
+		if (post.querySelector('button.follow') != null) {
+			post.querySelector('button.follow').addEventListener('click', function() {
+				follow_user(this.dataset.user);
+				return false;
+			});
+		};
     });
 
   // TODO: Implement Profiles View
@@ -74,16 +80,22 @@ function compose_post() {
 			alert(response.error);
 		} else if (window.location.href.indexOf("following") > -1) {
 			document.querySelector('#message').innerHTML = `
-				<div class="alert alert-success">
-					<strong>Success!</strong> Post successfully created.
-				</div> 
+				<div class="alert alert-success alert-dismissible fade show">
+					<strong>Success!</strong> Post created.
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>  
 			`;
 		} else {
 			document.querySelector('#compose-form').reset();
 			document.querySelector('#posts-view').insertAdjacentHTML("afterbegin", response.html);
 			document.querySelector('#message').innerHTML = `
-				<div class="alert alert-success">
-					<strong>Success!</strong> Post successfully created.
+				<div class="alert alert-success alert-dismissible fade show">
+					<strong>Success!</strong> Post created.
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
 				</div> 
 			`;
 			document.querySelector('#like-form').onsubmit = () => {
@@ -101,7 +113,7 @@ function like_post(post_id) {
 		headers: {'X-CSRFToken': csrftoken},
 		method: 'PUT',
 		body: JSON.stringify({
-			changed: true
+			like: true
 		})
 	})
 	.then(response => response.json())
@@ -130,6 +142,36 @@ function like_post(post_id) {
 			} else {
 				$("#" + result.post_id).find(".like-count").text(result.likes + " Likes");
 			};
+		};
+	});
+}
+
+// Likes a post
+function follow_user(username) {
+	const csrftoken = Cookies.get('csrftoken');
+	fetch(`/profile/${username}`, {
+		headers: {'X-CSRFToken': csrftoken},
+		method: 'PUT',
+		body: JSON.stringify({
+			follow: true
+		})
+	})
+	.then(response => response.json())
+	.then(result => {
+		// Print result
+		console.log(result);
+		buttons = document.querySelectorAll(`button[data-user="${username}"]`);
+		//if liked not tru then make button = unlike
+		if (result.followed != true) {
+			buttons.forEach(button => {
+				button.innerHTML = "Follow";
+			});
+			
+		//else button = follow
+		} else {
+			buttons.forEach(button => {
+				button.innerHTML = "Unfollow";
+			});
 		};
 	});
 }

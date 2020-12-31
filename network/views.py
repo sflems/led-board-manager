@@ -27,26 +27,56 @@ def index(request):
     return render(request, "network/index.html", {'page_obj': page_obj})
 
 def profile(request, username):
+    
+    if request.method == "GET":
+        profile = User.objects.get(username=username)
+        
+        try:
+            if FollowingList.objects.get(user=profile).followed_users.all() != []:
+                following = FollowingList.objects.get(user=profile).followed_users.all()
+        except EmptyResultSet:
+            following = []
 
-	profile = User.objects.get(username=username)
-	
-	try:
-		if FollowingList.objects.get(user=profile).followed_users.all() != []:
-			following = FollowingList.objects.get(user=profile).followed_users.all()
-	except EmptyResultSet:
-		following = []
-
-	posts = Post.objects.filter(author=profile)
-	paginator = Paginator(posts.order_by("-timestamp"), 10)
-	page_number = request.GET.get('page')
-	page_obj = paginator.get_page(page_number)
-	
-	# Return paginated results.
-	return render(request, "network/profile.html", {
-		'page_obj': page_obj,
-		'profile': profile,
-		'following': following,
-	})
+        posts = Post.objects.filter(author=profile)
+        paginator = Paginator(posts.order_by("-timestamp"), 10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        
+        # Return paginated results.
+        return render(request, "network/profile.html", {
+            'page_obj': page_obj,
+            'profile': profile,
+            'following': following,
+        })
+    
+    if request.method == "PUT":
+        data = json.loads(request.body)
+      # Fuctions to be performed on object
+        if data.get("follow") is not None:
+            
+        ## TODO: FIX IF ELSE STATMENTS BELOW FOR FOLLOWING USERS
+            newfollow = User.objects.get(username=username)
+            following = FollowingList.objects.get(user=request.user)
+            if following.followed_users.filter(username=username).exists():
+                following.followed_users.remove(newfollow.id)
+                following.save()
+                return JsonResponse({
+                    "message": "User " + username + " unfollowed.",
+                    "followed": False,
+                }, status=202)
+            else:
+                following.followed_users.add(newfollow.id)
+                following.save()
+                return JsonResponse({
+                    "message": "User " + username + " followed.",
+                    "followed": True,
+                }, status=202)
+               
+    # Update must be via PUT
+    else:
+        return JsonResponse({
+            "error": "GET or PUT request required."
+        }, status=400)
     
 
 def following(request):
@@ -124,7 +154,7 @@ def UpdatePost(request, post_id):
     if request.method == "PUT":
         data = json.loads(request.body)
       # Fuctions to be performed on object
-        if data.get("changed") is not None:
+        if data.get("like") is not None:
             if post.likes.filter(id=request.user.id).exists():
                 post.likes.remove(request.user.id)
                 post.save()
@@ -143,7 +173,6 @@ def UpdatePost(request, post_id):
                     "likes": post.like_count(),
                     "post_id": post.id,
                 }, status=202)
-        
 
     # Update must be via PUT
     else:

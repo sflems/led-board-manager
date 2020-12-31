@@ -84,7 +84,7 @@ class CommentForm(ModelForm):
 
 class FollowingList(models.Model):
     followed_users = models.ManyToManyField(User, blank=True, symmetrical=False, related_name="follower")
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following_list")
 
     def __str__(self):
         return f"{self.user}'s Following List"

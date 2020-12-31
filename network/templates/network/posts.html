@@ -7,7 +7,7 @@
 	{% if not post %}
 		{% for post in page_obj %}
 			<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm max-h-250 position-relative">
-				<div id="{{ post.id }}" class="post col">
+				<div id="{{ post.id }}" data-user="{{ post.author }}" class="post col">
 					<div class="row m-0">
 						<p id="post-content" class="col mb-2 lead truncate">{{ post.content.strip|linebreaksbr }}</p>
 					</div>
@@ -21,7 +21,7 @@
 								{% endif %}
 							</p>
 							{% if user.is_authenticated %}
-								<form id="like-form" action="{% url 'index' %}">
+								<form id="like-form">
 									{% if user in post.likes.all %}
 										<button href="#" id="like-post" class="btn btn-danger mt-2 ml-n2 mb-0">Unlike Post</button>
 									{% else %}
@@ -36,7 +36,15 @@
 							<h4 class="ml-3 font-weight-light text-right">- {{ post.author }}</h4>
 							<div class="row mt-1 ml-0">
 								{% if request.user != post.author %}
-									<span class="col m-0 text-right"><button href="#" id="like-post" class="btn btn-primary float-right mb-2">Follow</button></span>
+									<span class="col m-0 text-right">
+										<button href="#" class="btn follow btn-primary float-right mb-2"  data-user="{{ post.author }}">
+											{% if not post.author in request.user.following_list.first.followed_users.all %}
+												Follow
+											{% else %}
+												Unfollow
+											{% endif %}
+										</button>
+									</span>
 								{% endif %}
 							</div>
 							<p class="mb-0 text-muted text-right">{{ post.timestamp }}</p>
@@ -47,7 +55,7 @@
 		{% endfor %}
 	{% else %}
 		<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm max-h-250 position-relative">
-			<div id="{{ post.id }}" class="post col">
+			<div id="{{ post.id }}" data-user="{{ post.author }}" class="post col">
 				<div class="row m-0">
 					<p id="post-content" class="col mb-2 lead truncate">{{ post.content.strip|linebreaksbr }}</p>
 				</div>
@@ -76,7 +84,7 @@
 						<h4 class="ml-3 font-weight-light text-right">- {{ post.author }}</h4>
 						<div class="row mt-1 ml-0">
 							{% if request.user != post.author %}
-								<span class="col m-0 text-right"><button href="#" id="like-post" class="btn btn-primary float-right mb-2">Follow</button></span>
+								<span class="col m-0 text-right"><button href="#" id="follow-post" class="btn btn-primary float-right mb-2">Follow</button></span>
 							{% endif %}
 						</div>
 						<p class="mb-0 text-muted text-right">{{ post.timestamp }}</p>
