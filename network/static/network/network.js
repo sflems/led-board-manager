@@ -184,6 +184,21 @@ function save_post(post_id) {
 		// TODO: Update post (or not), once response recieved.
 		console.log(result);
 		
+		if (result.changed == true) {
+			document.getElementById(post_id).querySelector('#edit-form').outerHTML = `
+				<p id="post-content" class="col mb-2 lead truncate">${content}</p>
+			`;
+			document.getElementById(post_id).querySelector('small').style.display = "block";
+			document.querySelector('#message').innerHTML = `
+				<div class="alert alert-success alert-dismissible fade show">
+					<strong>Success!</strong> ${result.message}.
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>  
+			`;
+		};
+		
 	});
 }
 

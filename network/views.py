@@ -173,7 +173,24 @@ def UpdatePost(request, post_id):
                     "likes": post.like_count(),
                     "post_id": post.id,
                 }, status=202)
-
+                
+        elif data.get("edit") is not None:
+            if post.author != request.user:
+                return JsonResponse({
+                    "error": "User unauthorized.",
+                }, status=400)                
+            else:
+                post.content = data.get("content")
+                post.save()
+                return JsonResponse({
+                    "message": "Post content changed successfully.",
+                    "changed": True,
+                    "post_id": post.id,
+                }, status=202)
+        else:
+            return JsonResponse({
+                "error": "Invalid PUT request."
+            }, status=400)   
     # Update must be via PUT
     else:
         return JsonResponse({
