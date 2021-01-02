@@ -14,3 +14,9 @@
   background-color: #f8f9fa!important;
   box-shadow: none!important;
 }
+
+.btn-light:hover {
+    color: #212529!important;
+    background-color: #f8f9fa!important;
+    border-color: #f8f9fa!important;
+}
