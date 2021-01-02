@@ -222,8 +222,9 @@ function save_post(post_id) {
 		// Print result
 		// TODO: Update post (or not), once response recieved.
 		console.log(result);
-		
-		if (result.changed == true) {
+		if (result.error) {
+			alert(result.error);
+		} else if (result.changed == true) {
 			post = document.getElementById(post_id);
 			post.querySelector('#edit-form').outerHTML = `
 				<p id="post-content" class="col mb-2 lead">${content}</p>

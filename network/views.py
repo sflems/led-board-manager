@@ -188,8 +188,13 @@ def UpdatePost(request, post_id):
                 return JsonResponse({
                     "error": "User unauthorized.",
                 }, status=400)                
+            elif len(data.get("content")) <= 3:
+                return JsonResponse({
+                    "error": "Post length must be greater than 3 characters."
+                }, status=400)
+
             else:
-                post.content = data.get("content")
+                post.content = data.get("content")            
                 post.save()
                 return JsonResponse({
                     "message": "Post content changed successfully.",

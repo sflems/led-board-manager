@@ -28,7 +28,7 @@
 					{% if request.user == post.author %}
 						<small id="edit-post" data-post_id="{{ post.id }}"class="row mr-3 mb-2 justify-content-end"><a href="#{{ post.id }}">Edit Post</a></small>
 					{% endif %}
-					<button id="profile-button" class="btn btn-light" data-username="{{ post.author }}">
+					<button id="profile-button" class="btn btn-light m-1" data-username="{{ post.author }}">
 						<h4 class="font-weight-light">- {{ post.author }}</h4>
 					</button>
 					<div class="row mt-1 ml-0">
