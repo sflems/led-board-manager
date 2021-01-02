@@ -3,13 +3,55 @@
 {% block profile %}
 
 {% if user.is_authenticated %}
-	<div class="row m-0 justify-content-center">
-		<h3>{{ profile.username }}'s Profile</h3>
+	<div id="profile-head">
+		<div id="" class="row m-0 justify-content-center">
+			<h3>{{ profile.username }}'s Profile</h3>
+		</div>
+		<div class="row m-0 justify-content-center">
+			<p>
+				<button id="followers-btn" class="btn btn-light">Followers: {{ profile.follower.count }}</button> | <button id="following-btn" class="btn btn-light" data-following-count="{{ following.count }}">Following: {{ following.count }}</button>
+			</p>
+		</div>
 	</div>
-	<div class="row m-0 justify-content-center">
-		<p>
-			Followers: {{ profile.follower.count }} | Followed Users: {{ following.count }}
-		</p>
+	
+	<div id="profile-followers" class="mb-2" style="display:none;">
+		<div class="row m-0 justify-content-center">
+			<h4>Followers</h4><button id="hide" class="mb-1 btn btn-link btn-sm">(hide)</button>
+		</div>
+		{% for follower in profile.follower.all %}
+			<div class="row m-0 pb-2 justify-content-center">
+				
+				<p class="profile col-2">{{ follower.user.username }}</p>
+				<div class="col-2">
+					<button href="#" class="btn follow btn-primary btn-sm float-right ml-4 mt-n1"  data-user="{{ follower.user.username }}">
+						{% if not follower.user.username in request.user.following_list.first.followed_users.all %}
+							Follow
+						{% else %}
+							Unfollow
+						{% endif %}
+					</button>
+				</div>
+			</div>
+		{% empty %}
+		{% endfor %}
+	</div>
+	
+	<div id="profile-following" style="display:none;">
+		<div class="row m-0 justify-content-center">
+			<h4>Following</h4><button id="hide" class="mb-1 btn btn-link btn-sm">(hide)</button>
+		</div>
+		{% for followee in following %}
+			<div class="row m-0 mb-2 justify-content-center">
+				<p class="profile col-2">{{ followee.username }}</p>
+				<div class="col-2">
+					<button href="#" class="btn follow btn-primary btn-sm float-right ml-4 mt-n1"  data-user="{{ followee.username }}">
+						Unfollow
+					</button>
+				</div>
+			</div>
+		{% empty %}
+		
+		{% endfor %}
 	</div>
 {% else %}
 	<button class="btn btn-sm btn-dark" onclick="location.href='{% url 'login' %}';">Log In</button>

@@ -1,124 +1,59 @@
 {% block posts %}
-
-	{% if error %}
-		{{ error }}
-	{% endif %}
-
-	{% if not post %}
-		{% for post in page_obj %}
-			<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm max-h-250 position-relative">
-				<div id="{{ post.id }}" data-user="{{ post.author }}" class="post col">
-					<div class="row m-0">
-						<p id="post-content" class="col mb-2 lead truncate">{{ post.content.strip|linebreaksbr }}</p>
-					</div>
-					<div class="row m-0">
-						<div class="col-sm-6">
-							<p class="like-count ml-3 mt-4 mb-0 text-muted">
-								{% if post.like_count == 1 %}
-									1 Like
-								{% else %}
-									{{ post.like_count }} Likes
-								{% endif %}
-							</p>
-							{% if user.is_authenticated %}
-								<form id="like-form">
-									{% if user in post.likes.all %}
-										<button href="#" id="like-post" class="btn btn-danger mt-2 ml-n2 mb-0">Unlike Post</button>
-									{% else %}
-										<button href="#" id="like-post" class="btn btn-primary mt-2 mb-0">Like Post</button>
-									{% endif %}
-								</form>
+	
+	<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm max-h-250 position-relative">
+		<div id="{{ post.id }}" data-user="{{ post.author }}" class="post col">
+			<div class="row m-0">
+				<p id="post-content" class="col mb-2 lead truncate">{{ post.content.strip|linebreaksbr }}</p>
+			</div>
+			<div class="row m-0">
+				<div class="col-sm-6">
+					<p class="like-count ml-3 mt-4 mb-0 text-muted">
+						{% if post.like_count == 1 %}
+							1 Like
+						{% else %}
+							{{ post.like_count }} Likes
+						{% endif %}
+					</p>
+					{% if user.is_authenticated %}
+						<form id="like-form">
+							{% if user in post.likes.all %}
+								<button href="#" id="like-post" class="btn btn-danger mt-2 ml-n2 mb-0">Unlike Post</button>
 							{% else %}
-								<a class="btn btn-light mt-2 mb-0" href="{% url 'login' %}?next={{request.path}}">Log in to like this article.</a><br>
+								<button href="#" id="like-post" class="btn btn-primary mt-2 mb-0">Like Post</button>
 							{% endif %}
-						</div>
-						<div class="col-sm-6 text-right">
-							{% if request.user == post.author %}
-								<small id="edit-post" data-post_id="{{ post.id }}"class="text-right"><a href="#{{ post.id }}">Edit Post</a></small>
-							{% endif %}
-							<h4 class="ml-3 font-weight-light text-right">- {{ post.author }}</h4>
-							<div class="row mt-1 ml-0">
-								{% if request.user != post.author %}
-									<span class="col m-0 text-right">
-										<button href="#" class="btn follow btn-primary float-right mb-2"  data-user="{{ post.author }}">
-											{% if not post.author in request.user.following_list.first.followed_users.all %}
-												Follow
-											{% else %}
-												Unfollow
-											{% endif %}
-										</button>
-									</span>
-								{% endif %}
-							</div>
-							<p class="mb-0 text-muted font-weight-light text-right">
-								{% if post.timestamp == post.modified %}
-									Created: {{ post.timestamp }}
-								{% else %}
-									Last changed: {{ post.modified }}
-								{% endif %}
-							</p>
-						</div>
+						</form>
+					{% endif %}
+				</div>
+				<div class="col-sm-6 text-right">
+					{% if request.user == post.author %}
+						<small id="edit-post" data-post_id="{{ post.id }}"class="row mr-3 mb-2 justify-content-end"><a href="#{{ post.id }}">Edit Post</a></small>
+					{% endif %}
+					<button id="profile-button" class="btn btn-light" data-username="{{ post.author }}">
+						<h4 class="font-weight-light">- {{ post.author }}</h4>
+					</button>
+					<div class="row mt-1 ml-0">
+						{% if request.user != post.author %}
+							<span class="col m-0 text-right">
+								<button href="#" class="btn follow btn-primary float-right mb-2"  data-user="{{ post.author }}">
+									{% if not post.author in request.user.following_list.first.followed_users.all %}
+										Follow
+									{% else %}
+										Unfollow
+									{% endif %}
+								</button>
+							</span>
+						{% endif %}
 					</div>
+					<p class="date mb-0 text-muted font-weight-light text-right">
+						{% if post.timestamp == post.modified %}
+							Created: {{ post.timestamp }}
+						{% else %}
+							Last changed: {{ post.modified }}
+						{% endif %}
+					</p>
 				</div>
 			</div>
-		{% endfor %}
-	{% else %}
-		<div class="row no-gutters border rounded overflow-hidden mb-4 p-4 shadow-sm max-h-250 position-relative">
-				<div id="{{ post.id }}" data-user="{{ post.author }}" class="post col">
-					<div class="row m-0">
-						<p id="post-content" class="col mb-2 lead truncate">{{ post.content.strip|linebreaksbr }}</p>
-					</div>
-					<div class="row m-0">
-						<div class="col-sm-6">
-							<p class="like-count ml-3 mt-4 mb-0 text-muted">
-								{% if post.like_count == 1 %}
-									1 Like
-								{% else %}
-									{{ post.like_count }} Likes
-								{% endif %}
-							</p>
-							{% if user.is_authenticated %}
-								<form id="like-form">
-									{% if user in post.likes.all %}
-										<button href="#" id="like-post" class="btn btn-danger mt-2 ml-n2 mb-0">Unlike Post</button>
-									{% else %}
-										<button href="#" id="like-post" class="btn btn-primary mt-2 mb-0">Like Post</button>
-									{% endif %}
-								</form>
-							{% else %}
-								<a class="btn btn-light mt-2 mb-0" href="{% url 'login' %}?next={{request.path}}">Log in to like this article.</a><br>
-							{% endif %}
-						</div>
-						<div class="col-sm-6 text-right">
-							{% if request.user == post.author %}
-								<small id="edit-post" data-post_id="{{ post.id }}"class="text-right"><a href="#{{ post.id }}">Edit Post</a></small>
-							{% endif %}
-							<h4 class="ml-3 font-weight-light text-right">- {{ post.author }}</h4>
-							<div class="row mt-1 ml-0">
-								{% if request.user != post.author %}
-									<span class="col m-0 text-right">
-										<button href="#" class="btn follow btn-primary float-right mb-2"  data-user="{{ post.author }}">
-											{% if not post.author in request.user.following_list.first.followed_users.all %}
-												Follow
-											{% else %}
-												Unfollow
-											{% endif %}
-										</button>
-									</span>
-								{% endif %}
-							</div>
-							<p class="mb-0 text-muted font-weight-light text-right">
-								{% if post.timestamp == post.modified %}
-									Created: {{ post.timestamp }}
-								{% else %}
-									Last changed: {{ post.modified }}
-								{% endif %}
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-	{% endif %}
-
+		</div>
+	</div>
 
 {% endblock posts %}

@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 import json
+from django.utils import timezone
+import datetime
 from django.http import JsonResponse
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.template.response import TemplateResponse
@@ -36,7 +38,10 @@ def profile(request, username):
                 following = FollowingList.objects.get(user=profile).followed_users.all()
         except EmptyResultSet:
             following = []
-
+        except FollowingList.DoesNotExist:
+            newlist = FollowingList.objects.create(user=profile)
+            following = []
+            
         posts = Post.objects.filter(author=profile)
         paginator = Paginator(posts.order_by("-timestamp"), 10)
         page_number = request.GET.get('page')
@@ -87,13 +92,17 @@ def following(request):
         try:
             if FollowingList.objects.get(user=request.user) != []:
                 following = FollowingList.objects.get(user=request.user).followed_users.all()
-                posts = Post.objects.filter(author__in=following).order_by("-timestamp")
-                paginator = Paginator(posts, 3)
-                page_number = request.GET.get('page')
-                page_obj = paginator.get_page(page_number)
-
-                # Return paginated results.
-                return render(request, "network/index.html", {'page_obj': page_obj})
+                if Post.objects.filter(author__in=following).count() > 0:                   
+                    posts = Post.objects.filter(author__in=following).order_by("-timestamp")
+                    paginator = Paginator(posts, 10)
+                    page_number = request.GET.get('page')
+                    page_obj = paginator.get_page(page_number)
+                    # Return paginated results.
+                    return render(request, "network/index.html", {'page_obj': page_obj})
+                else:
+                    return TemplateResponse(request, "network/index.html", {
+                        "error": "No posts to display.",
+                    })
 
         # If no following list exists or no followed users in list exceptions
         except FollowingList.DoesNotExist:
@@ -186,6 +195,7 @@ def UpdatePost(request, post_id):
                     "message": "Post content changed successfully.",
                     "changed": True,
                     "post_id": post.id,
+                    "modified": post.modified.astimezone().strftime("%b %d %Y, %I:%M %p").replace("PM", "p.m.").replace("AM","a.m."),
                 }, status=202)
         else:
             return JsonResponse({
