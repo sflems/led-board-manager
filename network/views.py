@@ -3,8 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 import json
-from django.utils import timezone
-import datetime
 from django.http import JsonResponse
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.template.response import TemplateResponse
@@ -54,29 +52,34 @@ def profile(request, username):
             'following': following,
         })
     
-    if request.method == "PUT":
+    if request.method == "PUT" and request.user.is_authenticated:
         data = json.loads(request.body)
       # Fuctions to be performed on object
         if data.get("follow") is not None:
-            
-        ## TODO: FIX IF ELSE STATMENTS BELOW FOR FOLLOWING USERS
-            newfollow = User.objects.get(username=username)
-            following = FollowingList.objects.get(user=request.user)
-            if following.followed_users.filter(username=username).exists():
-                following.followed_users.remove(newfollow.id)
-                following.save()
-                return JsonResponse({
-                    "message": "User " + username + " unfollowed.",
-                    "followed": False,
-                }, status=202)
+            if request.user.username != username:
+                newfollow = User.objects.get(username=username)
+                following = FollowingList.objects.get(user=request.user)
+                if following.followed_users.filter(username=username).exists():
+                    following.followed_users.remove(newfollow.id)
+                    following.save()
+                    return JsonResponse({
+                        "message": "User " + username + " unfollowed.",
+                        "followed": False,
+                        "follower": request.user.username,
+                    }, status=202)
+                else:
+                    following.followed_users.add(newfollow.id)
+                    following.save()
+                    return JsonResponse({
+                        "message": "User " + username + " followed.",
+                        "followed": True,
+                        "follower": request.user.username,
+                    }, status=202)
             else:
-                following.followed_users.add(newfollow.id)
-                following.save()
                 return JsonResponse({
-                    "message": "User " + username + " followed.",
-                    "followed": True,
-                }, status=202)
-               
+                    "error": "Following self is disallowed. Sorry.",
+                }, status=400)
+                
     # Update must be via PUT
     else:
         return JsonResponse({
@@ -99,6 +102,11 @@ def following(request):
                     page_obj = paginator.get_page(page_number)
                     # Return paginated results.
                     return render(request, "network/index.html", {'page_obj': page_obj})
+                    
+                elif following.count() == 0:
+                    return TemplateResponse(request, "network/index.html", {
+                        "error": "No followed users to show posts for.",
+                    })
                 else:
                     return TemplateResponse(request, "network/index.html", {
                         "error": "No posts to display.",
@@ -108,11 +116,7 @@ def following(request):
         except FollowingList.DoesNotExist:
             return TemplateResponse(request, "network/index.html", {
                 "error": "No followed users to show posts for.",
-            })
-        except FollowingList.EmptyResultSet:
-            return TemplateResponse(request, "network/index.html", {
-                "error": "No followed users to show posts for.",
-            })
+            })          
  
  
 @login_required

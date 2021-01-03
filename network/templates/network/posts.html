@@ -32,7 +32,7 @@
 						<h4 class="font-weight-light">- {{ post.author }}</h4>
 					</button>
 					<div class="row mt-1 ml-0">
-						{% if request.user != post.author %}
+						{% if request.user != post.author and request.user.is_authenticated %}
 							<span class="col m-0 text-right">
 								<button href="#" class="btn follow btn-primary float-right mb-2"  data-user="{{ post.author }}">
 									{% if not post.author in request.user.following_list.first.followed_users.all %}

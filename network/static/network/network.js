@@ -14,22 +14,27 @@ document.addEventListener('DOMContentLoaded', function() {
 		return false;
 	});
 
-	document.querySelector("#followers-btn").addEventListener('click', function() {
-		if (document.querySelector("#profile-followers").style.display == "none") {
-			document.querySelector("#profile-followers").style.display = "block";
-			document.querySelector("#profile-following").style.display = "none";
-		} else {
-			document.querySelector("#profile-followers").style.display = "none";
-		};
-	});
-	document.querySelector("#following-btn").addEventListener('click', function() {
-		if (document.querySelector("#profile-following").style.display == "none") {
-			document.querySelector("#profile-following").style.display = "block";
-			document.querySelector("#profile-followers").style.display = "none";
-		} else {
-			document.querySelector("#profile-following").style.display = "none";
-		};
-	});
+	if (document.querySelector("#followers-btn") != null) {
+		document.querySelector("#followers-btn").addEventListener('click', function() {
+			if (document.querySelector("#profile-followers").style.display == "none") {
+				document.querySelector("#profile-followers").style.display = "block";
+				document.querySelector("#profile-following").style.display = "none";
+			} else {
+				document.querySelector("#profile-followers").style.display = "none";
+			};
+		});
+	};
+	
+	if (document.querySelector("#following-btn") != null) {
+		document.querySelector("#following-btn").addEventListener('click', function() {
+			if (document.querySelector("#profile-following").style.display == "none") {
+				document.querySelector("#profile-following").style.display = "block";
+				document.querySelector("#profile-followers").style.display = "none";
+			} else {
+				document.querySelector("#profile-following").style.display = "none";
+			};
+		});
+	};
 
 	let hide_buttons = document.querySelectorAll('button#hide');
 	hide_buttons.forEach(button => {
@@ -61,10 +66,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		post.querySelector('#profile-button').addEventListener('click', function() {
 		    location.href = '/profile/' + this.dataset.username;
 	    });
-	    post.querySelector('#like-form').onsubmit = () => {
-	    	like_post(`${post.id}`);
-			return false;
-	    };
+		if (post.querySelector('#like-form') != null) {
+			post.querySelector('#like-form').onsubmit = () => {
+				like_post(`${post.id}`);
+				return false;
+			};
+		};
 		if (post.querySelector('small#edit-post') != null) {
 			post.querySelector('small#edit-post').addEventListener('click', function() {
 				edit_post(`${post.id}`);
@@ -263,24 +270,41 @@ function follow_user(username) {
 			buttons.forEach(button => {
 				button.innerHTML = "Follow";
 			});
-			if (document.getElementById('following-btn') != null) {
-				element = document.getElementById('following-btn');
-				count = element.dataset.followingCount--;
-				count--;
-				element.innerHTML = `Following: ${count}`;
+			if (document.getElementById(result.follower.toLowerCase()) != null) {
+				if (document.getElementById('following-btn') != null) {
+					element = document.getElementById('following-btn');
+					count = element.dataset.followingCount--;
+					count--;
+					element.innerHTML = `Following: ${count}`;
+				};
+			} else if (document.getElementById(username.toLowerCase()) != null) {
+				if (document.getElementById('followers-btn') != null) {
+					element = document.getElementById('followers-btn');
+					count = element.dataset.followerCount--;
+					count--;
+					element.innerHTML = `Followers: ${count}`;
+				};
 			};
-
 		//else button = follow
 		} else {
 			buttons.forEach(button => {
 				button.innerHTML = "Unfollow";
 			});
-			if (document.getElementById('following-btn') != null) {
-				element = document.getElementById('following-btn');
-				count = element.dataset.followingCount++;
-				count++;
-				element.innerHTML = `Following: ${count}`;
-			};
+			if (document.getElementById(result.follower.toLowerCase()) != null) {
+				if (document.getElementById('following-btn') != null) {
+					element = document.getElementById('following-btn');
+					count = element.dataset.followingCount++;
+					count++;
+					element.innerHTML = `Following: ${count}`;
+				};
+			} else if (document.getElementById(username.toLowerCase()) != null) {
+				if (document.getElementById('followers-btn') != null) {
+					element = document.getElementById('followers-btn');
+					count = element.dataset.followerCount++;
+					count++;
+					element.innerHTML = `Followers: ${count}`;
+				};
+			}; 
 		};
 	});
 }
