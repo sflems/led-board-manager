@@ -5,6 +5,7 @@ from django.contrib.auth.models import User, AbstractUser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class User(AbstractUser):
@@ -22,7 +23,11 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
+    try:
+        instance.profile.save()
+        
+    except ObjectDoesNotExist:
+        Profile.objects.create(user=instance)
 
 class Location(models.Model):
     city = models.TextField(max_length=300, blank=True)
@@ -84,7 +89,7 @@ class CommentForm(ModelForm):
 
 class FollowingList(models.Model):
     followed_users = models.ManyToManyField(User, blank=True, symmetrical=False, related_name="follower")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following_list")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="following_list")
 
     def __str__(self):
         return f"{self.user}'s Following List"
@@ -92,4 +97,12 @@ class FollowingList(models.Model):
 @receiver(post_save, sender=User)
 def create_user_followinglist(sender, instance, created, **kwargs):
     if created:
+        FollowingList.objects.create(user=instance)
+        
+@receiver(post_save, sender=User)
+def save_user_followinglist(sender, instance, **kwargs):
+    try:
+        instance.following_list.save()
+    
+    except ObjectDoesNotExist:
         FollowingList.objects.create(user=instance)

@@ -15,7 +15,7 @@
 		{% if request.user != profile %}
 			<div class="row m-0 justify-content-center">
 					<button href="#" class="btn follow btn-primary btn-sm mt-n1"  data-user="{{ profile.username }}">
-						{% if not profile in request.user.following_list.first.followed_users.all %}
+						{% if not profile in request.user.following_list.followed_users.all %}
 							Follow
 						{% else %}
 							Unfollow
@@ -36,7 +36,7 @@
 				<div class="col-2">
 					{% if request.user != follower.user %}
 						<button href="#" class="btn follow btn-primary btn-sm float-right ml-4 mt-n1"  data-user="{{ follower.user.username }}">
-							{% if not follower.user in request.user.following_list.first.followed_users.all %}
+							{% if not follower.user in request.user.following_list.followed_users.all %}
 								Follow
 							{% else %}
 								Unfollow
@@ -59,7 +59,7 @@
 				<div class="col-2">
 					{% if request.user != followee %}
 						<button href="#" class="btn follow btn-primary btn-sm float-right ml-4 mt-n1"  data-user="{{ followee.username }}">
-							{% if not followee in request.user.following_list.first.followed_users.all %}
+							{% if not followee in request.user.following_list.followed_users.all %}
 								Follow
 							{% else %}
 								Unfollow
