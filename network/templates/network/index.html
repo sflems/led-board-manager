@@ -4,6 +4,11 @@
 
 {% block body %}
 	<div id="message">{{ message }}</div>
+	
+	<div class="row mr-1 mt-n1 mb-2 justify-content-center">
+		<small class="pr-1">THE</small><h2>Network</h2>
+	</div>   
+	
 	{% if error %}
 		<div class="alert alert-danger alert-dismissible fade show">
 			<strong>Heads up!</strong> {{ error }}
