@@ -1,0 +1,58 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}LED Scoreboard Configurator{% endblock %}</title>
+		
+		<link href="{% static 'scoreboard/styles.css' %}" rel="stylesheet">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+	
+    </head>
+    <body>
+	
+	{% load bootstrap4 %}
+
+	{# Load CSS and JavaScript #}
+	{% bootstrap_css %}
+	{% bootstrap_javascript jquery='full' %}
+	
+	{# Display django.contrib.messages as Bootstrap alerts #}
+	{% bootstrap_messages %}
+
+		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+			<a class="navbar-brand" style="color:rgba(255,255,255,.5)" href="{% url 'index' %}"><strong>LED Scoreboard Configurator</strong></a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="collapsibleNavbar">		
+				<ul class="navbar-nav">
+					
+				</ul>
+			</div>
+			<div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+				<ul class="navbar-nav">
+					{% if user.is_authenticated %}
+						<button class="btn btn-sm btn-dark" onclick="location.href='{% url 'logout' %}';">Log Out</button>
+					{% else %}
+						<button class="btn btn-sm btn-dark" onclick="location.href='{% url 'login' %}';">Log In</button>
+						<button class="btn btn-sm btn-dark" onclick="location.href='{% url 'register' %}';">Register</button>
+					{% endif %}
+				</ul>
+			</div>
+		</nav>
+		<br><br>
+        
+        <div class="body container">
+            {% block body %}
+            {% endblock %}
+        </div>
+		
+		{% bootstrap_javascript jquery='full' %}
+		{% block script %}
+			<script src="{% static 'scoreboard/scoreboard.js' %}"></script>
+		{% endblock %}
+    </body>
+</html>
