@@ -28,3 +28,5 @@ def save_user_profile(sender, instance, **kwargs):
         
     except ObjectDoesNotExist:
         Profile.objects.create(user=instance)
+
+# TODO: Implement models for Teams, Stats, etc. (Fixtures - import from JSON with manage.py loaddata)
