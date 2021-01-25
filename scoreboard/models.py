@@ -32,7 +32,7 @@ def save_user_profile(sender, instance, **kwargs):
         Profile.objects.create(user=instance)
 
 # Fixtures - import from JSON with manage.py loaddata
-class Team(models.Model):
+class Team(models.Model):      
     name = models.CharField(max_length=32, unique=True)
     abbreviation = models.CharField(max_length=3, unique=True, null=True)
     teamName = models.CharField(max_length=32, null=True)
@@ -57,14 +57,26 @@ class Settings(models.Model):
     def conf_default():
         with open("./scoreboard/fixtures/config.json.sample", "r") as f:
             return json.load(f)
-            
+
+    # Model Attributes  
     name = models.CharField(_("Config Name"), default="Default", max_length=32, blank=True)
-    config = models.JSONField(default=conf_default)
+    configJSON = models.JSONField(default=conf_default())
     isActive = models.BooleanField(_("Active"),default=1)
+
+    conf_default = conf_default()
+
+    debug = models.BooleanField(default=conf_default["debug"], null=False, blank=False)
+    loglevel = models.CharField(default=conf_default["loglevel"], max_length=16, blank=False)
+    live_mode = models.BooleanField(default=conf_default["live_mode"], null=False, blank=False)
+    preferences = models.JSONField(default=conf_default["preferences"], null=False)
+    states = models.JSONField(default=conf_default["states"], null=False)
+    boards = models.JSONField(default=conf_default["boards"], null=False)
+    sbio = models.JSONField(default=conf_default["sbio"], null=False)
   
     class Meta:
         verbose_name = _("Settings")
         verbose_name_plural = _("Settings")
+        db_table = 'settings'
         
     def __str__(self):
         return self.name + " Profile"
