@@ -29,22 +29,4 @@ def save_user_profile(sender, instance, **kwargs):
     except ObjectDoesNotExist:
         Profile.objects.create(user=instance)
 
-# TO DO: Implement models for Teams, Stats, etc. 
-# Fixtures - import from JSON with manage.py loaddata
-class Team(models.Model):
-    name = models.CharField(max_length=32, unique=True)
-    abbreviation = models.CharField(max_length=3, unique=True, null=True)
-    teamName = models.CharField(max_length=32, null=True)
-    locationName = models.CharField(max_length=32, null=True)
-    jsonLink = models.URLField(null=True)
-    officialSiteUrl = models.URLField(null=True)
-
-    class Meta:
-        verbose_name = _("Team")
-        verbose_name_plural = _("Teams")
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse("Team_detail", kwargs={"pk": self.pk})
+# TODO: Implement models for Teams, Stats, etc. (Fixtures - import from JSON with manage.py loaddata)
