@@ -51,20 +51,23 @@ class Team(models.Model):
         return reverse("Team_detail", kwargs={"pk": self.pk})
 
 
-# TO DO: Implement settings form to change settings and update active profile.
+# TO DO: Implement settings form to change settings without having to format as raw JSON, ie. make it easy with choices, selections, etc.
 class Settings(models.Model):
     # Opens default config and loads into Settings Profile
+    # TODO: Update default config location to use FileSystemStorage(see Django docs) to load the actual nhl-led-scoreboard install directory config file.
+    
+
+    # Model Attributes  
+    name = models.CharField(_("Config Name"), default="Default", max_length=32, blank=True)
+    configJSON = models.JSONField(conf_default())
+    isActive = models.BooleanField(_("Active"),default=1)
+
     def conf_default():
         with open("./scoreboard/fixtures/config.json.sample", "r") as f:
             return json.load(f)
 
-    # Model Attributes  
-    name = models.CharField(_("Config Name"), default="Default", max_length=32, blank=True)
-    configJSON = models.JSONField(default=conf_default())
-    isActive = models.BooleanField(_("Active"),default=1)
-
-    conf_default = conf_default()
-
+    # These attributes are generated from the current config schema at build timezone
+    # TODO: Implement a method to create these automatically, or on config schema update
     debug = models.BooleanField(default=conf_default["debug"], null=False, blank=False)
     loglevel = models.CharField(default=conf_default["loglevel"], max_length=16, blank=False)
     live_mode = models.BooleanField(default=conf_default["live_mode"], null=False, blank=False)
