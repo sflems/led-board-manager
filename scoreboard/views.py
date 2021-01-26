@@ -9,12 +9,13 @@ import json
 
 # Create your views here.
 def index(request):
-    return render(request, "scoreboard/index.html", {"form":form,})
+    return render(request, "scoreboard/index.html",)
 
-def settings_panel(request):
-    # Settings Form is instantiated in forms.py
-    form = SettingsForm()
-    return render(request, "scoreboard/index.html", {"form":form,})
+def settings_view(request):
+    if request.method == "GET":
+        # Settings Form is instantiated in forms.py
+        form = SettingsForm()
+        return render(request, "scoreboard/settings.html", {"form":form,})
 
 def login_view(request):
     if request.method == "POST":

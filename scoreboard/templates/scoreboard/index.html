@@ -30,17 +30,4 @@
                     </div>
 		</div>
 	</div>
-
-	<div class="page-nav row m-2 p-2 justify-content-center">
-		<form action="" method="get">
-			{% csrf_token %}
-			{{ form.media }}
-			{{ form }}
-			<input type="submit" value="Submit">
-		</form>
-	</div>
-
-	 <div class="page-nav row m-2 p-2 justify-content-center">
-		<a href="#">Back to Top</a>
-	</div>
 {% endblock body %}
