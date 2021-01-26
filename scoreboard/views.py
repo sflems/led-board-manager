@@ -9,8 +9,10 @@ import json
 
 # Create your views here.
 def index(request):
-    conf = Settings.objects.get(pk=1)
-    # TO DO: Instantiate form (below) with current config (above)
+    return render(request, "scoreboard/index.html", {"form":form,})
+
+def settings_panel(request):
+    # Settings Form is instantiated in forms.py
     form = SettingsForm()
     return render(request, "scoreboard/index.html", {"form":form,})
 

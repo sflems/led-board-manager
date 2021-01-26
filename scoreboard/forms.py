@@ -1,20 +1,26 @@
 from django.forms import ModelForm, Form
 from django_jsonforms.forms import JSONSchemaField
+from .models import Settings
 import json
 
 # TO DO: Document usage of django-jsonforms
 
+# Defines config schema used by the current led-scoreboard version
 def schema():
     with open("./scoreboard/static/schema/config.schema.json", "r") as f:
         conf = json.load(f)
         return conf
-
 schema = schema()
+
+# Gets the active config to later instantiate SettingsForm
+current_conf = Settings.objects.filter(isActive=1).first().config
 
 class SettingsForm(Form):
     json = JSONSchemaField(
         schema = schema,
         options = {
+            # startval takes in current settings as long as they are schema valid
+            "startval": current_conf, 
             "theme": "bootstrap4",
             "iconlib": "none",
             "object_layout": "grid",
@@ -54,5 +60,5 @@ class SettingsForm(Form):
             "lib_jquery": 1,
             "lib_dompurify": 0
         },
-        ajax = False
+        ajax = True
     )
