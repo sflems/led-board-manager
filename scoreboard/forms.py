@@ -5,7 +5,7 @@ import json
 
 # TO DO: Document usage of django-jsonforms
 
-# Defines config schema used by the current led-scoreboard version
+# Defines config schema used by the current led-scoreboard version. File is opened, converted from binery to a python/django object and then used as a callable object.
 def schema():
     with open("./scoreboard/static/schema/config.schema.json", "r") as f:
         conf = json.load(f)
@@ -15,11 +15,16 @@ schema = schema()
 # Gets the active config to later instantiate SettingsForm
 current_conf = Settings.objects.filter(isActive=1).first().config
 
+# This is the django-jsonforms implementation for the scoreboard config. It generates a form based on the current schema config and populates with with the active config.
 class SettingsForm(Form):
     json = JSONSchemaField(
+
+        # Default config schema to be used
         schema = schema,
+
+        # Options for JSON created settings form.
+        # startval takes in current settings as long as they are schema valid. Others modify which JSON editing options are visible to users, themes, etc.
         options = {
-            # startval takes in current settings as long as they are schema valid
             "startval": current_conf, 
             "theme": "bootstrap4",
             "iconlib": "none",
@@ -45,20 +50,9 @@ class SettingsForm(Form):
             "disable_array_delete_all_rows": 0,
             "disable_array_delete_last_row": 0,
             "prompt_before_delete": 1,
-            "lib_aceeditor": 0,
-            "lib_autocomplete": 0,
-            "lib_sceditor": 0,
-            "lib_simplemde": 0,
-            "lib_select2": 0,
-            "lib_selectize": 0,
-            "lib_choices": 0,
-            "lib_flatpickr": 0,
-            "lib_signaturepad": 0,
-            "lib_mathjs": 0,
-            "lib_cleavejs": 0,
-            "lib_jodit": 0,
             "lib_jquery": 1,
-            "lib_dompurify": 0
         },
+
+        # TO DO! Define me.
         ajax = True
     )

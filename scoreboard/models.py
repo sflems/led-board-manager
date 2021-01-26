@@ -49,8 +49,9 @@ class Team(models.Model):
         return reverse("Team_detail", kwargs={"pk": self.pk})
 
 
-# TO DO: Implement settings form to change settings without having to format as raw JSON, ie. make it easy with choices, selections, etc.
+# TO DO: Implement saving of updated config data, and save it in a location used by the led-scoreboard. Is a reboot necessary?
 class Settings(models.Model):
+
     # Opens default config and loads into Settings Profile
     # TO DO: Update default config location to use FileSystemStorage(see Django docs) to load the actual nhl-led-scoreboard install directory config file.
     def conf_default():
@@ -58,7 +59,8 @@ class Settings(models.Model):
             conf = json.load(f)
             return conf
 
-    # Model Attributes  
+    # Model Attributes
+    # TO DO: Allow only ONE active profile.  
     name = models.CharField(_("Config Name"), default="Default", max_length=32, blank=True)
     config = models.JSONField(default=conf_default)
     isActive = models.BooleanField(_("Active"),default=1)

@@ -4,7 +4,8 @@ from .forms import SettingsForm
 
 # TO DO: Change default admin form to JSONForm
 class SettingsAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'name',)
+    list_display_links = ('id', 'name',)
 
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('id', 'teamName', 'abbreviation',)
