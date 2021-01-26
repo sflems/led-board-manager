@@ -10,6 +10,7 @@ import json
 # Create your views here.
 def index(request):
     conf = Settings.objects.get(pk=1)
+    # TO DO: Instantiate form (below) with current config (above)
     form = SettingsForm()
     return render(request, "scoreboard/index.html", {"form":form,})
 

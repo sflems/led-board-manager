@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import Settings, Team, User
+from .forms import SettingsForm
 
+# TO DO: Change default admin form to JSONForm
 class SettingsAdmin(admin.ModelAdmin):
     pass
 
