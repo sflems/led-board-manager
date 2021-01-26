@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
-from django.forms import ModelForm, Form
-from django_jsonforms.forms import JSONSchemaField
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -57,24 +55,13 @@ class Settings(models.Model):
     # TO DO: Update default config location to use FileSystemStorage(see Django docs) to load the actual nhl-led-scoreboard install directory config file.
     def conf_default():
         with open("./scoreboard/fixtures/config.json.sample", "r") as f:
-            return json.load(f)
+            conf = json.load(f)
+            return conf
 
     # Model Attributes  
     name = models.CharField(_("Config Name"), default="Default", max_length=32, blank=True)
-    configJSON = models.JSONField(default=conf_default())
+    config = models.JSONField(default=conf_default)
     isActive = models.BooleanField(_("Active"),default=1)
-
-    conf_default = conf_default()
-
-    # These attributes are generated from the current config schema at build timezone
-    # TO DO: Implement a method to create these automatically, or on config schema update
-    debug = models.BooleanField(default=conf_default["debug"], null=False, blank=False)
-    loglevel = models.CharField(default=conf_default["loglevel"], max_length=16, blank=False)
-    live_mode = models.BooleanField(default=conf_default["live_mode"], null=False, blank=False)
-    preferences = models.JSONField(default=conf_default["preferences"], null=False)
-    states = models.JSONField(default=conf_default["states"], null=False)
-    boards = models.JSONField(default=conf_default["boards"], null=False)
-    sbio = models.JSONField(default=conf_default["sbio"], null=False)
   
     class Meta:
         verbose_name = _("Settings")
