@@ -1,8 +1,15 @@
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
+
 from .forms import *
+from .models import *
+import json
 
 # Create your views here.
 def index(request):
+    conf = Settings.objects.get(pk=1)
     form = SettingsForm()
     return render(request, "scoreboard/index.html", {"form":form,})
 
