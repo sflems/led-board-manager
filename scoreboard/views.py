@@ -1,8 +1,10 @@
 from django.shortcuts import render
+from .forms import *
 
 # Create your views here.
 def index(request):
-    return render(request, "scoreboard/index.html")
+    form = SettingsForm()
+    return render(request, "scoreboard/index.html", {"form":form,})
 
 def login_view(request):
     if request.method == "POST":
