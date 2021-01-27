@@ -25,15 +25,15 @@ class SettingsForm(Form):
         # Options for JSON created settings form.
         # startval takes in current settings as long as they are schema valid. Others modify which JSON editing options are visible to users, themes, etc.
         options = {
+            "collapsed": 1,
             "startval": current_conf, 
             "theme": "bootstrap4",
-            "iconlib": "none",
             "object_layout": "grid",
             "template": "default",
             "show_errors": "interaction",
             "required_by_default": 0,
             "no_additional_properties": 1,
-            "display_required_only": 0,
+            "display_required_only": 1,
             "remove_empty_properties": 0,
             "keep_oneof_values": 0,
             "ajax": 1,
@@ -51,7 +51,6 @@ class SettingsForm(Form):
             "disable_array_delete_last_row": 0,
             "prompt_before_delete": 1,
             "lib_jquery": 1,
-            "collapsed": 1
         },
 
         # TO DO! Define me.

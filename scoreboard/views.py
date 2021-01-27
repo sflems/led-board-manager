@@ -13,11 +13,20 @@ def index(request):
     games = todays_games()
     return render(request, "scoreboard/index.html", {"games":games,})
 
+@login_required
 def settings_view(request):
     if request.method == "GET":
         # Settings Form is instantiated in forms.py
         form = SettingsForm()
         return render(request, "scoreboard/settings.html", {"form":form,})
+        
+    if request.method == "POST":
+        new_config = request.POST
+        new_settings = Settings.objects.create(config=new_config['json'])
+        ## TODO: STOP CONFIG FROM SAVING AS AN \ ESCAPED STRING!
+        new_settings.save()
+        return render(request, "scoreboard/index.html", { "error": new_settings.config, })
+            
 
 def login_view(request):
     if request.method == "POST":
