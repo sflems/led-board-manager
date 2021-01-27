@@ -51,6 +51,7 @@ class SettingsForm(Form):
             "disable_array_delete_last_row": 0,
             "prompt_before_delete": 1,
             "lib_jquery": 1,
+            "collapsed": 1
         },
 
         # TO DO! Define me.
