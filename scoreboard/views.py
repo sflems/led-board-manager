@@ -1,7 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.http import HttpResponse, HttpResponseRedirect
+
 
 from .forms import *
 from .models import *
@@ -21,11 +25,21 @@ def settings_view(request):
         return render(request, "scoreboard/settings.html", {"form":form,})
         
     if request.method == "POST":
-        new_config = request.POST
-        new_settings = Settings.objects.create(config=new_config['json'])
-        ## TODO: STOP CONFIG FROM SAVING AS AN \ ESCAPED STRING!
-        new_settings.save()
-        return render(request, "scoreboard/index.html", { "error": new_settings.config, })
+        
+        #TO DO: Expand on form validation
+        try:
+            # The request data must be encoded and the decoded due to a BOM error. Without this the form submissions are saved as slash escaped strings... but why? (Needs expert opinon.)
+            new_config = request.POST['json'].encode().decode('utf-8-sig')
+            new_settings = Settings.objects.create(config=json.loads(new_config))
+            new_settings.save()
+            
+            # From django docs:
+            # Return an HttpResponseRedirect to prevent data from being posted twice if a user hits the Back button.
+            messages.success(request, "Your data has been saved!")
+            return HttpResponseRedirect(reverse('index'))
+        
+        except:
+            return render(request, "scoreboard/settings.html", { "error": "Form submission error.", "form":SettingsForm() })
             
 
 def login_view(request):

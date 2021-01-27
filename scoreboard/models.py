@@ -59,8 +59,7 @@ class Settings(models.Model):
             conf = json.load(f)
             return conf
 
-    # Model Attributes
-    # TO DO: Allow only ONE active profile.  
+    # Model Attributes 
     name = models.CharField(_("Config Name"), default="Default", max_length=32, blank=True)
     config = models.JSONField(default=conf_default)
     isActive = models.BooleanField(_("Active"),default=1)
@@ -72,3 +71,5 @@ class Settings(models.Model):
         
     def __str__(self):
         return self.name + " Profile"
+
+    # TO DO: Define the save method to allow only one active profile.
