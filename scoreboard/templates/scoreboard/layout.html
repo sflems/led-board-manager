@@ -7,8 +7,6 @@
 		
 		<link href="{% static 'scoreboard/styles.css' %}" rel="stylesheet">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		
-		<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
 	
     </head>
     <body>
@@ -29,7 +27,9 @@
 			</button>
 			<div class="collapse navbar-collapse" id="collapsibleNavbar">		
 				<ul class="navbar-nav">
-					
+					{% if user.is_authenticated %}
+						<button class="btn btn-sm btn-dark" id="settings">Settings</button>
+					{% endif %}
 				</ul>
 			</div>
 			<div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">

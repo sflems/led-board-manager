@@ -15,19 +15,24 @@
 
     <div id="message">{{ message }}</div>
 
-	<div class="page-nav row m-2 p-2 justify-content-center">
-		<div id="daily-schedule" class="col" style="display:none;">
-			<div id="games-list" class="row justify-content-center">
-                        <div class="col-3 text-center">
-                            <h4>Game Time</h4>
-                        </div>                    
-                        <div class="col-6 text-center">
-                            <h4>Teams</h4>
-                        </div>
-                        <div id="status" class="col-3 text-center">
-                            <h4>Status</h4>
-                        </div>
+    <h4 class="row m-2 p-2 justify-content-center">Today's Lineup</h4>
+	<div id="games-list" class="row m-2 p-2 justify-content-center">
+        <div class="col">
+            {% for game in games %}
+                <div id="{{ game.gamePk }}" class="row justify-content-center mb-2">
+                    <div class="teams col-sm-6 text-center">
+                        <p class="mb-0"><strong>{{ game.teams.away.team.name }} @ {{ game.teams.home.team.name }}</strong></p>                            
+                        <span></span><span>{{ game.teams.away.score }}</span><span class="ml-3 mr-3">-</span><span>{{ game.teams.home.score }}</span>    
                     </div>
-		</div>
+                    <div class="game-time col-sm-3 text-center">
+                        <p class="mt-2" data-datetime="{{ game.gameDate }}"></p>
+                    </div>
+                </div>
+            {% empty %}
+                <div id="no-games" class="row justify-content-center mb-2">
+                    <p>No games scheduled for today.</p>            
+                </div>
+            {% endfor %}
+        </div>
 	</div>
 {% endblock body %}

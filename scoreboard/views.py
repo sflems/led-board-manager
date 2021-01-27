@@ -5,11 +5,13 @@ from django.shortcuts import render
 
 from .forms import *
 from .models import *
+from .services import *
 import json
 
 # Create your views here.
 def index(request):
-    return render(request, "scoreboard/index.html",)
+    games = todays_games()
+    return render(request, "scoreboard/index.html", {"games":games,})
 
 def settings_view(request):
     if request.method == "GET":
