@@ -28,7 +28,9 @@ def settings_view(request):
         
         #TO DO: Expand on form validation
         try:
-            # The request data must be encoded and the decoded due to a BOM error. Without this the form submissions are saved as slash escaped strings... but why? (Needs expert opinon.)
+            ''' 
+                The request data must be encoded and the decoded again as below due to a BOM error. Without this the form submissions are saved as slash escaped strings... but why? Possibly due to jsonforms JSON serialization method. (Needs expert opinon.)
+            '''
             new_config = request.POST['json'].encode().decode('utf-8-sig')
             new_settings = Settings.objects.create(config=json.loads(new_config))
             new_settings.save()
