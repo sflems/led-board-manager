@@ -35,8 +35,10 @@ def settings_view(request):
             new_settings = Settings.objects.create(config=json.loads(new_config))
             new_settings.save()
             
-            # From django docs:
-            # Return an HttpResponseRedirect to prevent data from being posted twice if a user hits the Back button.
+            '''
+                From django docs:
+                Return an HttpResponseRedirect to prevent data from being posted twice if a user hits the Back button.
+            ''' 
             messages.success(request, "Your data has been saved!")
             return HttpResponseRedirect(reverse('index'))
         
