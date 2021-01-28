@@ -1,0 +1,22 @@
+
+"""""""""""""""""""""""""""""""""""""
+-------------------------------------
+ nhl-led-scoreboard-WebGUI To Do List
+-------------------------------------
+
+--------
+ TODO's:
+--------
+
+
+ Backend
+---------
+ TODO: Define Settings Model post_save method to save config to new location. (Make a backup too?)
+ TODO: Perform checks for Settings.isActive
+ TODO: Admin JSON form for settings or just default raw editor?
+
+ CSS/JS
+---------
+
+ TODO: Beautify Boxscores (Index Page)
+ TODO: Beautify Settings Form
