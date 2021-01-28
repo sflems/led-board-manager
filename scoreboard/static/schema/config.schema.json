@@ -33,7 +33,18 @@
             "description": "Level of logs to show in output.  Can be DEBUG, INFO, WARN, ERROR, CRITICAL  DEBUG is same as setting debug to true ",
             "default": "INFO",
             "examples": [
-                "INFO"
+                "DEBUG", 
+                "INFO", 
+                "WARN", 
+                "ERROR", 
+                "CRITICAL"
+            ],
+            "enum": [
+                "DEBUG", 
+                "INFO", 
+                "WARN", 
+                "ERROR", 
+                "CRITICAL"
             ]
         },
         "live_mode": {
@@ -87,12 +98,16 @@
                     "description": "The format in which the game start time will be displayed.",
                     "default": "12h",
                     "examples": [
-                        "12h"
+                        "12h", "24h"
+                    ],
+                    "enum": [
+                        "12h", "24h"
                     ]
                 },
                 "end_of_day": {
                     "$id": "#/properties/preferences/properties/end_of_day",
                     "type": "string",
+                    "pattern": "([01]?[0-9]|2[0-3]):[0-5][0-9]",
                     "title": "end_of_day",
                     "description": "A 24-hour time you wish to consider the end of the previous day before starting to display the current day's games.",
                     "default": "12:00",
@@ -107,7 +122,7 @@
                     "description": "Overrides latitude and longitude lookup by IP address.  Used by dimmer and weather",
                     "default": "",
                     "examples": [
-                        "Winnipeg, MB"
+                        "City,State/Province", "Winnipeg, MB", "49.8844,-97.147"
                     ]
                 },
                 "live_game_refresh_rate": {
@@ -127,12 +142,10 @@
                     "description": "List of preferred teams. First one in the list is considered the favorite. If left empty, the scoreboard will be in offday mode",
                     "default": [],
                     "examples": [
-                        [
                             "Jets",
                             "Canadiens",
                             "Oilers"
-                        ]
-                    ],
+                        ],
                     "additionalItems": true,
                     "items": {
                         "$id": "#/properties/preferences/properties/teams/items",
@@ -144,6 +157,39 @@
                             "Jets",
                             "Canadiens",
                             "Oilers"
+                        ],
+                        "enum": [
+                            "Ducks",
+                            "Coyotes",
+                            "Bruins",
+                            "Sabres",
+                            "Flames",
+                            "Hurricanes",
+                            "Blackhawks",
+                            "Avalanche",
+                            "Blue Jackets",
+                            "Stars",
+                            "Red Wings",
+                            "Oilers",
+                            "Panthers",
+                            "Kings",
+                            "Wild",
+                            "Canadiens",
+                            "Predators",
+                            "Devils",
+                            "Islanders",
+                            "Rangers",
+                            "Senators",
+                            "Flyers",
+                            "Penguins",
+                            "Sharks",
+                            "Blues",
+                            "Lightning",
+                            "Maple Leafs",
+                            "Canucks",
+                            "Golden Knights",
+                            "Capitals",
+                            "Jets"
                         ]
                     }
                 },
@@ -243,6 +289,13 @@
                         "examples": [
                             "clock",
                             "wxweather"
+                        ],
+                        "enum": [
+                            "scoreticker",
+                            "standings",
+                            "clock",
+                            "covid19",
+                            "weather"
                         ]
                     }
                 },
@@ -270,6 +323,13 @@
                             "team_summary",
                             "standings",
                             "scoreticker"
+                        ],
+                        "enum": [
+                            "scoreticker",
+                            "standings",
+                            "clock",
+                            "covid19",
+                            "weather"
                         ]
                     }
                 },
@@ -293,6 +353,13 @@
                         "default": "",
                         "examples": [
                             "clock"
+                        ],
+                        "enum": [
+                            "scoreticker",
+                            "standings",
+                            "clock",
+                            "covid19",
+                            "weather"
                         ]
                     }
                 },
@@ -316,6 +383,13 @@
                         "default": "",
                         "examples": [
                             "scoreticker"
+                        ],
+                        "enum": [
+                            "scoreticker",
+                            "standings",
+                            "clock",
+                            "covid19",
+                            "weather"
                         ]
                     }
                 }
@@ -489,6 +563,11 @@
                             "default": "conference",
                             "examples": [
                                 "wild_card"
+                            ],
+                            "enum": [
+                                "conference",
+                                "division",
+                                "wild_card"                                
                             ]
                         },
                         "divisions": {
@@ -499,6 +578,12 @@
                             "default": "",
                             "examples": [
                                 "central"
+                            ],
+                            "enum": [
+                                "central",
+                                "pacific", 
+                                "atlanic", 
+                                "metropolitan"
                             ]
                         },
                         "conference": {
@@ -509,6 +594,10 @@
                             "default": "",
                             "examples": [
                                 "eastern"
+                            ],
+                            "enum": [
+                                "eastern",
+                                "western"
                             ]
                         }
                     }
@@ -932,7 +1021,7 @@
                         "description": "What data feed is provide alert data.  EC for Environment Canada or NWS for the National Weather Service in the US",
                         "default": "",
                         "examples": [
-                            "EC"
+                            "EC", "NWS"
                         ]
                     },
                     "update_freq": {
@@ -1109,6 +1198,7 @@
                         "start": {
                             "$id": "#/properties/sbio/properties/screensaver/properties/start",
                             "type": "string",
+                            "pattern": "([01]?[0-9]|2[0-3]):[0-5][0-9]",
                             "title": "start",
                             "description": "Time to start screensaver at (12h or 24h)",
                             "default": "",
@@ -1119,6 +1209,7 @@
                         "end": {
                             "$id": "#/properties/sbio/properties/screensaver/properties/end",
                             "type": "string",
+                            "pattern": "([01]?[0-9]|2[0-3]):[0-5][0-9]",
                             "title": "end",
                             "description": "Time to end screensaver at (12h or 24h)",
                             "default": "",
@@ -1219,7 +1310,12 @@
                             "description": "Hardware (adafruit TSL2591 light sensor) or software (based on your IP address)",
                             "default": "",
                             "examples": [
-                                "software"
+                                "software", 
+                                "hardware"
+                            ],
+                            "enum": [
+                                "software", 
+                                "hardware"
                             ]
                         },
                         "frequency": {
@@ -1250,6 +1346,10 @@
                             "default": "always",
                             "examples": [
                                 "always"
+                            ],
+                            "enum": [
+                                "always",
+                                "offday"
                             ]
                         },
                         "daytime": {
@@ -1441,6 +1541,7 @@
                             "examples": [
                                 "wxweather"
                             ]
+                            
                         },
                         "state_triggered1_process": {
                             "$id": "#/properties/sbio/properties/pushbutton/properties/state_triggered1_process",
