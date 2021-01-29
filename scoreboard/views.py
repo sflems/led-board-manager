@@ -20,9 +20,13 @@ def index(request):
 @login_required
 def settings_view(request):
     if request.method == "GET":
-        # Settings Form is instantiated in forms.py
-        form = SettingsForm()
-        return render(request, "scoreboard/settings.html", {"form":form,})
+        # Settings Forms are instantiated in forms.py
+        detailform = SettingsDetailForm()
+        JSONform = SettingsJSONForm()
+        return render(request, "scoreboard/settings.html", {
+            "JSONform":JSONform, 
+            "detailform":detailform,
+        })
         
     if request.method == "POST":
         

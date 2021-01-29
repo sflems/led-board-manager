@@ -1,10 +1,10 @@
 from django.contrib import admin
 from .models import Settings, Team, User
-from .forms import SettingsForm
+from .forms import SettingsDetailForm, SettingsJSONForm
 
 # TO DO: Change default admin form to JSONForm
 class SettingsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name',)
+    list_display = ('id', 'name', 'isActive')
     list_display_links = ('id', 'name',)
 
 class TeamAdmin(admin.ModelAdmin):

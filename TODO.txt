@@ -20,3 +20,10 @@
 
  TODO: Beautify Boxscores (Index Page)
  TODO: Beautify Settings Form
+
+
+ Misc.
+-------
+
+TODO: weather/wxalert schema fixes!!!
+TODO: On invalid settings forms, return form with entered data and display error.
