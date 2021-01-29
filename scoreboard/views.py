@@ -41,19 +41,37 @@ def settings_view(request):
                 name = detailform.cleaned_data['name']
                 isActive = detailform.cleaned_data['isActive']
                 new_config = request.POST['json'].encode().decode('utf-8-sig')
+
                 new_settings = Settings.objects.create(name=name, isActive=isActive, config=json.loads(new_config))
-                new_settings.save()
                 
+
                 '''
                     From django docs:
                     Return an HttpResponseRedirect to prevent data from being posted twice if a user hits the Back button.
                 ''' 
-                messages.success(request, "Your data has been saved!")
-                return HttpResponseRedirect(reverse('index'))
+                if new_settings.isActive.exists():
+                    
+                    if Settings.objects.filter(isActive=True):
+                        active_profiles = Settings.objects.filter(isActive=True).exclude(name=new_settings.name)
+                        for profile in active_profiles:
+                            profile.isActive = False
+                            profile.save()
+
+                    '''
+                    Insert filesystem saving logic (and scoreboard restart logic?) here.
+                    '''
+                    new_settings.save()
+                    messages.success(request, "Your profile has been saved and set as the active profile.")
+                    return HttpResponseRedirect(reverse('index'))
+                   
+                else:
+                    new_settings.save()
+                    messages.success(request, "Your profile has been saved.")
+                    return HttpResponseRedirect(reverse('index'))
             
             except:
-                return render(request, "scoreboard/settings.html", { "error": "Form submission error.", "form":SettingsForm() })
-            
+                return render(request, "scoreboard/settings.html", { "error": "Form submission error.", "jsonform":SettingsJSONForm(request.POST), "detailform":SettingsDetailForm(request.POST) })
+                
 
 def login_view(request):
     if request.method == "POST":
