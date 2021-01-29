@@ -55,12 +55,12 @@ class Settings(models.Model):
     # Opens default config and loads into Settings Profile
     # TO DO: Update default config location to use FileSystemStorage(see Django docs) to load the actual nhl-led-scoreboard install directory config file.
     def conf_default():
-        with open("./scoreboard/fixtures/config.json.sample", "r") as f:
+        with open("/home/flem/nhl-led-scoreboard/config/config.json.sample", "r") as f:
             conf = json.load(f)
             return conf
 
     # Model Attributes 
-    name = models.CharField(_("Config Name"), default="Default", max_length=32, blank=True)
+    name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32, blank=True, unique=True)
     config = models.JSONField(default=conf_default)
     isActive = models.BooleanField(_("Active"),default=1)
   
@@ -71,3 +71,5 @@ class Settings(models.Model):
         
     def __str__(self):
         return self.name + " Profile"
+
+    # TO DO: Define the save method to allow only one active profile here. Does this propagate everywhere?
