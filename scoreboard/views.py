@@ -49,7 +49,7 @@ def settings_view(request):
                     From django docs:
                     Return an HttpResponseRedirect to prevent data from being posted twice if a user hits the Back button.
                 ''' 
-                if new_settings.isActive.exists():
+                if new_settings.isActive:
                     
                     if Settings.objects.filter(isActive=True):
                         active_profiles = Settings.objects.filter(isActive=True).exclude(name=new_settings.name)
@@ -60,6 +60,7 @@ def settings_view(request):
                     '''
                     Insert filesystem saving logic (and scoreboard restart logic?) here.
                     '''
+                    
                     new_settings.save()
                     messages.success(request, "Your profile has been saved and set as the active profile.")
                     return HttpResponseRedirect(reverse('index'))

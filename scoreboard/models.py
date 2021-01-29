@@ -1,10 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 from django.utils import timezone
-from django.db.models.signals import post_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import *
 import json
 
 # Default User Class
@@ -71,5 +71,3 @@ class Settings(models.Model):
         
     def __str__(self):
         return self.name + " Profile"
-
-    # TO DO: Define the save method to allow only one active profile.
