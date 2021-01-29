@@ -243,10 +243,9 @@
                 {
                     "off_day": [
                         "clock",
-                        "wxweather"
+                        "weather"
                     ],
                     "scheduled": [
-                        "team_summary",
                         "standings",
                         "scoreticker",
                         "clock"
@@ -276,7 +275,7 @@
                     "examples": [
                         [
                             "clock",
-                            "wxweather"
+                            "weather"
                         ]
                     ],
                     "additionalItems": true,
@@ -288,7 +287,7 @@
                         "default": "",
                         "examples": [
                             "clock",
-                            "wxweather"
+                            "weather"
                         ],
                         "enum": [
                             "scoreticker",
@@ -307,7 +306,7 @@
                     "default": [],
                     "examples": [
                         [
-                            "team_summary",
+                            "clock",
                             "standings",
                             "scoreticker"
                         ]
@@ -320,7 +319,7 @@
                         "description": "Boards to display on sceduled",
                         "default": "",
                         "examples": [
-                            "team_summary",
+                            "clock",
                             "standings",
                             "scoreticker"
                         ],
@@ -1420,7 +1419,7 @@
                             "reboot_duration": 2,
                             "display_halt": true,
                             "enabled": true,
-                            "state_triggered1": "wxweather",
+                            "state_triggered1": "weather",
                             "bonnet": true,
                             "pin": 25,
                             "state_triggered1_process": "",
@@ -1538,10 +1537,11 @@
                             "$id": "#/properties/sbio/properties/pushbutton/properties/state_triggered1",
                             "type": "string",
                             "title": "state_triggered1",
-                            "description": "The board you want displayed on button press. If this is blank falls back to the default board which is clock. Current boards available are team_summary,standings,scoreticker,wxweather and clock",
+                            "description": "The board you want displayed on button press. If this is blank falls back to the default board which is clock. Current boards available are scoreticker, standings, clock, covid19, and weather",
                             "default": "clock",
                             "examples": [
-                                "wxweather"
+                                "weather",
+                                "standings"
                             ]
                             
                         },

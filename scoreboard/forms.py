@@ -13,7 +13,7 @@ def schema():
 schema = schema()
 
 # Gets the active config to later instantiate SettingsForm
-current_conf = Settings.objects.filter(isActive=1).first().config
+current_conf = Settings.objects.get(pk=1).config
 
 
 # This Settings model form gets the name and isActive attributes from the user.
