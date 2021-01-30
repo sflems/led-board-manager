@@ -1,0 +1,10 @@
+{% extends "scoreboard/layout.html" %}
+
+{% block settingslist %}
+    <h2>Settings Profiles</h2>
+    <ul>
+        {% for profile in object_list %}
+            <li>{{ profile.name }}</li>
+        {% endfor %}
+    </ul>
+{% endblock settingslist %}

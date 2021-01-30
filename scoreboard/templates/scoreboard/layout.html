@@ -28,7 +28,8 @@
 			<div class="collapse navbar-collapse" id="collapsibleNavbar">		
 				<ul class="navbar-nav">
 					{% if user.is_authenticated %}
-						<button class="btn btn-sm btn-dark" id="settings">Settings</button>
+						<button class="btn btn-sm btn-dark" id="settings_list" data-url="{% url 'settings_list' %}">Settings Profiles</button>
+						<button class="btn btn-sm btn-dark" id="settings_create" data-url="{% url 'settings_create' %}">Create a Profile</button>
 					{% endif %}
 				</ul>
 			</div>
@@ -46,7 +47,10 @@
         
         <div class="body container">
             {% block body %}
-            {% endblock %}
+            {% endblock body %}
+
+			{% block settingslist %}
+			{% endblock settingslist %}
         </div>
 		
 		{% bootstrap_javascript jquery='full' %}

@@ -16,7 +16,7 @@
     <div id="message">{{ message }}</div>
 
 	<div class="page-nav row m-2 p-2 justify-content-center">
-		<form action="{% url 'settings_view' %}" method="post">
+		<form action="{% url 'settings_create' %}" method="post">
 			{% csrf_token %}
 			{{ detailform.as_p }}
 			{{ JSONform.media }}

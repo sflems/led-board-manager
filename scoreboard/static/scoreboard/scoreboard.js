@@ -5,8 +5,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		location.href = '/';
 	});
 
-	$('#settings').click(function () {
-		location.href = '/settings'
+	$('#settings_list').click(function () {
+		location.href = `${this.dataset.url}`
+	});
+
+	$('#settings_create').click(function () {
+		location.href = `${this.dataset.url}`
 	});
 
 	$('.game-time p').each(function () {

@@ -2,9 +2,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import ListView
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
+
 
 
 from .forms import *
@@ -17,8 +19,11 @@ def index(request):
     games = todays_games()
     return render(request, "scoreboard/index.html", {"games":games,})
 
+class SettingsList(ListView):
+    model = Settings
+
 @login_required
-def settings_view(request):
+def settings_create(request):
     if request.method == "GET":
         # Settings Forms are instantiated in forms.py
         detailform = SettingsDetailForm()
@@ -66,8 +71,10 @@ def settings_view(request):
                     return HttpResponseRedirect(reverse('index'))
             
             except:
-                return render(request, "scoreboard/settings.html", { "error": "Form submission error.", "jsonform":SettingsJSONForm(request.POST), "detailform":SettingsDetailForm(options={"startval": request.POST['json']}) })
-                
+                return render(request, "scoreboard/settings.html", { "error": "Form submission error.", "jsonform":SettingsJSONForm(request.POST['json']), "detailform":SettingsDetailForm(request.POST)})
+        else:        
+            return render(request, "scoreboard/settings.html", { "error": "Invalid data.", "jsonform":SettingsJSONForm(request.POST['json']), "detailform":SettingsDetailForm(request.POST)})
+        
 
 def login_view(request):
     if request.method == "POST":
