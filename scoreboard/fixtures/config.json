@@ -105,7 +105,7 @@
             "enabled": true,
 			"animations": true,
             "start": "22:00",
-            "stop": "22:05",
+            "end": "22:05",
             "data_updates": false,
 			"motionsensor": true,
             "pin": 24,

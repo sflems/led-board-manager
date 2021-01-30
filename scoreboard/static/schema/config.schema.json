@@ -1013,7 +1013,7 @@
                     ],
                     "properties": {
                         "alert_feed": {
-                            "$id": "#/properties/boards/properties/weather/properties/alert_feed",
+                            "$id": "#/properties/boards/properties/wxalert/properties/alert_feed",
                             "type": "string",
                             "title": "alert_feed",
                             "description": "What data feed is provide alert data.  EC for Environment Canada or NWS for the National Weather Service in the US",
@@ -1023,7 +1023,7 @@
                             ]
                         },
                         "update_freq": {
-                            "$id": "#/properties/boards/properties/weather/properties/update_freq",
+                            "$id": "#/properties/boards/properties/wxalert/properties/update_freq",
                             "type": "integer",
                             "title": "update_freq ",
                             "description": "How often in minutes to refresh the weather and alerts feeds.",
@@ -1033,7 +1033,7 @@
                             ]
                         },
                         "nws_show_expire": {
-                            "$id": "#/properties/boards/properties/weather/properties/nws_show_expire",
+                            "$id": "#/properties/boards/properties/wxalert/properties/nws_show_expire",
                             "type": "boolean",
                             "title": "nws_show_expire",
                             "description": "Show expire time (true) instead of effective time (false) of alert",
@@ -1043,7 +1043,7 @@
                             ]
                         },
                         "show_alerts": {
-                            "$id": "#/properties/boards/properties/weather/properties/show_alerts",
+                            "$id": "#/properties/boards/properties/wxalert/properties/show_alerts",
                             "type": "boolean",
                             "title": "show_alerts",
                             "description": "Get weather alerts and display them",
@@ -1053,7 +1053,7 @@
                             ]
                         },
                         "alert_title": {
-                            "$id": "#/properties/boards/properties/weather/properties/alert_title",
+                            "$id": "#/properties/boards/properties/wxalert/properties/alert_title",
                             "type": "boolean",
                             "title": "alert_title",
                             "description": "On the initial alert page that will interrupt the normal board rotation, display on the top and bottom board the type of alert (WARNING, WATCH or ADVISORY)",
@@ -1063,7 +1063,7 @@
                             ]
                         },
                         "scroll_alert": {
-                            "$id": "#/properties/boards/properties/weather/properties/scroll_alert",
+                            "$id": "#/properties/boards/properties/wxalert/properties/scroll_alert",
                             "type": "boolean",
                             "title": "Scroll_alert",
                             "description": "Scroll the text of the alert on the initial alert page.  If you select false, a static page will be displayed that is the same as the 4th page on the weather board",
@@ -1073,7 +1073,7 @@
                             ]
                         },
                         "alert_duration": {
-                            "$id": "#/properties/boards/properties/weather/properties/alert_duration",
+                            "$id": "#/properties/boards/properties/wxalert/properties/alert_duration",
                             "type": "integer",
                             "title": "alert_duration",
                             "description": "How long to display alert board (in seconds)",
