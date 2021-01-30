@@ -41,19 +41,16 @@ def settings_view(request):
                 new_config = request.POST['json'].encode().decode('utf-8-sig')
 
                 new_settings = Settings.objects.create(name=name, isActive=isActive, config=json.loads(new_config))
-                
+                active_profiles = Settings.objects.filter(isActive=True).exclude(name=new_settings.name)
 
                 '''
                     From django docs:
                     Return an HttpResponseRedirect to prevent data from being posted twice if a user hits the Back button.
                 ''' 
-                if new_settings.isActive:
-                    
-                    if Settings.objects.filter(isActive=True):
-                        active_profiles = Settings.objects.filter(isActive=True).exclude(name=new_settings.name)
-                        for profile in active_profiles:
-                            profile.isActive = False
-                            profile.save()
+                if new_settings.isActive and active_profiles:
+                    for profile in active_profiles:
+                        profile.isActive = False
+                        profile.save()
 
                     '''
                     Insert filesystem saving logic (and scoreboard restart logic?) here.
@@ -65,7 +62,7 @@ def settings_view(request):
                    
                 else:
                     new_settings.save()
-                    messages.success(request, "Your profile has been saved.")
+                    messages.success(request, "Your profile has been saved. (Not Active)")
                     return HttpResponseRedirect(reverse('index'))
             
             except:
