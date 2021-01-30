@@ -1,9 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 from django.utils import timezone
-from django.db.models.signals import pre_save, post_save
-from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
+from django.db.models.signals import pre_save, post_save, pre_delete
+from django.dispatch import receiver
 from django.core.exceptions import *
 import json
 
@@ -72,4 +72,11 @@ class Settings(models.Model):
     def __str__(self):
         return self.name + " Profile"
 
-    # TO DO: Define the save method to allow only one active profile here. Does this propagate everywhere?
+@receiver(pre_delete, sender=Settings)
+def delete_is_default(sender, instance, **kwargs):
+    if instance.name.lower() == "default":
+       raise ValueError('Default profile is read-only. Profile not removed.')
+
+
+    # TO DO: Define the save method to allow only one active profile here. Currently validation happens in both views.py and admin.py
+

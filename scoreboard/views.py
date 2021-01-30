@@ -32,11 +32,9 @@ def settings_view(request):
         detailform = SettingsDetailForm(request.POST)
 
         if detailform.is_valid():
-        
-            #TO DO: Expand on form validation
             try:
                 ''' 
-                    The request data for the config json must be encoded and the decoded again as below due to a BOM error. Without this the form submissions are saved as slash escaped strings... but why? Possibly due to jsonforms encoding methods.
+                    The request data for the config json must be encoded and then decoded again as below due to a BOM error. Without this the form submissions are saved as slash escaped strings... but why? Possibly due to jsonforms encoding methods.
                 '''
                 name = detailform.cleaned_data['name']
                 isActive = detailform.cleaned_data['isActive']
@@ -71,7 +69,7 @@ def settings_view(request):
                     return HttpResponseRedirect(reverse('index'))
             
             except:
-                return render(request, "scoreboard/settings.html", { "error": "Form submission error.", "jsonform":SettingsJSONForm(request.POST), "detailform":SettingsDetailForm(request.POST) })
+                return render(request, "scoreboard/settings.html", { "error": "Form submission error.", "jsonform":SettingsJSONForm(request.POST), "detailform":SettingsDetailForm(options={"startval": request.POST['json']}) })
                 
 
 def login_view(request):
