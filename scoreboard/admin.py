@@ -17,6 +17,7 @@ class SettingsAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'name',)
     actions = [delete_selected]
 
+    # Defines default settings model profile as read-only
     def get_readonly_fields(self, request, obj):
         try:
             if obj.name.lower() != "default": 
@@ -25,9 +26,15 @@ class SettingsAdmin(admin.ModelAdmin):
         except:
             return self.readonly_fields
 
+    # Defines delete permissions. Returns a delete button for Settings models as long as there are models present AND they aren't the default profile.
+    def has_delete_permission(self, request, obj=None):
+        return super().has_delete_permission(request, obj) and (not obj or obj.name.lower() != 'default')
+
     # Checks to see if active profile status changed, and then makes it the only active profile if so.
     def save_model(self, request, obj, form, change):
         if obj.isActive:
+
+            # Checks if there are other active profiles and deactivates them.
             if Settings.objects.filter(isActive=True):
                 active_profiles = Settings.objects.filter(isActive=True).exclude(name=obj.name)
                 for profile in active_profiles:
