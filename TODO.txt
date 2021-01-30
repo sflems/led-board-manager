@@ -12,7 +12,6 @@
  Backend
 ---------
  TODO: Define Settings Model post_save method to save config to new location. (Make a backup too?)
- TODO: Perform checks for Settings.isActive
  TODO: Admin JSON form for settings or just default raw editor?
 
  CSS/JS
@@ -20,10 +19,9 @@
 
  TODO: Beautify Boxscores (Index Page)
  TODO: Beautify Settings Form
+ TODO: Add settings page list view and ajax buttons to switch profiles. Adjust urls.py accordingly.
 
 
  Misc.
 -------
-
-TODO: weather/wxalert schema fixes!!!
 TODO: On invalid settings forms, return form with entered data and display error.
