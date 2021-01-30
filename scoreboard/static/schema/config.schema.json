@@ -5,7 +5,7 @@
     "title": "NHL LED Scoreboard configuration",
     "description": "Configuration that controls the NHL LED scoreboard rgb matrix application",
     "default": {},
-    "additionalProperties": true,
+    "additionalProperties": false,
     "required": [
         "debug",
         "loglevel",
@@ -80,7 +80,7 @@
                     }
                 }
             ],
-            "additionalProperties": true,
+            "additionalProperties": false,
             "required": [
                 "time_format",
                 "end_of_day",
@@ -140,7 +140,7 @@
                     "type": "array",
                     "title": "teams",
                     "description": "List of preferred teams. First one in the list is considered the favorite. If left empty, the scoreboard will be in offday mode",
-                    "default": [],
+                    "default": ["Avalanche"],
                     "examples": [
                             "Jets",
                             "Canadiens",
@@ -152,7 +152,7 @@
                         "type": "string",
                         "title": "teams",
                         "description": "Teams selected to display",
-                        "default": "",
+                        "default": "Avalanche",
                         "examples": [
                             "Jets",
                             "Canadiens",
@@ -214,7 +214,7 @@
                             "pref_team_only": true
                         }
                     ],
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "required": [
                         "pref_team_only"
                     ],
@@ -258,7 +258,7 @@
                     ]
                 }
             ],
-            "additionalProperties": true,
+            "additionalProperties": false,
             "required": [
                 "off_day",
                 "scheduled",
@@ -433,7 +433,7 @@
                     }
                 }
             ],
-            "additionalProperties": true,
+            "additionalProperties": false,
             "required": [
                 "scoreticker",
                 "standings",
@@ -454,7 +454,7 @@
                             "rotation_rate": 5
                         }
                     ],
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "required": [
                         "preferred_teams_only",
                         "rotation_rate"
@@ -494,7 +494,7 @@
                             "rotation_rate": 5
                         }
                     ],
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "required": [
                         "preferred_teams_only",
                         "rotation_rate"
@@ -536,7 +536,7 @@
                             "preferred_standings_only": true
                         }
                     ],
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "required": [
                         "preferred_standings_only",
                         "standing_type",
@@ -617,7 +617,7 @@
                             "flash_seconds": true
                         }
                     ],
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "required": [
                         "duration",
                         "hide_indicator",
@@ -712,7 +712,7 @@
                             "canada_enabled": false
                         }
                     ],
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "required": [
                         "worldwide_enabled",
                         "country_enabled",
@@ -855,7 +855,7 @@
                             "forecast_update": 1
                         }
                     ],
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "required": [
                         "enabled",
                         "view",
@@ -1000,7 +1000,7 @@
                             "show_alerts": true
                         }
                     ],
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "required": [
                         "alert_feed",
                         "update_freq",
@@ -1142,7 +1142,7 @@
                     }
                 }
             ],
-            "additionalProperties": true,
+            "additionalProperties": false,
             "required": [
                 "screensaver",
                 "dimmer",
@@ -1167,7 +1167,7 @@
                                 "delay": 30
                         }
                     ],
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "required": [
                         "enabled",
                         "animations",
@@ -1280,7 +1280,7 @@
                             "offset": 90
                         }
                     ],
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "required": [
                         "enabled",
                         "source",
@@ -1428,7 +1428,7 @@
                             "poweroff_override_process": ""
                         }
                     ],
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "required": [
                         "enabled",
                         "bonnet",
