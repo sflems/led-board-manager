@@ -72,10 +72,18 @@ class Settings(models.Model):
     def __str__(self):
         return self.name + " Profile"
 
+@receiver(pre_save, sender=Settings)
+def pre_save(sender, instance, **kwargs):
+    active_profiles = Settings.objects.filter(isActive=True).exclude(name=instance.name)
+    if instance.isActive and active_profiles:
+            for profile in active_profiles:
+                profile.isActive = False
+                profile.save()
+
 @receiver(pre_delete, sender=Settings)
 def delete_is_default(sender, instance, **kwargs):
     if instance.name.lower() == "default":
-       raise ValueError('Default profile is read-only. Profile not removed.')
+       raise FieldError('Default profile is read-only. Profile not removed.')
 
 
     # TO DO: Define the save method to allow only one active profile here. Currently validation happens in both views.py and admin.py

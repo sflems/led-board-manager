@@ -3,25 +3,23 @@
 -------------------------------------
  nhl-led-scoreboard-WebGUI To Do List
 -------------------------------------
-
 --------
  TODO's:
 --------
 
-
  Backend
 ---------
  TODO: Define Settings Model post_save method to save config to new location. (Make a backup too?)
- TODO: Admin JSON form for settings or just default raw editor?
 
- CSS/JS
+ HTML/CSS/JS
 ---------
 
  TODO: Beautify Boxscores (Index Page)
  TODO: Beautify Settings Form
- TODO: Add settings page list view and ajax buttons to switch profiles. Adjust urls.py accordingly.
+ TODO: Add to settings ListView: Buttons to switch profiles. Adjust urls.py accordingly.
 
 
  Misc.
 -------
-TODO: On invalid settings forms, return form with entered data and display error.
+TODO: Add time selection instead of user text box for settings forms.
+TODO: Add rgb picker instead of text box for settings forms.

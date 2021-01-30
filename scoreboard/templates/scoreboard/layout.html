@@ -29,7 +29,7 @@
 				<ul class="navbar-nav">
 					{% if user.is_authenticated %}
 						<button class="btn btn-sm btn-dark" id="settings_list" data-url="{% url 'settings_list' %}">Settings Profiles</button>
-						<button class="btn btn-sm btn-dark" id="settings_create" data-url="{% url 'settings_create' %}">Create a Profile</button>
+						<button class="btn btn-sm btn-dark" id="settings_create" data-url="{% url 'create' %}">Create a Profile</button>
 					{% endif %}
 				</ul>
 			</div>

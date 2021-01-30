@@ -16,5 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('.game-time p').each(function () {
 		this.innerText = new Date(this.dataset.datetime).toLocaleTimeString();
 	});
+	
+	$('#settingsform > label:nth-child(7)').html("");
 
 });

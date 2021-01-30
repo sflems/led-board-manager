@@ -6,10 +6,10 @@ from django.views.generic import ListView
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.exceptions import FieldError
 
-
-
-from .forms import *
+from .forms import schema, SettingsDetailForm, SettingsJSONForm
+from django_jsonforms.forms import JSONSchemaForm
 from .models import *
 from .services import *
 import json
@@ -24,57 +24,57 @@ class SettingsList(ListView):
 
 @login_required
 def settings_create(request):
+    def schema():
+        with open("./scoreboard/static/schema/config.schema.json", "r") as f:
+            conf = json.load(f)
+            return conf
+
     if request.method == "GET":
         # Settings Forms are instantiated in forms.py
         detailform = SettingsDetailForm()
         JSONform = SettingsJSONForm()
-        return render(request, "scoreboard/settings.html", {
+        return render(request, "scoreboard/settings_create.html", {
             "JSONform":JSONform, 
             "detailform":detailform,
         })
         
     if request.method == "POST":
         detailform = SettingsDetailForm(request.POST)
+        # The request data for the config json must be encoded and then decoded again as below due to a BOM error. Without this the form submissions are saved as slash escaped strings... but why? Possibly due to jsonforms encoding methods.
+        new_config = request.POST['json'].encode().decode('utf-8-sig')
 
-        if detailform.is_valid():
-            try:
-                ''' 
-                    The request data for the config json must be encoded and then decoded again as below due to a BOM error. Without this the form submissions are saved as slash escaped strings... but why? Possibly due to jsonforms encoding methods.
-                '''
-                name = detailform.cleaned_data['name']
-                isActive = detailform.cleaned_data['isActive']
-                new_config = request.POST['json'].encode().decode('utf-8-sig')
-
-                new_settings = Settings.objects.create(name=name, isActive=isActive, config=json.loads(new_config))
-                active_profiles = Settings.objects.filter(isActive=True).exclude(name=new_settings.name)
-
-                '''
-                    From django docs:
-                    Return an HttpResponseRedirect to prevent data from being posted twice if a user hits the Back button.
-                ''' 
-                if new_settings.isActive and active_profiles:
-                    for profile in active_profiles:
-                        profile.isActive = False
-                        profile.save()
-
-                    '''
-                    Insert filesystem saving logic (and scoreboard restart logic?) here.
-                    '''
-                    
-                    new_settings.save()
-                    messages.success(request, "Your profile has been saved and set as the active profile.")
-                    return HttpResponseRedirect(reverse('index'))
-                   
-                else:
-                    new_settings.save()
-                    messages.success(request, "Your profile has been saved. (Not Active)")
-                    return HttpResponseRedirect(reverse('index'))
+        if detailform.is_valid():           
             
-            except:
-                return render(request, "scoreboard/settings.html", { "error": "Form submission error.", "jsonform":SettingsJSONForm(request.POST['json']), "detailform":SettingsDetailForm(request.POST)})
-        else:        
-            return render(request, "scoreboard/settings.html", { "error": "Invalid data.", "jsonform":SettingsJSONForm(request.POST['json']), "detailform":SettingsDetailForm(request.POST)})
-        
+            name = detailform.cleaned_data['name']
+            isActive = detailform.cleaned_data['isActive']
+
+            active_profiles = Settings.objects.filter(isActive=True).exclude(name=name)
+            new_settings = Settings.objects.create(name=name, isActive=isActive, config=json.loads(new_config))
+            new_settings.save()
+
+            notes = [
+                " (Not Active)",
+                " (Active)" 
+            ]
+            message = "Your profile has been saved." + notes[new_settings.isActive]
+            messages.success(request, message)
+
+            return HttpResponseRedirect(reverse(index), {"message": message,})
+
+        elif FieldError:
+            schema = schema()
+            startval = json.loads(request.POST['json'])
+            options = form_options(startval)
+
+            # JSONResponse to refill form? This isnt working.
+            return render(request, "scoreboard/settings_create.html", { 
+                "error": "Profile with this name exists.", 
+                "detailform": SettingsDetailForm(request.POST), 
+                "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True)
+                })
+        else:      
+            return render(request, "scoreboard/settings_create.html", { "error": "Invalid data.", })
+            
 
 def login_view(request):
     if request.method == "POST":
@@ -99,3 +99,4 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
+    
