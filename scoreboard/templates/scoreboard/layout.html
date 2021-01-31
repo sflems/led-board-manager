@@ -28,8 +28,10 @@
 			<div class="collapse navbar-collapse" id="collapsibleNavbar">		
 				<ul class="navbar-nav">
 					{% if user.is_authenticated %}
-						<button class="btn btn-sm btn-dark" id="settings_list" data-url="{% url 'settings_list' %}">Settings Profiles</button>
-						<button class="btn btn-sm btn-dark" id="settings_create" data-url="{% url 'create' %}">Create a Profile</button>
+						<button class="btn btn-sm btn-dark" id="index" data-url="{% url 'index' %}">Home</button>
+						<button class="btn btn-sm btn-dark" id="settings_list" data-url="{% url 'settings_list' %}">Profiles</button>
+						<button class="btn btn-sm btn-dark" id="settings_create" data-url="{% url 'create' %}">New Profile</button>
+						<button class="btn btn-sm btn-dark" id="admin" data-url="{% url 'index' %}admin">Admin</button>
 					{% endif %}
 				</ul>
 			</div>
@@ -56,7 +58,8 @@
 		{% bootstrap_javascript jquery='full' %}
 		{% block script %}
 			<script src="{% static 'scoreboard/scoreboard.js' %}"></script>
-   <script src="{% static 'scoreboard/jsoneditor.js' %}"></script>
+   			<script src="{% static 'scoreboard/jsoneditor.js' %}"></script>
+			<script src="{% static 'scoreboard/js.cookie.js' %}"></script>
 		{% endblock %}
     </body>
 </html>

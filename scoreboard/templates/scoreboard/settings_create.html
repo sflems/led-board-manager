@@ -18,7 +18,7 @@
 	<div class="page-nav row m-2 p-2 justify-content-center">
 		<form id="settingsform" action="{% url 'create' %}" method="post">
 			{% csrf_token %}
-			{{ detailform.as_p }}
+			{{ detailform|crispy }}
 			{{ JSONform.media }}
 			{{ JSONform }}
 			<input type="submit" value="Submit">

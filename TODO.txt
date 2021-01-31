@@ -10,7 +10,7 @@
  Backend
 ---------
 
-TODO: Functions to reboot Pi and restart nhl scoreboard app. (Supervisor)
+TODO: Functions to reboot Pi and restart nhl scoreboard app. (Supervisor?)
 TODO: Create a default settings model instance on intsall? How to do this?
 
  HTML/CSS/JS

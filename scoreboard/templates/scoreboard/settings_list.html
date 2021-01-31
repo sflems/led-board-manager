@@ -1,10 +1,65 @@
 {% extends "scoreboard/layout.html" %}
+{% load static %}
 
 {% block settingslist %}
-    <h2>Settings Profiles</h2>
-    <ul>
-        {% for profile in object_list %}
-            <li>{{ profile.name }}</li>
-        {% endfor %}
-    </ul>
+
+    <h2>Configuration Profiles</h1>
+
+    <table class="table table-hover" id="config-table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col" style="text-align:left">Name</th>
+                <th scope="col" style="text-align:right">Active</th>
+                <th scope="col" style="text-align:center"></th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for profile in object_list %}
+                    <tr class="profile-info">
+                        <th scope="row" class="modal-link" data-toggle="modal" data-target="#configModal" data-json="{{ profile.config|safe }}" style="text-align:left">
+                            {{ profile.name }}
+                        </th>
+                        <td style="text-align:right">
+                            {% if profile.isActive %}
+                                <img src={% static 'scoreboard/check-square-fill.svg' %} width="16" height="16" class="check-square-fill mr-3">
+                                </img>
+                            {% else %}
+                                <img src={% static 'scoreboard/x-square-fill.svg' %} width="16" height="16" class="x-square-fill mr-3">
+                                </img>
+                            {% endif %}
+                        </td>
+                        <td style="text-align:center">
+                            {% if not profile.isActive %}
+                                <button href="#" id="activate" data-id="{{ profile.id }}" data-editurl="{% url 'activate' profile.id %}" class="btn btn-sm btn-outline-success mb-0">Activate</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td scope="row" colspan="3" class="text-center bg-warning">No profiles found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+    </table>
+
+    <!-- Modal -->
+    <div class="modal fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="configModalLabel">Raw Config</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <pre><code id="prettyJSON"></code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock settingslist %}

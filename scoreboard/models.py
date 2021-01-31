@@ -55,6 +55,7 @@ class Settings(models.Model):
         verbose_name = _("Settings")
         verbose_name_plural = _("Settings")
         db_table = 'settings'
+        ordering = ["-id"]
         
     def __str__(self):
         return self.name + " Profile"

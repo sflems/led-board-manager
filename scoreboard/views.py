@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed, JsonResponse
 from django.core.exceptions import FieldError
 
 from .forms import schema, SettingsDetailForm, SettingsJSONForm
@@ -21,6 +21,30 @@ def index(request):
 
 class SettingsList(ListView):
     model = Settings
+
+@login_required
+def settings_activate(request, id):
+    if request.method == "PUT":
+        try:
+            profile = Settings.objects.get(pk=id)
+            data = json.loads(request.body)
+            if data.get("activated") == True and not profile.isActive:
+                profile.isActive = True
+                profile.save()
+                messages.success(request, "Profile set as active configuration.")
+                return JsonResponse({
+                    "activated": True
+                }, status=202)
+            else:
+                messages.error(request, "Profile is already set as active!")
+                return HttpResponseRedirect(reverse(request))
+        except ObjectDoesNotExist:
+            return render(request, "scoreboard/settings_create.html", {
+                "error": "No profile found. Please create one first."
+            })
+    else:
+        messages.error(request, "Must sent a PUT request to this URL.")
+        return HttpResponseRedirect("/settings_list/")
 
 @login_required
 def settings_create(request):
