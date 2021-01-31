@@ -48,7 +48,7 @@ class Team(models.Model):
 
 class Settings(models.Model):
     name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32, blank=True, unique=True)
-    config = models.JSONField(default=services.conf_default())
+    config = models.JSONField(default=services.conf_default)
     isActive = models.BooleanField(_("Active"),default=1)
   
     class Meta:
