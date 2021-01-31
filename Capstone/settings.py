@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
-from decouple import config
+from secret_key_generator import secret_key_generator
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -19,8 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# DECOUPLE! https://stackoverflow.com/questions/64208678/hiding-secret-key-in-django-project-on-github-after-uploading-project
-SECRET_KEY = config("SECRET_KEY") # this the secret key in .gitignore'd .env
+# DECOUPLE! https://stackoverflow.com/questions/64208678/hiding-secret-key-in-django-project-on-github-after-uploading-projectSECRET_KEY = config("SECRET_KEY") # this the secret key in .gitignore'd .env
+SECRET_KEY = secret_key_generator.generate()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
