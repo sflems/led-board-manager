@@ -1,6 +1,23 @@
 import requests
 import json
+from .models import *
 
+# Gets the users home folder and then the nhl-led-scoreboard folder.
+def install_path():
+    path = os.path.expanduser("~") + "/nhl-led-scoreboard/config"
+    return path
+
+# Opens default config from model object if found, otherwise from file, and then loads into Settings Profile
+def conf_default():
+        try:
+            conf = Settings.objects.get(name__iexact="default").config
+            return conf
+        except:
+            path = install_path() + "/config.json.sample"
+            with open(path, "r") as f:
+                conf = json.load(f)
+                return conf
+                
 def todays_games():
     url = 'https://statsapi.web.nhl.com/api/v1/schedule'
     response = requests.get(url)

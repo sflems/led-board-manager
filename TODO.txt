@@ -9,7 +9,8 @@
 
  Backend
 ---------
- TODO: Define Settings Model post_save method to save config to new location. (Make a backup too?)
+TODO: Functions to reboot Pi and restart nhl scoreboard app. (Supervisor)
+TODO: Create a default settings model instance on intsall? How to do this?
 
  HTML/CSS/JS
 ---------
@@ -18,8 +19,8 @@
  TODO: Beautify Settings Form
  TODO: Add to settings ListView: Buttons to switch profiles. Adjust urls.py accordingly.
 
-
  Misc.
 -------
-TODO: Add time selection instead of user text box for settings forms.
-TODO: Add rgb picker instead of text box for settings forms.
+TODO: Add time selection instead of user text box for settings forms. (Schema)
+TODO: Add rgb picker instead of text box for settings forms. (Schema)
+TODO: Install/Usage instructions.
