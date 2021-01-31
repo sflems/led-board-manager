@@ -45,19 +45,17 @@ class Team(models.Model):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
-        return reverse("Team_detail", kwargs={"pk": self.pk})
-
-
-# TO DO: Implement saving of updated config data, and save it in a location used by the led-scoreboard. Is a reboot necessary?
 class Settings(models.Model):
 
-    # Opens default config and loads into Settings Profile
-    # TO DO: Update default config location to use FileSystemStorage(see Django docs) to load the actual nhl-led-scoreboard install directory config file.
+    # Opens default config from model object if found, otherwise from file, and then loads into Settings Profile
     def conf_default():
-        with open("/home/flem/nhl-led-scoreboard/config/config.json.sample", "r") as f:
-            conf = json.load(f)
+        try:
+            conf = Settings.objects.get(name__iexact="default").config
             return conf
+        except ObjectDoesNotExist:
+            with open("/home/flem/nhl-led-scoreboard/config/config.json", "r") as f:
+                conf = json.load(f)
+                return conf
 
     # Model Attributes 
     name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32, blank=True, unique=True)
@@ -80,11 +78,16 @@ def pre_save(sender, instance, **kwargs):
                 profile.isActive = False
                 profile.save()
 
+# TO DO: Implement method of changing config path. Is a reboot necessary? Also add a static default config file for good measure.
+@receiver(post_save, sender=Settings)
+def post_save(sender, instance, **kwargs):
+    with open("/home/flem/nhl-led-scoreboard/config/config.json", "w") as outfile:
+        if instance.isActive:
+            # indent=4 makes content human readable
+            json.dump(instance.config, outfile, indent=4)
+            
+    
 @receiver(pre_delete, sender=Settings)
 def delete_is_default(sender, instance, **kwargs):
     if instance.name.lower() == "default":
        raise FieldError('Default profile is read-only. Profile not removed.')
-
-
-    # TO DO: Define the save method to allow only one active profile here. Currently validation happens in both views.py and admin.py
-
