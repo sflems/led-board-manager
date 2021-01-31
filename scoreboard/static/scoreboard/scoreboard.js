@@ -88,6 +88,44 @@ document.addEventListener('DOMContentLoaded', function () {
 			};			
 		});
 	});
+	$('button#delete').click(function () {
+		const csrftoken = Cookies.get('csrftoken');
+		fetch(`${this.dataset.editurl}`, {
+			headers: {'X-CSRFToken': csrftoken},
+			method: 'PUT',
+			body: JSON.stringify({
+				"delete": true
+			})
+		})
+		.then(response => response.json())
+		.then(result => {
+			console.log(result);
+			if (result.delete != true) {
+				document.querySelector('#message').innerHTML = `
+					<div class="alert alert-error alert-dismissible fade show">
+						<strong>Error!</strong> Profile "${result.profile}" deleted <strong>unsuccessfully!</strong>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>  
+				`;
+			} else {
+				document.querySelector('#message').innerHTML = `
+					<div class="alert alert-success alert-dismissible fade show">
+						<strong>Success!</strong> Profile "${result.profile}" deleted. (Backup files may remain).
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>  
+				`;
+			};			
+		});
+	});
+
+	// Adds profile/id path to data-editurl attribute on modal delete confirmation button.
+	$('button#deleteModalbutton').click(function () {
+		$('button#delete').attr('data-editurl', this.dataset.editurl)
+	});
 
 	$('button#edit').click(function () {
 		location.href = `${this.dataset.editurl}`

@@ -46,6 +46,7 @@ def profiles(request, id):
         try:
             profile = Settings.objects.get(pk=id)
             data = json.loads(request.body)
+
             if data.get("activated"):
                 if not profile.isActive:
                     profile.isActive = True
@@ -58,6 +59,7 @@ def profiles(request, id):
                     messages.error(request, "Profile is already set as active!")
                     return HttpResponseRedirect(reverse(request))
             data = json.loads(request.body)
+
             if data.get("backup"):
                 try:
                     path = profile.save_to_file()
@@ -71,6 +73,20 @@ def profiles(request, id):
                         "backup": False,
                         "path": path
                     }, status=202)
+
+            if data.get("delete"):
+                try:
+                    profile.delete()
+                    return JsonResponse({
+                        "delete": True,
+                        "profile": profile.name,
+                    }, status=202)
+                except:
+                    return JsonResponse({
+                        "delete": False,
+                        "profile": profile.name,
+                    }, status=400)
+
         except ObjectDoesNotExist:
             return render(request, "scoreboard/settings_create.html", {
                 "error": "No profile found."
@@ -80,7 +96,7 @@ def profiles(request, id):
         return HttpResponseRedirect("/settings_list/")
 
 @login_required
-def settings_create(request):
+def profiles_create(request):
     if request.method == "GET":
         # Settings Forms are instantiated in forms.py
         detailform = SettingsDetailForm()
@@ -111,7 +127,7 @@ def settings_create(request):
             message = "Your profile has been saved." + notes[new_settings.isActive]
             messages.success(request, message)
 
-            return HttpResponseRedirect(reverse(index), {"message": message,})
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message,})
 
         elif FieldError:
             schema = services.schema()
@@ -125,7 +141,11 @@ def settings_create(request):
                 "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True)
                 })
         else:      
-            return render(request, "scoreboard/settings_create.html", { "error": "Invalid data.", })
+            return render(request, "scoreboard/settings_create.html", { 
+                "error": "Invalid data. Please check your submission.", 
+                "detailform": SettingsDetailForm(request.POST), 
+                "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True)
+                })
             
 
 def login_view(request):
