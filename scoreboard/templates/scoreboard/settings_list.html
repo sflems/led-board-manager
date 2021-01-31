@@ -10,13 +10,15 @@
             <tr>
                 <th scope="col" style="text-align:left">Name</th>
                 <th scope="col" style="text-align:right">Active</th>
-                <th scope="col" style="text-align:center"></th>
+                <th scope="col" style="text-align:center" id="activate_col"></th>
+                <th scope="col" style="text-align:center" id="edit_col"></th>
+                <th scope="col" style="text-align:center" id="backup_col"></th>
             </tr>
             </thead>
             <tbody>
                 {% for profile in object_list %}
                     <tr class="profile-info">
-                        <th scope="row" class="modal-link" data-toggle="modal" data-target="#configModal" data-json="{{ profile.config|safe }}" style="text-align:left">
+                        <th scope="row" class="col-9 modal-link" data-toggle="modal" data-target="#configModal" data-json="{{ profile.config|safe }}" style="text-align:left">
                             {{ profile.name }}
                         </th>
                         <td style="text-align:right">
@@ -30,7 +32,17 @@
                         </td>
                         <td style="text-align:center">
                             {% if not profile.isActive %}
-                                <button href="#" id="activate" data-id="{{ profile.id }}" data-editurl="{% url 'activate' profile.id %}" class="btn btn-sm btn-outline-success mb-0">Activate</button>
+                                <button href="#" id="activate" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-sm btn-outline-success mb-0">Activate</button>
+                            {% endif %}
+                        </td>
+                        <td style="text-align:center">
+                            {% if not profile.isActive and profile.name.lower != "default" %}
+                                <button href="#" id="edit" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-sm btn-outline-dark mb-0">Edit</button>
+                            {% endif %}
+                        </td>
+                        <td style="text-align:center">
+                            {% if not profile.isActive and profile.name.lower != "default" %}
+                                <button href="#" id="backup" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-sm btn-outline-dark mb-0">Backup</button>
                             {% endif %}
                         </td>
                     </tr>

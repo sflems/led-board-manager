@@ -5,3 +5,7 @@ pre {
 .alert {
     margin-bottom: 0!important;
 }
+
+label[for=id_json] {
+    display: none;
+}

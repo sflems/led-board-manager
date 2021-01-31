@@ -19,6 +19,7 @@
 	
 	{# Display django.contrib.messages as Bootstrap alerts #}
 	{% bootstrap_messages %}
+	<div id="message">{{ message }}</div>
 
 		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 			<a class="navbar-brand" style="color:rgba(255,255,255,.5)" href="{% url 'index' %}"><strong>LED Scoreboard Configurator</strong></a>
@@ -29,7 +30,7 @@
 				<ul class="navbar-nav">
 					{% if user.is_authenticated %}
 						<button class="btn btn-sm btn-dark" id="index" data-url="{% url 'index' %}">Home</button>
-						<button class="btn btn-sm btn-dark" id="settings_list" data-url="{% url 'settings_list' %}">Profiles</button>
+						<button class="btn btn-sm btn-dark" id="profiles_list" data-url="{% url 'profiles_list' %}">Profiles</button>
 						<button class="btn btn-sm btn-dark" id="settings_create" data-url="{% url 'create' %}">New Profile</button>
 						<button class="btn btn-sm btn-dark" id="admin" data-url="{% url 'index' %}admin">Admin</button>
 					{% endif %}

@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed, JsonResponse
 from django.core.exceptions import FieldError
@@ -11,36 +11,69 @@ from django.core.exceptions import FieldError
 from .forms import schema, SettingsDetailForm, SettingsJSONForm
 from django_jsonforms.forms import JSONSchemaForm
 from .models import *
-from .services import *
+from . import services
 import json
 
 # Create your views here.
 def index(request):
-    games = todays_games()
+    games = services.todays_games()
     return render(request, "scoreboard/index.html", {"games":games,})
 
 class SettingsList(ListView):
     model = Settings
 
 @login_required
-def settings_activate(request, id):
-    if request.method == "PUT":
+def profiles(request, id):
+    if request.method == "GET":
+        profile = get_object_or_404(Settings, pk=id)
+        if profile.id != 1 or profile.name.lower() != "default":
+            # Settings Forms are instantiated with form_options and schema functions from services.py
+            schema = services.schema()
+            startval = profile.config
+            options = services.form_options(startval)
+
+            # JSONResponse to refill form? This isnt working.
+            return render(request, "scoreboard/settings_create.html", { 
+                "detailform": SettingsDetailForm(instance=profile), 
+                "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True)
+                })
+        else:
+            messages.error(request, "Cannot edit the default profile!")
+            return HttpResponseRedirect(reverse('profiles_list'))
+        
+
+    elif request.method == "PUT":
         try:
             profile = Settings.objects.get(pk=id)
             data = json.loads(request.body)
-            if data.get("activated") == True and not profile.isActive:
-                profile.isActive = True
-                profile.save()
-                messages.success(request, "Profile set as active configuration.")
-                return JsonResponse({
-                    "activated": True
-                }, status=202)
-            else:
-                messages.error(request, "Profile is already set as active!")
-                return HttpResponseRedirect(reverse(request))
+            if data.get("activated"):
+                if not profile.isActive:
+                    profile.isActive = True
+                    profile.save()
+                    messages.success(request, "Profile set as active configuration.")
+                    return JsonResponse({
+                        "activated": True
+                    }, status=202)
+                else:
+                    messages.error(request, "Profile is already set as active!")
+                    return HttpResponseRedirect(reverse(request))
+            data = json.loads(request.body)
+            if data.get("backup"):
+                try:
+                    path = profile.save_to_file()
+                    message = "Profile saved to " + path
+                    return JsonResponse({
+                        "backup": True,
+                        "path": path
+                    }, status=202)
+                except:
+                    return JsonResponse({
+                        "backup": False,
+                        "path": path
+                    }, status=202)
         except ObjectDoesNotExist:
             return render(request, "scoreboard/settings_create.html", {
-                "error": "No profile found. Please create one first."
+                "error": "No profile found."
             })
     else:
         messages.error(request, "Must sent a PUT request to this URL.")
@@ -48,11 +81,6 @@ def settings_activate(request, id):
 
 @login_required
 def settings_create(request):
-    def schema():
-        with open("./scoreboard/static/schema/config.schema.json", "r") as f:
-            conf = json.load(f)
-            return conf
-
     if request.method == "GET":
         # Settings Forms are instantiated in forms.py
         detailform = SettingsDetailForm()
@@ -86,9 +114,9 @@ def settings_create(request):
             return HttpResponseRedirect(reverse(index), {"message": message,})
 
         elif FieldError:
-            schema = schema()
+            schema = services.schema()
             startval = json.loads(request.POST['json'])
-            options = form_options(startval)
+            options = services.form_options(startval)
 
             # JSONResponse to refill form? This isnt working.
             return render(request, "scoreboard/settings_create.html", { 

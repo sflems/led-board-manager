@@ -61,9 +61,11 @@ class Settings(models.Model):
         return self.name + " Profile"
 
     def save_to_file(self):
-        with open(services.conf_path() + "/" + self.name + ".config.json.bak", "w") as outfile:
+        path = services.conf_path() + "/" + self.name.lower() + ".config.json.bak"
+        with open(path, "w") as outfile:
             # indent=4 makes content human readable
             json.dump(self.config, outfile, indent=4)
+            return path
 
 @receiver(pre_save, sender=Settings)
 def pre_save(sender, instance, **kwargs):

@@ -19,7 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# DECOUPLE! https://stackoverflow.com/questions/64208678/hiding-secret-key-in-django-project-on-github-after-uploading-projectSECRET_KEY = config("SECRET_KEY") # this the secret key in .gitignore'd .env
+# secret_key_generator: https://pypi.org/project/secret-key-generator/
+# This checks if a secret key is present in a .secret.txt file, and if not it generates one. Should be a good solution for local installs/dev use.
 SECRET_KEY = secret_key_generator.generate()
 
 # SECURITY WARNING: don't run with debug turned on in production!

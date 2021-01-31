@@ -1,4 +1,4 @@
-from django.forms import ModelForm, Form
+from django import forms
 from django_jsonforms.forms import JSONSchemaField
 from django.core.exceptions import ObjectDoesNotExist
 from .models import *
@@ -15,11 +15,15 @@ schema = schema()
 options = form_options(current_conf)
 
 # django-jsonforms implementation for the scoreboard config. It generates a form based on the current config schema and populates with with the active config settings in the json attribute.
-class SettingsJSONForm(Form):
-     json = JSONSchemaField(schema=schema, options=options, ajax=True)
+class SettingsJSONForm(forms.Form):
+    json = JSONSchemaField(schema=schema, options=options, ajax=True)
+    class Meta:
+        labes = {
+             "json":"",
+        }
 
 # This Settings mo# This Settings model form gets the name and isActive attributes from the user.
-class SettingsDetailForm(ModelForm):
+class SettingsDetailForm(forms.ModelForm):
     class Meta:
         model = Settings
         fields = ('name', 'isActive')
@@ -27,3 +31,4 @@ class SettingsDetailForm(ModelForm):
             "name": "Profile Name",
             "isActive": "Make this the active profile?"
         }
+        
