@@ -59,6 +59,11 @@ class Settings(models.Model):
     def __str__(self):
         return self.name + " Profile"
 
+    def save_to_file(self):
+        with open(services.conf_path() + "/" + self.name + ".config.json.bak", "w") as outfile:
+            # indent=4 makes content human readable
+            json.dump(self.config, outfile, indent=4)
+
 @receiver(pre_save, sender=Settings)
 def pre_save(sender, instance, **kwargs):
     active_profiles = Settings.objects.filter(isActive=True).exclude(name=instance.name)
@@ -71,7 +76,7 @@ def pre_save(sender, instance, **kwargs):
 @receiver(post_save, sender=Settings)
 def post_save(sender, instance, **kwargs):
     if instance.isActive:
-        with open(services.install_path() + "/config.json", "w") as outfile:
+        with open(services.conf_path() + "/config.json", "w") as outfile:
             # indent=4 makes content human readable
             json.dump(instance.config, outfile, indent=4)
             

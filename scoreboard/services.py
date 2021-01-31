@@ -2,8 +2,8 @@ import requests
 import json
 from .models import *
 
-# Gets the users home folder and then the nhl-led-scoreboard folder.
-def install_path():
+# Gets the users home/user/nhl-led-scoreboard/config folder path.
+def conf_path():
     path = os.path.expanduser("~") + "/nhl-led-scoreboard/config"
     return path
 
@@ -13,7 +13,7 @@ def conf_default():
             conf = Settings.objects.get(name__iexact="default").config
             return conf
         except:
-            path = install_path() + "/config.json.sample"
+            path = conf_path() + "/config.json.sample"
             with open(path, "r") as f:
                 conf = json.load(f)
                 return conf
