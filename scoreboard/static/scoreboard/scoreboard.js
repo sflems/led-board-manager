@@ -110,14 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					</div>  
 				`;
 			} else {
-				document.querySelector('#message').innerHTML = `
-					<div class="alert alert-success alert-dismissible fade show">
-						<strong>Success!</strong> Profile "${result.profile}" deleted. (Backup files may remain).
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>  
-				`;
+				location.reload();
 			};			
 		});
 	});
@@ -146,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (result.reboot != true) {
 				document.querySelector('#message').innerHTML = `
 					<div class="alert alert-danger alert-dismissible fade show">
-						<strong>Error!</strong> Reboot unsuccessful!</strong>
+						<strong>Error!</strong> Reboot unsuccessful.
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -155,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			} else {
 				document.querySelector('#message').innerHTML = `
 					<div class="alert alert-success alert-dismissible fade show">
-						<strong>Success!</strong> Raspberry Pi is rebooting...
+						<strong>Success!</strong> Reboot initiated.
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -164,4 +157,39 @@ document.addEventListener('DOMContentLoaded', function () {
 			};
 		});
 	});
+
+	$('button#shutdown').click(function () {
+		const csrftoken = Cookies.get('csrftoken');
+		fetch(`${this.dataset.url}`, {
+			headers: {'X-CSRFToken': csrftoken},
+			method: 'PUT',
+			body: JSON.stringify({
+				"shutdown": true
+			})
+		})
+		.then(response => response.json())
+		.then(result => {
+			console.log(result);
+			if (result.shutdown != true) {
+				document.querySelector('#message').innerHTML = `
+					<div class="alert alert-danger alert-dismissible fade show">
+						<strong>Error!</strong> Shutdown unsuccessful.
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>  
+				`;
+			} else {
+				document.querySelector('#message').innerHTML = `
+					<div class="alert alert-success alert-dismissible fade show">
+						<strong>Success!</strong> Shutdown initiated.
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>  
+				`;
+			};
+		});
+	});
+
 });

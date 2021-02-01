@@ -20,18 +20,32 @@ def index(request):
     return render(request, "scoreboard/index.html", {"games":games,})
 
 @login_required
-def reboot(request):
+def command(request):
     data = json.loads(request.body)
     if request.method == "PUT" and data.get("reboot"):
         try:
-            subprocess.check_call(["sudo", "reboot", "now",])
+            subprocess.call(["reboot"])
+            
+        except subprocess.CalledProcessError:
+            return JsonResponse({
+                "reboot": False,
+            }, status=400)
+        else:
             return JsonResponse({
                 "reboot": True
+            }, status=202)    
+
+    if request.method == "PUT" and data.get("shutdown"):
+        try:
+            subprocess.call(["shutdown", "-h", "now"])
+            return JsonResponse({
+                "shutdown": True
             }, status=202)
         except subprocess.CalledProcessError:
             return JsonResponse({
-                "reboot": False
-            }, status=400)        
+                "shutdown": False
+            }, status=400)
+                    
 
 class SettingsList(ListView):
     model = Settings
@@ -65,17 +79,21 @@ def profiles(request, id):
                 if not profile.isActive:
                     profile.isActive = True
                     profile.save()
+                    messages.success(request, "\"" + profile.name + "\" activated.")
                     return JsonResponse({
                         "activated": True
                     }, status=202)
                 else:
-                    messages.error(request, "Profile is already set as active!")
-                    return HttpResponseRedirect(reverse(request))
+                    return JsonResponse({
+                        "activated": false,
+                        "profile":profile.name
+                    }, status=400)
 
             if data.get("backup"):
                 try:
                     path = profile.save_to_file()
                     message = "Profile saved to " + path
+                    messages.success(request, message)
                     return JsonResponse({
                         "backup": True,
                         "path": path
@@ -84,14 +102,16 @@ def profiles(request, id):
                     return JsonResponse({
                         "backup": False,
                         "path": path
-                    }, status=202)
+                    }, status=400)
 
             if data.get("delete"):
                 try:
+                    name = profile.name
                     profile.delete()
+                    message = "\"" + name + "\" deleted successfully."
+                    messages.success(request, message)
                     return JsonResponse({
                         "delete": True,
-                        "profile": profile.name,
                     }, status=202)
                 except:
                     return JsonResponse({
