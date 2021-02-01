@@ -50,13 +50,14 @@ class SettingsAdmin(admin.ModelAdmin):
             super().save_model(request, obj, form, change)
         else:
             super().save_model(request, obj, form, change) 
-
+'''
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('id', 'teamName', 'abbreviation',)
     ordering = ('teamName',)
     readonly_fields = ('name', 'abbreviation', 'teamName', 'locationName', 'jsonLink', 'officialSiteUrl')
+'''
 
 # Register your models here.
 admin.site.register(User)
 admin.site.register(Settings, SettingsAdmin)
-admin.site.register(Team, TeamAdmin)
+# admin.site.register(Team, TeamAdmin)

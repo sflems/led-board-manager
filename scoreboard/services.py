@@ -17,12 +17,20 @@ def conf_default():
             with open(path, "r") as f:
                 conf = json.load(f)
                 return conf
+
+def team_abbrev(id):
+    url = 'https://statsapi.web.nhl.com/api/v1/teams/' + id
+    response = requests.get(url)
+    team = response.json()
+    return team
                 
 def todays_games():
     url = 'https://statsapi.web.nhl.com/api/v1/schedule'
     response = requests.get(url)
     games = response.json()
-    return games['dates'][0]['games']
+    games = games['dates'][0]['games']
+    
+    return games
 
 # Defines config schema used by the current led-scoreboard version. File is opened, converted from binery to a python/django object and then used as a callable object.
 def schema():

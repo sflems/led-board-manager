@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			console.log(result);
 			if (result.activated != true) {
 				document.querySelector('#message').innerHTML = `
-					<div class="alert alert-error alert-dismissible fade show">
+					<div class="alert alert-danger alert-dismissible fade show">
 						<strong>Error!</strong> Profile activation unsuccessful.
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			console.log(result);
 			if (result.backup != true) {
 				document.querySelector('#message').innerHTML = `
-					<div class="alert alert-error alert-dismissible fade show">
+					<div class="alert alert-danger alert-dismissible fade show">
 						<strong>Error!</strong> File save unsuccessful! Attempted to save file as ${result.path}
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			console.log(result);
 			if (result.delete != true) {
 				document.querySelector('#message').innerHTML = `
-					<div class="alert alert-error alert-dismissible fade show">
+					<div class="alert alert-danger alert-dismissible fade show">
 						<strong>Error!</strong> Profile "${result.profile}" deleted <strong>unsuccessfully!</strong>
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
@@ -131,4 +131,37 @@ document.addEventListener('DOMContentLoaded', function () {
 		location.href = `${this.dataset.editurl}`
 	});
 
+	$('button#reboot').click(function () {
+		const csrftoken = Cookies.get('csrftoken');
+		fetch(`${this.dataset.url}`, {
+			headers: {'X-CSRFToken': csrftoken},
+			method: 'PUT',
+			body: JSON.stringify({
+				"reboot": true
+			})
+		})
+		.then(response => response.json())
+		.then(result => {
+			console.log(result);
+			if (result.reboot != true) {
+				document.querySelector('#message').innerHTML = `
+					<div class="alert alert-danger alert-dismissible fade show">
+						<strong>Error!</strong> Reboot unsuccessful!</strong>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>  
+				`;
+			} else {
+				document.querySelector('#message').innerHTML = `
+					<div class="alert alert-success alert-dismissible fade show">
+						<strong>Success!</strong> Raspberry Pi is rebooting...
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>  
+				`;
+			};
+		});
+	});
 });

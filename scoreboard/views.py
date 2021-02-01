@@ -12,12 +12,26 @@ from .forms import schema, SettingsDetailForm, SettingsJSONForm
 from django_jsonforms.forms import JSONSchemaForm
 from .models import *
 from . import services
-import json
+import json, subprocess
 
 # Create your views here.
 def index(request):
     games = services.todays_games()
     return render(request, "scoreboard/index.html", {"games":games,})
+
+@login_required
+def reboot(request):
+    data = json.loads(request.body)
+    if request.method == "PUT" and data.get("reboot"):
+        try:
+            subprocess.check_call(["sudo", "reboot", "now",])
+            return JsonResponse({
+                "reboot": True
+            }, status=202)
+        except subprocess.CalledProcessError:
+            return JsonResponse({
+                "reboot": False
+            }, status=400)        
 
 class SettingsList(ListView):
     model = Settings
@@ -51,14 +65,12 @@ def profiles(request, id):
                 if not profile.isActive:
                     profile.isActive = True
                     profile.save()
-                    messages.success(request, "Profile set as active configuration.")
                     return JsonResponse({
                         "activated": True
                     }, status=202)
                 else:
                     messages.error(request, "Profile is already set as active!")
                     return HttpResponseRedirect(reverse(request))
-            data = json.loads(request.body)
 
             if data.get("backup"):
                 try:
