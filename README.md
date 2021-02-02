@@ -1,7 +1,7 @@
 # NHL LED Scoreboard Web GUI & Configurator
 #### A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
 
-Designed as a solution to manage the NHL LED scoreboard project by @riffnshred. The app uses the current configuration schema found in the `nhl-led-scoreboard/config` directory and generates a form to modify the config. At the moment configs you edit are validated against this current schema exclusively. I'd certainly like to get cross version editing working sooner than later.
+Designed as a solution to manage the NHL LED scoreboard project by @riffnshred. The app uses the current configuration schema found in the `nhl-led-scoreboard/config` directory and generates a form to modify the config. At the moment, configurations you edit are validated against this current schema exclusively. I'd certainly like to get cross version editing working sooner than later.
 
 _(Work in Progress)_
 
@@ -19,9 +19,12 @@ git clone -r https://github.com/sflems/nhl-led-scoreboard-WebGUI.git
 cd nhl-led-scoreboard-WebGUI
 su
 chmod -x autorun.sh
-chmod g-x .secret.txt
+chmod g-w .secret.txt
 su (username)
 ```
+
+The script needs permissiom to start the server.
+The .secret.txt file is automatically generated and saved here. It needs to have the appropriate write permissions as well.
 
 #### Optional but Suggested: 
 ###### Install `virtualenv` using `pip3`, create and activate the environment:
@@ -111,11 +114,13 @@ Or... simply stop the server from the dashboard in the following steps :).
 
 ## Usage
 
+Access the dashboard at `YOUR IP:PORT` in the browser.
+
 Default Admin Login: `admin`
 
 Default Admin Password: `scoreboard`
 
-Please change the password! You can do this by visiting `YOUR IP:PORT/admin`.
+Please change the password! You can do this by visiting `YOUR IP:PORT/admin` and clicking the change password button. Email currently isn't configured.
 
 When a config is activated, the config.json file is replaced with the updated configuration. Be sure to back this up first!!! You can do this on the profiles page. When they are saved, a file is created in the same folder as profile.config.json.bak. Deleted profiles do not delete the config.json or .bak files; it only removes them from the database. Speaking of which, did you back up your profiles? ;)
 
