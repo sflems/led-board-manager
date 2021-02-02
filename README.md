@@ -1,9 +1,15 @@
 # NHL LED Scoreboard Web GUI & Configurator
 #### A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
 
+Designed as a solution to manage the NHL LED scoreboard project by @riffnshred. The app uses the current configuration schema found in the `nhl-led-scoreboard/config` directory and generates a form to modify the config. At the moment, configurations you edit are validated against this current schema exclusively. I'd certainly like to get cross version editing working sooner than later.
+
+_(Work in Progress)_
+
 ## Requirements
 
-[requirements.txt](requirements.txt)
+- [Hockey](https//www.nhl.com)
+
+- [App Dependancies](requirements.txt)
 
 ## Installation
 #### From the `/home/user` directory:
@@ -11,7 +17,14 @@
 ```
 git clone -r https://github.com/sflems/nhl-led-scoreboard-WebGUI.git
 cd nhl-led-scoreboard-WebGUI
+su
+chmod -x autorun.sh
+chmod g-w .secret.txt
+su (username)
 ```
+
+The script needs permissiom to start the server.
+The .secret.txt file is automatically generated and saved here. It needs to have the appropriate write permissions as well.
 
 #### Optional but Suggested: 
 ###### Install `virtualenv` using `pip3`, create and activate the environment:
@@ -76,7 +89,7 @@ Enter `sudo nano /etc/rc.local` to add the following line before `exit 0`:
 ```
 su user -c '/home/user/nhl-led-scoreboard-webGUI/autorun.sh >> /tmp/scoreboard-gui.log 2>&1'
 ```
-...again substituting your username for `user`, or `pi` if it is still the default.
+...again substituting your own username for `user`, or `pi` if it is still the default.
 
 Alternatively, you can setup a [crontab](https://www.raspberrypi.org/documentation/linux/usage/cron.md), [systemd](https://www.raspberrypi.org/documentation/linux/usage/systemd.md), or another method of your choice to autostart the app.
 
@@ -84,13 +97,12 @@ Alternatively, you can setup a [crontab](https://www.raspberrypi.org/documentati
 In a terminal with the server running, `Ctrl` + `C` will terminate the process.
 
 ##### If the server is running in the background:
-Enter `ps aux | grep runserver` and look for the process ID, or `PID` it returns for `/usr/bin/python3 manage.py runserver 0:9002`. If you kill the other process, the virtual environment will remain, but can be closed the same way. 
+Enter `ps aux | grep runserver` and look for the process ID, or `PID` it returns for `/usr/bin/python3 manage.py runserver 0:9002`.
 
 Example response:
 ```
     user@raspi:~ $ ps aux | grep runserver
-    user      6300 26.6  0.8  38236 33364 pts/0    S+   00:22   0:01 python3 manage.py runserver 0:9002
---> user      6302 66.7  0.9  49124 35104 pts/0    Sl+  00:22   0:02 /usr/bin/python3 manage.py runserver 0:9002
+--> user      6300 26.6  0.8  38236 33364 pts/0    S+   00:22   0:01 python3 manage.py runserver 0:9002
     user      6319  0.0  0.0   3160  1536 pts/1    S+   00:22   0:00 grep --color=auto runserver
     user@raspi:~ $ 
 ```
@@ -102,5 +114,13 @@ Or... simply stop the server from the dashboard in the following steps :).
 
 ## Usage
 
-Default Admin Login: admin
-Default Admin Password: scoreboard
+Access the dashboard at `YOUR IP:PORT` in the browser.
+
+Default Admin Login: `admin`
+
+Default Admin Password: `scoreboard`
+
+Please change the password! You can do this by visiting `YOUR IP:PORT/admin` and clicking the change password button. Email currently isn't configured.
+
+When a config is activated, the config.json file is replaced with the updated configuration. Be sure to back this up first!!! You can do this on the profiles page. When they are saved, a file is created in the same folder as profile.config.json.bak. Deleted profiles do not delete the config.json or .bak files; it only removes them from the database. Speaking of which, did you back up your profiles? ;)
+
