@@ -2,9 +2,22 @@ import requests
 import json
 from .models import *
 
-# Gets the users home/user/nhl-led-scoreboard/config folder path.
+def team_abbrev(id):
+    url = 'https://statsapi.web.nhl.com/api/v1/teams' + id
+    response = requests.get(url)
+    team = response.json()
+    return team
+                
+def todays_games():
+    url = 'https://statsapi.web.nhl.com/api/v1/schedule?expand=schedule.linescore'
+    response = requests.get(url)
+    games = response.json()
+    games = games['dates'][0]['games']
+    return games
+
+# defines the users home/user/nhl-led-scoreboard/config folder path.
 def conf_path():
-    path = os.path.expanduser("~") + "/nhl-led-scoreboard/config"
+    path = os.path.expanduser("~") + "/nhl-led-scoreboard/config/"
     return path
 
 # Opens default config from model object if found, otherwise from file, and then loads into Settings Profile
@@ -13,28 +26,14 @@ def conf_default():
             conf = Settings.objects.get(name__iexact="default").config
             return conf
         except:
-            path = conf_path() + "/config.json.sample"
+            path = conf_path() + "config.json.sample"
             with open(path, "r") as f:
                 conf = json.load(f)
                 return conf
 
-def team_abbrev(id):
-    url = 'https://statsapi.web.nhl.com/api/v1/teams/' + id
-    response = requests.get(url)
-    team = response.json()
-    return team
-                
-def todays_games():
-    url = 'https://statsapi.web.nhl.com/api/v1/schedule'
-    response = requests.get(url)
-    games = response.json()
-    games = games['dates'][0]['games']
-    
-    return games
-
 # Defines config schema used by the current led-scoreboard version. File is opened, converted from binery to a python/django object and then used as a callable object.
 def schema():
-    with open("./scoreboard/static/schema/config.schema.json", "r") as f:
+    with open(conf_path() + "config.schema.json", "r") as f:
         conf = json.load(f)
         return conf
 

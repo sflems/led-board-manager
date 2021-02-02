@@ -42,7 +42,7 @@
                             {% endif %}
                         </td>
                         <td style="text-align:center">
-                            {% if not profile.isActive and profile.name.lower != "default" %}
+                            {% if not profile.isActive %}
                                 <button href="#" id="backup" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-sm btn-outline-dark mb-0">Backup</button>
                             {% endif %}
                         </td>

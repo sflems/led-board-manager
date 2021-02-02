@@ -12,7 +12,7 @@ from .forms import schema, SettingsDetailForm, SettingsJSONForm
 from django_jsonforms.forms import JSONSchemaForm
 from .models import *
 from . import services
-import json, subprocess
+import json, os, subprocess
 
 # Create your views here.
 def index(request):
@@ -22,9 +22,35 @@ def index(request):
 @login_required
 def command(request):
     data = json.loads(request.body)
+    if request.method == "PUT" and data.get("autostart"):
+        try:
+            # Rename autostart.sh here
+            pass
+        
+        except subprocess.CalledProcessError:
+            return JsonResponse({
+                "autostart": False,
+            }, status=400)  
+        else:
+            pass 
+
+    if request.method == "PUT" and data.get("stopserver"):
+        try:
+            #call = subprocess.call(["sudo", "reboot"])
+            command = ["sleep 5 ; kill -9 " + str(os.getpid())]
+            call = subprocess.check_call(command, shell=True)
+        
+        except subprocess.CalledProcessError:
+            return JsonResponse({
+                "stopserver": False,
+            }, status=400)             
+             
+
     if request.method == "PUT" and data.get("reboot"):
         try:
-            subprocess.call(["reboot"])
+            #call = subprocess.call(["sudo", "reboot"])
+            command = ["sleep 5 ; sudo reboot"]
+            subprocess.check_call(command, shell=True)
             
         except subprocess.CalledProcessError:
             return JsonResponse({
@@ -37,14 +63,17 @@ def command(request):
 
     if request.method == "PUT" and data.get("shutdown"):
         try:
-            subprocess.call(["shutdown", "-h", "now"])
-            return JsonResponse({
-                "shutdown": True
-            }, status=202)
+            command = "sleep 5 ; sudo shutdown -h now"
+            subprocess.check_call(command, shell=True)
+            
         except subprocess.CalledProcessError:
             return JsonResponse({
                 "shutdown": False
             }, status=400)
+        else:
+            return JsonResponse({
+                "shutdown": True
+            }, status=202)
                     
 
 class SettingsList(ListView):

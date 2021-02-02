@@ -61,7 +61,7 @@ class Settings(models.Model):
         return self.name + " Profile"
 
     def save_to_file(self):
-        path = services.conf_path() + "/" + self.name.lower() + ".config.json.bak"
+        path = services.conf_path() + self.name.lower().replace(" ", ".") + ".config.json.bak"
         with open(path, "w") as outfile:
             # indent=4 makes content human readable
             json.dump(self.config, outfile, indent=4)
@@ -79,7 +79,7 @@ def pre_save(sender, instance, **kwargs):
 @receiver(post_save, sender=Settings)
 def post_save(sender, instance, **kwargs):
     if instance.isActive:
-        with open(services.conf_path() + "/config.json", "w") as outfile:
+        with open(services.conf_path() + "config.json", "w") as outfile:
             # indent=4 makes content human readable
             json.dump(instance.config, outfile, indent=4)
             

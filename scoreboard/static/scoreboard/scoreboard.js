@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		location.href = `${this.dataset.url}`
 	});
 
-	$('.game-time p').each(function () {
+	$('.game-time').each(function () {
 		this.innerText = new Date(this.dataset.datetime).toLocaleTimeString();
 	});
 
@@ -124,6 +124,42 @@ document.addEventListener('DOMContentLoaded', function () {
 		location.href = `${this.dataset.editurl}`
 	});
 
+	$('button#stopserver').click(function () {
+		const csrftoken = Cookies.get('csrftoken');
+		fetch(`${this.dataset.url}`, {
+			headers: {'X-CSRFToken': csrftoken},
+			method: 'PUT',
+			body: JSON.stringify({
+				"stopserver": true
+			})
+		})
+		.then(response => response.json())
+		.then(result => {
+			console.log(result);
+			if (result.stopserver != true) {
+				document.querySelector('#message').innerHTML = `
+					<div class="alert alert-danger alert-dismissible fade show">
+						<strong>Error!</strong> Server shutdown unsuccessful.
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>  
+				`;
+				// make this the no response. not result.
+			} else {
+				document.querySelector('#message').innerHTML = `
+					<div class="alert alert-success alert-dismissible fade show">
+						<strong>Success!</strong> Web interface will shutdown in 5 seconds...
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>  
+				`;
+			};
+		})
+	});
+
+
 	$('button#reboot').click(function () {
 		const csrftoken = Cookies.get('csrftoken');
 		fetch(`${this.dataset.url}`, {
@@ -148,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			} else {
 				document.querySelector('#message').innerHTML = `
 					<div class="alert alert-success alert-dismissible fade show">
-						<strong>Success!</strong> Reboot initiated.
+						<strong>Success!</strong> Rebooting in 5 seconds...
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>

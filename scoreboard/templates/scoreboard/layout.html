@@ -39,9 +39,10 @@
 			<div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
 				<ul class="navbar-nav">
 					{% if user.is_authenticated %}
-						<button class="btn btn-sm btn-info ml-1 mr-1" id="reboot" data-url="{% url 'command_pi' %}">Reboot</button>
-						<button class="btn btn-sm btn-danger ml-1 mr-1" id="shutdown" data-url="{% url 'command_pi' %}">Shutdown</button>
-						<button class="btn btn-sm btn-dark ml-1 mr-1" onclick="location.href='{% url 'logout' %}';">Log Out</button>
+						<button class="btn btn-sm btn-warning m-1" id="stopserver" data-url="{% url 'command_pi' %}">Stop Server</button>
+						<button class="btn btn-sm btn-info m-1" id="reboot" data-url="{% url 'command_pi' %}">Reboot</button>
+						<button class="btn btn-sm btn-danger m-1" id="shutdown" data-url="{% url 'command_pi' %}">Shutdown</button>
+						<button class="btn btn-sm btn-dark m-1" onclick="location.href='{% url 'logout' %}';">Log Out</button>
 
 					{% else %}
 						<button class="btn btn-sm btn-dark" onclick="location.href='{% url 'login' %}';">Log In</button>
