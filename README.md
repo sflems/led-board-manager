@@ -1,7 +1,7 @@
 # NHL LED Scoreboard Web GUI & Configurator
 #### A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
 
-Designed as a solution to manage the NHL LED scoreboard project by @riffnshred. The app uses the current configuration schema found in the `nhl-led-scoreboard/config` directory and generates a form to modify the config. It references the JSON schema here and currently does not support editing configurations across versions. At the moment configs you edit are validated against this current schema exclusively. I'd certainly like to get this working sooner than later.
+Designed as a solution to manage the NHL LED scoreboard project by @riffnshred. The app uses the current configuration schema found in the `nhl-led-scoreboard/config` directory and generates a form to modify the config. At the moment configs you edit are validated against this current schema exclusively. I'd certainly like to get cross version editing working sooner than later.
 
 _(Work in Progress)_
 
