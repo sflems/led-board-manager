@@ -102,4 +102,5 @@ Or... simply stop the server from the dashboard in the following steps :).
 
 ## Usage
 
-##### TODO!
+Default Admin Login: admin
+Default Admin Password: scoreboard

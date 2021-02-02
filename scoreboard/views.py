@@ -37,8 +37,9 @@ def command(request):
     if request.method == "PUT" and data.get("stopserver"):
         try:
             #call = subprocess.call(["sudo", "reboot"])
-            command = ["sleep 5 ; kill -9 " + str(os.getpid())]
+            command = ["kill -9 " + str(os.getpid()) + " && deactivate"]
             call = subprocess.check_call(command, shell=True)
+           # call = subprocess.check_call("deactivate", shell=True)
         
         except subprocess.CalledProcessError:
             return JsonResponse({
