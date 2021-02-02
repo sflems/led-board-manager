@@ -1,9 +1,12 @@
 # NHL LED Scoreboard Web GUI & Configurator
 #### A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
+_(Work in Progress)_
 
 ## Requirements
 
-[requirements.txt](requirements.txt)
+- [Hockey](https//www.nhl.com)
+
+- [App Dependancies](requirements.txt)
 
 ## Installation
 #### From the `/home/user` directory:
@@ -102,5 +105,6 @@ Or... simply stop the server from the dashboard in the following steps :).
 
 ## Usage
 
-Default Admin Login: admin
-Default Admin Password: scoreboard
+Default Admin Login: `admin`
+
+Default Admin Password: `scoreboard`
