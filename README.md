@@ -14,6 +14,10 @@ _(Work in Progress)_
 ```
 git clone -r https://github.com/sflems/nhl-led-scoreboard-WebGUI.git
 cd nhl-led-scoreboard-WebGUI
+su
+chmod -x autorun.sh
+chmod g-x .secret.txt
+su (username)
 ```
 
 #### Optional but Suggested: 
@@ -79,7 +83,7 @@ Enter `sudo nano /etc/rc.local` to add the following line before `exit 0`:
 ```
 su user -c '/home/user/nhl-led-scoreboard-webGUI/autorun.sh >> /tmp/scoreboard-gui.log 2>&1'
 ```
-...again substituting your username for `user`, or `pi` if it is still the default.
+...again substituting your own username for `user`, or `pi` if it is still the default.
 
 Alternatively, you can setup a [crontab](https://www.raspberrypi.org/documentation/linux/usage/cron.md), [systemd](https://www.raspberrypi.org/documentation/linux/usage/systemd.md), or another method of your choice to autostart the app.
 
@@ -87,13 +91,12 @@ Alternatively, you can setup a [crontab](https://www.raspberrypi.org/documentati
 In a terminal with the server running, `Ctrl` + `C` will terminate the process.
 
 ##### If the server is running in the background:
-Enter `ps aux | grep runserver` and look for the process ID, or `PID` it returns for `/usr/bin/python3 manage.py runserver 0:9002`. If you kill the other process, the virtual environment will remain, but can be closed the same way. 
+Enter `ps aux | grep runserver` and look for the process ID, or `PID` it returns for `/usr/bin/python3 manage.py runserver 0:9002`.
 
 Example response:
 ```
     user@raspi:~ $ ps aux | grep runserver
-    user      6300 26.6  0.8  38236 33364 pts/0    S+   00:22   0:01 python3 manage.py runserver 0:9002
---> user      6302 66.7  0.9  49124 35104 pts/0    Sl+  00:22   0:02 /usr/bin/python3 manage.py runserver 0:9002
+--> user      6300 26.6  0.8  38236 33364 pts/0    S+   00:22   0:01 python3 manage.py runserver 0:9002
     user      6319  0.0  0.0   3160  1536 pts/1    S+   00:22   0:00 grep --color=auto runserver
     user@raspi:~ $ 
 ```
