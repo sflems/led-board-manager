@@ -27,7 +27,7 @@ SECRET_KEY = secret_key_generator.generate()
 DEBUG = True
 
 # Allows server to be hosted on local subnet
-ALLOWED_HOSTS = ['192.168.1.{}'.format(i) for i in range(256)]
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -119,7 +119,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

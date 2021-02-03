@@ -23,10 +23,8 @@ def conf_path():
 # Opens default config from model object if found, otherwise from file, and then loads into Settings Profile
 def conf_default():
         try:
-            path = conf_path() + "config.json"
-            with open(path, "r") as f:
-                conf = json.load(f)
-                return conf
+            conf = Settings.objects.get(name__iexact="default").config
+            return conf
         except:
             path = conf_path() + "config.json.sample"
             with open(path, "r") as f:
@@ -35,7 +33,7 @@ def conf_default():
 
 # Defines config schema used by the current led-scoreboard version. File is opened, converted from binery to a python/django object and then used as a callable object.
 def schema():
-    with open(os.path.expanduser("~") + "/nhl-led-scoreboard-WebGUI/scoreboard/static/schema/config.schema.json", "r") as f:
+    with open(conf_path() + "config.schema.json", "r") as f:
         conf = json.load(f)
         return conf
 
