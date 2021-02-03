@@ -75,9 +75,7 @@ We're going to use the Raspberry Pi's `/etc/rc.local` file to start our script a
 ```
 #!/bin/bash
 
-cd /home/user/nhl-led-scoreboard-webGUI
-source env/bin/activate
-exec python3 /home/user/nhl-led-webGUI/manage.py runserver 0:9002 --noreload &
+exec /home/user/nhl-led-scoreboard-WebGUI/env/bin/python3 /home/user/nhl-led-scoreboard-WebGUI/manage.py runserver 0:9002 --noreload &
 
 exit 0
 ```
