@@ -3,70 +3,60 @@
 
 {% block settingslist %}
 
-    <h2>Configuration Profiles</h1>
+        <h4 class="row m-2 p-2 justify-content-center">Configuration Profiles</h4>
+        
+        <table class="table table-hover table-responsive-md" id="config-table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col" style="text-align:left">Name</th>
+                    <th scope="col" style="text-align:right">Active</th>
+                    <th scope="col" style="text-align:center" id="edit_col"></th>
+                    <th scope="col" style="text-align:center" id="delete_col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for profile in object_list %}
+                        <tr class="profile-info align-middle">
+                            <th scope="row" class="modal-link align-middle" data-toggle="modal" data-target="#configModal" data-json="{{ profile.config|safe }}" style="text-align:left">
+                                {{ profile.name }}
+                            </th>
+                            <td style="text-align:right">
+                                {% if profile.isActive %}
+                                    <img src={% static 'scoreboard/check-square-fill.svg' %} width="16" height="16" class="check-square-fill mr-3">
+                                    </img>
+                                {% else %}
+                                    <img src={% static 'scoreboard/x-square-fill.svg' %} width="16" height="16" class="x-square-fill mr-3">
+                                    </img>
+                                    <button href="#" id="activate" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-block btn-sm btn-success mt-3 mb-0 ml-3">Activate</button>
+                                {% endif %}
+                            </td>
+                            <td style="text-align:center">
+                                {% if not profile.isActive and profile.name.lower != "default" %}
+                                    <button href="#" id="edit" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-block btn-sm btn-outline-dark ml-2 mb-2">Edit</button>
+                                    <button href="#" id="backup" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-block btn-sm btn-outline-dark ml-2 mb-0">Backup</button>
+                                {% endif %}
+                            </td>
+                            <td style="text-center">
+                                {% if not profile.isActive and profile.name.lower != "default" %}
 
-    <table class="table table-hover" id="config-table">
-            <thead class="thead-dark">
-            <tr>
-                <th scope="col" style="text-align:left">Name</th>
-                <th scope="col" style="text-align:right">Active</th>
-                <th scope="col" style="text-align:center" id="activate_col"></th>
-                <th scope="col" style="text-align:center" id="edit_col"></th>
-                <th scope="col" style="text-align:center" id="backup_col"></th>
-                <th scope="col" style="text-align:center" id="delete_col"></th>
-            </tr>
-            </thead>
-            <tbody>
-                {% for profile in object_list %}
-                    <tr class="profile-info">
-                        <th scope="row" class="col-9 modal-link" data-toggle="modal" data-target="#configModal" data-json="{{ profile.config|safe }}" style="text-align:left">
-                            {{ profile.name }}
-                        </th>
-                        <td style="text-align:right">
-                            {% if profile.isActive %}
-                                <img src={% static 'scoreboard/check-square-fill.svg' %} width="16" height="16" class="check-square-fill mr-3">
-                                </img>
-                            {% else %}
-                                <img src={% static 'scoreboard/x-square-fill.svg' %} width="16" height="16" class="x-square-fill mr-3">
-                                </img>
-                            {% endif %}
-                        </td>
-                        <td style="text-align:center">
-                            {% if not profile.isActive %}
-                                <button href="#" id="activate" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-sm btn-outline-success mb-0">Activate</button>
-                            {% endif %}
-                        </td>
-                        <td style="text-align:center">
-                            {% if not profile.isActive and profile.name.lower != "default" %}
-                                <button href="#" id="edit" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-sm btn-outline-dark mb-0">Edit</button>
-                            {% endif %}
-                        </td>
-                        <td style="text-align:center">
-                            {% if not profile.isActive %}
-                                <button href="#" id="backup" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-sm btn-outline-dark mb-0">Backup</button>
-                            {% endif %}
-                        </td>
-                        <td style="text-align:center">
-                            {% if not profile.isActive and profile.name.lower != "default" %}
+                                    <!-- Delete Profile Modal -->
+                                    <button type="button" id="deleteModalbutton" class="btn btn-sm btn-outline-danger mt-3 mb-0" data-toggle="modal" data-target="#staticBackdrop" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="mt-n1 bi bi-file-earmark-x" viewBox="0 0 16 16">
+                                            <path d="M6.854 7.146a.5.5 0 1 0-.708.708L7.293 9l-1.147 1.146a.5.5 0 0 0 .708.708L8 9.707l1.146 1.147a.5.5 0 0 0 .708-.708L8.707 9l1.147-1.146a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146z"/>
+                                            <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                                        </svg>
+                                    </button>
 
-                                <!-- Delete Profile Modal -->
-                                <button type="button" id="deleteModalbutton" class="btn btn-sm btn-outline-danger mb-0" data-toggle="modal" data-target="#staticBackdrop" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="mt-n1 bi bi-file-earmark-x" viewBox="0 0 16 16">
-                                        <path d="M6.854 7.146a.5.5 0 1 0-.708.708L7.293 9l-1.147 1.146a.5.5 0 0 0 .708.708L8 9.707l1.146 1.147a.5.5 0 0 0 .708-.708L8.707 9l1.147-1.146a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146z"/>
-                                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
-                                    </svg>
-                                </button>
-
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td scope="row" colspan="3" class="text-center bg-warning">No profiles found.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-    </table>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td scope="row" colspan="3" class="text-center bg-warning">No profiles found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+        </table>
 
     <!-- JSON Modal -->
     <div class="modal fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel" aria-hidden="true">

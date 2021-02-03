@@ -27,7 +27,7 @@ SECRET_KEY = secret_key_generator.generate()
 DEBUG = True
 
 # Allows server to be hosted on local subnet
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['192.168.{}.{}'.format(i,j) for i in range(256) for j in range(256)]
 
 # Application definition
 
@@ -125,4 +125,5 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static') 
 STATIC_URL = '/static/'

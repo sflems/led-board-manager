@@ -88,3 +88,4 @@ def post_save(sender, instance, **kwargs):
 def delete_is_default(sender, instance, **kwargs):
     if instance.name.lower() == "default":
        raise FieldError('Default profile is read-only. Profile not removed.')
+

@@ -179,17 +179,26 @@ def profiles_create(request):
             isActive = detailform.cleaned_data['isActive']
 
             active_profiles = Settings.objects.filter(isActive=True).exclude(name=name)
-            new_settings = Settings.objects.create(name=name, isActive=isActive, config=json.loads(new_config))
-            new_settings.save()
+            
+            try:
+                if Settings.objects.get(name__iexact=name.lower()):
+                    Settings.objects.filter(name.lower()).update(name=name, isActive=isActive, config=json.loads(new_config))
+                else:
+                    new_settings = Settings.objects.create(name=name, isActive=isActive, config=json.loads(new_config))
+                    new_settings.save()
 
-            notes = [
-                " (Not Active)",
-                " (Active)" 
-            ]
-            message = "Your profile has been saved." + notes[new_settings.isActive]
-            messages.success(request, message)
+                notes = [
+                    " (Not Active)",
+                    " (Active)" 
+                ]
+                message = "Your profile has been saved." + notes[new_settings.isActive]
+                messages.success(request, message)
 
-            return HttpResponseRedirect(reverse("profiles_list"), {"message": message,})
+                return HttpResponseRedirect(reverse("profiles_list"), {"message": message,})
+            
+            except Model.DoesNotExist:
+                obj = Model.objects.create(name=name, isActive=isActive, config=json.loads(new_config))
+                obj.save()
 
         elif FieldError:
             schema = services.schema()

@@ -15,45 +15,54 @@
 
     <h4 class="row m-2 p-2 justify-content-center">Today's Lineup</h4>
 	<div id="games-list" class="row m-2 p-2 justify-content-center">
-        <div class="col">
-            
-        </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr class="align-middle text-center">
+                        <th scope="col">Away</th>
+                        <th scope="col">vs</th>
+                        <th scope="col">Home</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for game in games %}
+                        <tr id="{{ game.gamePk }}" class="align-middle text-center">
+                            <td scope="row"  class="align-middle">{{ game.teams.away.team.name }}</td>
+                            <td class="align-middle"><small>vs.</small></td>
+                            <td class="align-middle">{{ game.teams.home.team.name }}</td>
+                            <td class="align-middle justify-content-center">
+                                <table class="table-sm table-nested table-borderless">
+                                    <tbody>
+                                        <tr scope="col" class="table-nostriped">
+                                            <td scope="row">{{ game.teams.away.score }} - {{ game.teams.home.score }}</td>
+                                        </tr>
+                                        <tr>
+                                            {% if game.linescore.currentPeriod == 0 %}
+                                                <td scope="row" class="game-time" data-datetime="{{ game.gameDate }}"></td>
+                                            {% elif game.status.detailedState != "Final" %}
+                                                <td scope="row" class="game-state">{{ game.linescore.currentPeriodOrdinal }} - {{ game.linescore.currentPeriodTimeRemaining }}</td>
+                                            {% elif game.status.detailedState == "Postponed" %}
+                                                <td scope="row" class="game-state"> {{ POSTPONED }}</td>
+                                            {% else %}
+                                                {% if game.linescore.currentPeriod > 3%}   
+                                                    <td scope="row" class="game-state">{{ game.status.detailedState }}/{{ game.linescore.currentPeriodOrdinal }}</td>
+                                                {% else %}   
+                                                    <td scope="row" class="game-state">{{ game.status.detailedState }}</td>
+                                                {% endif %}
+                                            {% endif %}
+                                        </tr>
+                                    </tbody>                            
+                                </table>
+                            </td>
+                            
+                        </tr>          
+                    {% empty %}
+                        <tr>
+                            <td scope="row" colspan="12" class="text-center bg-warning">No games found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 	</div>
 
-    <table class="table table-striped text-center">
-        <thead>
-            <tr>
-                <th scope="col" class="col-3">Away</th>
-                <th scope="col" class="col-1">vs.</th>
-                <th scope="col" class="col-3">Home</th>
-                <th scope="col" class="col-3">Score</th>
-                <th scope="col" class="col-2">Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for game in games %}
-                <tr id="{{ game.gamePk }}">
-                    <td scope="row">{{ game.teams.away.team.name }}</td>
-                    <td>vs.</td>
-                    <td>{{ game.teams.home.team.name }}</td>
-                    <td><span>{{ game.teams.away.score }}</span><span class="ml-3 mr-3">-</span><span>{{ game.teams.home.score }}</span></td>
-                    {% if game.linescore.currentPeriod == 0 %}
-                        <td class="game-time" data-datetime="{{ game.gameDate }}"></td>
-                    {% elif game.status.detailedState != "Final" %}
-                        <td class="game-ls">{{ game.linescore.currentPeriodOrdinal }}</td>
-                    {% else %}
-                        <td class="game-ls">{{ game.status.detailedState }} 
-                            {% if game.linescore.currentPeriod > 3 %}
-                                ({{ game.linescore.currentPeriodOrdinal }})
-                            {% endif %}
-                        </td>
-                    {% endif %}
-                </tr>          
-            {% empty %}
-                <tr>
-                    <td scope="row" colspan="12" class="text-center bg-warning">No games found.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 {% endblock body %}
