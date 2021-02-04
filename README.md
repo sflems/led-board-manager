@@ -23,6 +23,7 @@ The original files are overwritten and saved as `config.json.webgui.bak` and `co
 git clone -r https://github.com/sflems/nhl-led-scoreboard-webgui.git
 cd nhl-led-scoreboard-webgui
 chmod +x install.sh
+./install.sh
 ```
 If all is working, you should then be able to access the app @ `YOUR_IP:9002` in the browser. 
 
