@@ -20,7 +20,7 @@ __Be sure to back up any previous configurations before use!!!__
 The original files are overwritten and saved as `config.json.webgui.bak` and `config.schema.json.webgui.bak` in the `nhl-led-scoreboard/config/bak` subdirectory.
 
 ```
-git clone -r https://github.com/sflems/nhl-led-scoreboard-webgui.git
+git clone --recursive https://github.com/sflems/nhl-led-scoreboard-webgui.git
 cd nhl-led-scoreboard-webgui
 chmod +x install.sh
 ./install.sh
