@@ -4,17 +4,10 @@
 
 {% block body %}
 
-    {% if error %}
-		<div class="alert alert-danger alert-dismissible fade show">
-			<strong>Heads up!</strong> {{ error }}
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>  
-	{% endif %}
-
     <h4 class="row m-2 p-2 justify-content-center">Today's Lineup</h4>
-	<div id="games-list" class="row m-2 p-2 justify-content-center">
+    
+	<div id="games-list" class="row justify-content-center">
+        <div class="col">
             <table class="table table-striped">
                 <thead>
                     <tr class="align-middle text-center">
@@ -63,6 +56,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-	</div>
+        </div>
+    </div>
 
 {% endblock body %}

@@ -14,6 +14,11 @@ from .models import *
 from . import services
 import json, os, subprocess
 
+notes = [
+                    " (Not Active)",
+                    " (Active)" 
+                ]
+
 # Create your views here.
 def index(request):
     games = services.todays_games()
@@ -24,7 +29,7 @@ def command(request):
     data = json.loads(request.body)
     if request.method == "PUT" and data.get("autostart"):
         try:
-            # Rename autostart.sh here
+            # Autostart toggle option for autostart.sh here
             pass
         
         except subprocess.CalledProcessError:
@@ -90,10 +95,10 @@ def profiles(request, id):
             startval = profile.config
             options = services.form_options(startval)
 
-            # JSONResponse to refill form? This isnt working.
-            return render(request, "scoreboard/settings_create.html", { 
+            return render(request, "scoreboard/settings_edit.html", { 
                 "detailform": SettingsDetailForm(instance=profile), 
-                "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True)
+                "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True),
+                "profile_id": profile.pk
                 })
         else:
             messages.error(request, "Cannot edit the default profile!")
@@ -153,8 +158,26 @@ def profiles(request, id):
             return render(request, "scoreboard/settings_create.html", {
                 "error": "No profile found."
             })
+
+
+
+    elif request.method == "POST":
+        profile = get_object_or_404(Settings, pk=id)
+        detailform = SettingsDetailForm(request.POST, instance=profile)
+        new_config = json.loads(request.POST['json'].encode().decode('utf-8-sig'))
+
+        if detailform.is_valid():
+            profile.config = new_config
+            profile.save(update_fields=['config'])
+            detailform.save()
+            message = "Your profile has been updated." + notes[profile.isActive]
+            messages.success(request, message)
+
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message,})
+
+        
     else:
-        messages.error(request, "Must sent a PUT request to this URL.")
+        messages.error(request, "Must sent a POST or PUT request to this URL.")
         return HttpResponseRedirect("/settings_list/")
 
 @login_required
@@ -171,34 +194,22 @@ def profiles_create(request):
     if request.method == "POST":
         detailform = SettingsDetailForm(request.POST)
         # The request data for the config json must be encoded and then decoded again as below due to a BOM error. Without this the form submissions are saved as slash escaped strings... but why? Possibly due to jsonforms encoding methods.
-        new_config = request.POST['json'].encode().decode('utf-8-sig')
+        new_config = json.loads(request.POST['json'].encode().decode('utf-8-sig'))
 
         if detailform.is_valid():           
             
             name = detailform.cleaned_data['name']
             isActive = detailform.cleaned_data['isActive']
-
-            active_profiles = Settings.objects.filter(isActive=True).exclude(name=name)
             
-            try:
-                if Settings.objects.get(name__iexact=name.lower()):
-                    Settings.objects.filter(name.lower()).update(name=name, isActive=isActive, config=json.loads(new_config))
-                else:
-                    new_settings = Settings.objects.create(name=name, isActive=isActive, config=json.loads(new_config))
-                    new_settings.save()
-
-                notes = [
-                    " (Not Active)",
-                    " (Active)" 
-                ]
-                message = "Your profile has been saved." + notes[new_settings.isActive]
-                messages.success(request, message)
-
-                return HttpResponseRedirect(reverse("profiles_list"), {"message": message,})
             
-            except Model.DoesNotExist:
-                obj = Model.objects.create(name=name, isActive=isActive, config=json.loads(new_config))
-                obj.save()
+
+            new_settings = Settings.objects.create(name=name, isActive=isActive, config=new_config)
+            new_settings.save()
+
+            message = "Your profile has been saved." + notes[isActive]
+            messages.success(request, message)
+
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message,})
 
         elif FieldError:
             schema = services.schema()

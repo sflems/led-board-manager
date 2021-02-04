@@ -82,10 +82,5 @@ def post_save(sender, instance, **kwargs):
         with open(services.conf_path() + "config.json", "w") as outfile:
             # indent=4 makes content human readable
             json.dump(instance.config, outfile, indent=4)
-            
-    
-@receiver(pre_delete, sender=Settings)
-def delete_is_default(sender, instance, **kwargs):
-    if instance.name.lower() == "default":
-       raise FieldError('Default profile is read-only. Profile not removed.')
+
 

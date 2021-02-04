@@ -4,17 +4,6 @@
 
 {% block body %}
 
-    {% if error %}
-		<div class="alert alert-danger alert-dismissible fade show">
-			<strong>Heads up!</strong> {{ error }}
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>  
-	{% endif %}
-
-    <div id="message">{{ message }}</div>
-
 	<div class="page-nav row m-2 p-2 justify-content-center">
 		<form id="settingsform" action="{% url 'create' %}" method="post">
 			{% csrf_token %}
