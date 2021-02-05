@@ -21,12 +21,11 @@ chmod g+w .secret.txt
 # Install the app requirements and dependencies from the included requirements.txt file:
 pip3 install -r requirements.txt
 
-echo "Moving original config.json and schema files to "$TARGET"/config/bak/original/" 1>&3
+echo "Moving original schema file to "$TARGET"/config/bak/original/" 1>&3
 
 mkdir -p $TARGET/config/bak/original
 
-# Copy the updated Schema and default config to the config folder in the nhl-led-scoreboard directory. Backs up originals first.
-mv $TARGET/config/config.json $TARGET/config/bak/original/config.json
+# Copy the updated Schema to the config folder in the nhl-led-scoreboard directory. Backs up original first.
 mv $TARGET/config/config.schema.json $TARGET/config/bak/original/config.schema.json
 
 echo "Updating schema with modified version..." 1>&3
