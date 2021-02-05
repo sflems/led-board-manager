@@ -41,6 +41,7 @@ def schema():
 # startval takes in current settings (NOT VALIDATED AGAINST SCHEMA). Others modify which JSON editing options are visible to users, themes, etc.
 def form_options(startval):
     options = {
+            "collapse": True,
             "startval": startval,
             "theme": "bootstrap4",
             "object_layout": "default",

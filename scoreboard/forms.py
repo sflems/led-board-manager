@@ -18,7 +18,7 @@ options = form_options(current_conf)
 class SettingsJSONForm(forms.Form):
     json = JSONSchemaField(schema=schema, options=options, ajax=True)
     class Meta:
-        labes = {
+        labels = {
              "json":"",
         }
 

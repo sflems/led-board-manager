@@ -20,7 +20,9 @@ notes = [
                 ]
 
 # Create your views here.
+@login_required
 def index(request):
+
     games = services.todays_games()
     return render(request, "scoreboard/index.html", {"games":games,})
 
@@ -81,7 +83,6 @@ def command(request):
                 "shutdown": True
             }, status=202)
                     
-
 class SettingsList(ListView):
     model = Settings
 
@@ -174,11 +175,6 @@ def profiles(request, id):
             messages.success(request, message)
 
             return HttpResponseRedirect(reverse("profiles_list"), {"message": message,})
-
-        
-    else:
-        messages.error(request, "Must sent a POST or PUT request to this URL.")
-        return HttpResponseRedirect("/settings_list/")
 
 @login_required
 def profiles_create(request):

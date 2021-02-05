@@ -26,8 +26,16 @@ SECRET_KEY = secret_key_generator.generate()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# Allows server to be hosted on local subnet
+
+# Allows server to be hosted on local subnet 192.168.[0-255]].[0-255]
+# This can be modified for your local subnet.
 ALLOWED_HOSTS = ['192.168.{}.{}'.format(i,j) for i in range(256) for j in range(256)]
+
+
+# IF YOU CANT ACCESS THE DEVSERVER
+# Allows server to be hosted on local subnet with unrestricted IPs. Make sure your firewall is accepting local network traffic only!!!
+# ALLOWED_HOSTS = ['192.168.{}.{}'.format(i,j) for i in range(256) for j in range(256)]
+
 
 # Application definition
 
@@ -108,6 +116,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Corrects the default login redirect from the django defaults
+LOGIN_URL = 'login'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -129,3 +140,10 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'static') 
 STATIC_URL = '/static/'
 STATIC_FILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Dummy cache used for data intensive sites & development environments as per Django docs. Should be a good solution for this.
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
