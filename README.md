@@ -1,6 +1,5 @@
 # nhl-led-scoreboard-WebGUI
-A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
-=======
+A Django based web app to configure an <a href="https://g
 # NHL LED Scoreboard Web GUI & Configurator
 #### A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
 
@@ -93,7 +92,7 @@ su user -c '/home/user/nhl-led-scoreboard-webgui/autorun.sh >> /tmp/scoreboard-g
 
 `tail -f -n 100 /tmp/scoreboard-gui.log`
 
-######_If_ you setup a `virtualenv`, change the `autorun.sh` contents to the following:
+###### _If_ you setup a `virtualenv`, change the `autorun.sh` contents to the following:
 
 ```
 #!/bin/bash
