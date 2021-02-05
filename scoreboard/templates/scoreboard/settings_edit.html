@@ -4,13 +4,15 @@
 
 {% block form %}
 	<div class="page-nav row justify-content-center">
-		<form id="settingsform" action="{% url 'profiles' profile_id %}" method="post">
-			{% csrf_token %}
-			{{ detailform|crispy }}
-			{{ JSONform.media }}
-			{{ JSONform }}
-			<input type="submit" value="Submit">
-		</form>
+		<div class="col">
+			<form id="settingsform" class="m-n1" action="{% url 'profiles' profile_id %}" method="post">
+				{% csrf_token %}
+				{{ detailform|crispy }}
+				{{ JSONform.media }}
+				{{ JSONform }}
+				<input type="submit" value="Submit">
+			</form>
+		</div>
 	</div>
 
 	 <div class="page-nav row justify-content-center">
