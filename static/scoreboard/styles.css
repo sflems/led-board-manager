@@ -6,6 +6,10 @@ pre {
     margin-bottom: 0!important;
 }
 
+.alert .close {
+    margin-top:-0.25rem;
+}
+
 label[for=id_json] {
     display: none;
 }
@@ -29,7 +33,5 @@ label[for=id_json] {
 
 .json-editor-btntype-editjson {
     margin-top:-0.25rem;
-    border-radius: .2rem;
+    border-radius: .2rem!important;
 }
-
-json-editor-btntype-editjson

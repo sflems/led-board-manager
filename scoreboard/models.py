@@ -61,7 +61,7 @@ class Settings(models.Model):
         return self.name + " Profile"
 
     def save_to_file(self):
-        path = services.conf_path() + self.name.lower().replace(" ", ".") + ".config.json.bak"
+        path = services.conf_path() + "bak/" + self.name.lower().replace(" ", ".") + ".config.json.bak"
         with open(path, "w") as outfile:
             # indent=4 makes content human readable
             json.dump(self.config, outfile, indent=4)
