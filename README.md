@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # nhl-led-scoreboard-WebGUI
 A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
 =======
@@ -147,4 +146,3 @@ When a profile is backed up, a file is created in the same folder as profile.con
 Speaking of which... _did you back up your profiles?_ ;)
 
 ### Please let me know if you experience any bugs or issues as this is still in the testing phase!
->>>>>>> web50/projects/2020/x/capstone
