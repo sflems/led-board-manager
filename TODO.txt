@@ -1,0 +1,29 @@
+
+"""""""""""""""""""""""""""""""""""""
+-------------------------------------
+ nhl-led-scoreboard-WebGUI To Do List
+-------------------------------------
+--------
+ TODO's:
+--------
+
+ Backend
+---------
+
+TODO: Functions to reboot Pi and restart nhl scoreboard app. (Supervisor?)
+TODO: Create a default settings model instance on intsall? How to do this?
+
+ HTML/CSS/JS
+---------
+
+ TODO: Beautify Boxscores (Index Page)
+ TODO: Beautify Settings Form
+ TODO: Add to settings ListView: Buttons to switch profiles. Adjust urls.py accordingly.
+ TODO: Add rgb picker instead of text box for settings forms. (Schema)
+ TODO: Add time selection instead of user text box for settings forms. (Schema)
+
+ Misc.
+-------
+
+TODO: Update readme.md
+TODO: Install/Usage instructions.

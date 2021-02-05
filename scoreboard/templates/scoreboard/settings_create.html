@@ -1,0 +1,20 @@
+{% extends "scoreboard/layout.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block form %}
+
+	<div class="page-nav row justify-content-center">
+		<form id="settingsform" action="{% url 'create' %}" method="post">
+			{% csrf_token %}
+			{{ detailform|crispy }}
+			{{ JSONform.media }}
+			{{ JSONform }}
+			<input type="submit" value="Submit">
+		</form>
+	</div>
+
+	 <div class="page-nav row justify-content-center">
+		<a href="#">Back to Top</a>
+	</div>
+{% endblock form %}

@@ -1,0 +1,37 @@
+pre {
+    white-space: pre-wrap;
+}
+
+.alert {
+    margin-bottom: 0!important;
+}
+
+.alert .close {
+    margin-top:-0.25rem;
+}
+
+label[for=id_json] {
+    display: none;
+}
+
+.table-nostriped {
+    background-color:transparent!important;
+  }
+
+.table-nested {
+    margin: auto;
+    width: 50% !important;
+}
+
+.json-editor-btntype-add {
+    margin-left:1rem;
+}
+
+.json-editor-btntype-add, .json-editor-btntype-deletelast, .json-editor-btntype-deleteall {
+    margin-top:-0.5rem;
+}
+
+.json-editor-btntype-editjson {
+    margin-top:-0.25rem;
+    border-radius: .2rem!important;
+}
