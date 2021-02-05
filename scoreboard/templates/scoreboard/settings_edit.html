@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block form %}
-	<div class="page-nav row justify-content-center">
+	<div class="page-nav row mt-2 justify-content-center">
 		<div class="col">
 			<form id="settingsform" class="m-n1" action="{% url 'profiles' profile_id %}" method="post">
 				{% csrf_token %}
