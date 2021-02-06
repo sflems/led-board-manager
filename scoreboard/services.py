@@ -41,7 +41,6 @@ def schema():
 # startval takes in current settings (NOT VALIDATED AGAINST SCHEMA). Others modify which JSON editing options are visible to users, themes, etc.
 def form_options(startval):
     options = {
-            "collapse": True,
             "startval": startval,
             "theme": "bootstrap4",
             "object_layout": "default",
@@ -63,8 +62,8 @@ def form_options(startval):
             "disable_array_delete": 0,
             "enable_array_copy": 0,
             "array_controls_top": 1,
-            "disable_array_delete_all_rows": 0,
-            "disable_array_delete_last_row": 0,
+            "disable_array_delete_all_rows": 1,
+            "disable_array_delete_last_row": 1,
             "prompt_before_delete": 1,
         }
     return options
