@@ -21,6 +21,15 @@ document.addEventListener('DOMContentLoaded', function () {
 		this.innerText = new Date(this.dataset.datetime).toLocaleTimeString();
 	});
 
+	// Auto-collapses json forms for easier viewing on load. The "collapsed" option does not work!
+	const collapse_buttons = document.querySelectorAll('button.json-editor-btn-collapse');
+	collapse_buttons.forEach(element => {
+		if (element !== collapse_buttons[0]) {
+			element.click();	
+		};
+	});
+
+
 	// Add's JSON config to modal when profile is clicked on Profile Page.
 	// TODO: Allow users to edit and save form here. MUST BE VALIDATED!
 	$(document).on("click", ".modal-link", function () {

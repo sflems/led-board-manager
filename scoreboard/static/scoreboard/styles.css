@@ -9,6 +9,10 @@ pre {
 .alert .close {
     margin-top:-0.25rem;
 }
+h3.card-title.je-object__title label {
+    padding-top:1rem;
+    margin-bottom:-1rem;
+}
 
 label[for=id_json] {
     display: none;
