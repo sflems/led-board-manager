@@ -32,7 +32,7 @@
                                         {{ profile.name }}
                                     </td>
                                     <td style="text-align:center">
-                                    <ul>
+                                    <ul class="mb-0">
                                         {% if not profile.isActive %}
                                             <button href="#" id="activate" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-block btn-sm btn-success b-2">Activate</button>
                                         {% endif %}
