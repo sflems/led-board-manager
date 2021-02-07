@@ -64,7 +64,7 @@ cp ../nhl-led-scoreboard/config/config.json ../nhl-led-scoreboard/config/bak/ori
 `cp ./scoreboard/static/schema/config.schema.json ../nhl-led-scoreboard/config/config.schema.json`
 
 ###### Install the app requirements and dependencies from the included requirements.txt file:
-`pip3 install -r requirements`
+`pip3 install -r requirements.txt`
 
 ###### Once complete, we'll make, migrate and fill our sqlite3 database with the supplied teams data in the fixtures folder:
 
