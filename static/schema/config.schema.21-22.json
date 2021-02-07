@@ -429,7 +429,7 @@
                     "standings": {
                         "standing_type": "wild_card",
                         "preferred_standings_only": true,
-                        "divisions": "north",
+                        "divisions": "central",
                         "conference": "eastern"
                     },
                     "covid19": {
@@ -554,7 +554,7 @@
                     "default": {},
                     "examples": [
                         {
-                            "divisions": "north",
+                            "divisions": "central",
                             "conference": "eastern",
                             "standing_type": "wild_card",
                             "preferred_standings_only": true
@@ -596,17 +596,17 @@
                         "divisions": {
                             "$id": "#/properties/boards/properties/standings/properties/divisions",
                             "type": "string",
-                            "title": "divisions (north, south, east, west)",
+                            "title": "divisions (central, pacific, atlanic, metropolitan",
                             "description": "Your preferred division",
                             "default": "",
                             "examples": [
-                                "north"
+                                "central"
                             ],
                             "enum": [
-                                "north",
-                                "west",
-                                "south",
-                                "east"
+                                "central",
+                                "pacific", 
+                                "atlanic", 
+                                "metropolitan"
                             ]
                         },
                         "conference": {

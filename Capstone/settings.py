@@ -40,6 +40,7 @@ ALLOWED_HOSTS = ['192.168.{}.{}'.format(i,j) for i in range(256) for j in range(
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'scoreboard',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -139,7 +140,7 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static') 
 STATIC_URL = '/static/'
-STATIC_FILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_FILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Dummy cache used for data intensive sites & development environments as per Django docs. Should be a good solution for this.
 CACHES = {

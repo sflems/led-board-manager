@@ -10,9 +10,8 @@ TARGET="$( cd ../nhl-led-scoreboard && pwd )"
 echo "Working directory: "$DIR 1>&3
 echo "Target: "$TARGET 1>&3
 
-echo "Changing autorun.sh and .secret.txt permissions..." 1>&3
-# The autorun script needs permission to start the server.
-chmod +x autorun.sh
+# A permission issue in the past was solved by creating the file on install and granting the permissions.
+echo "Touching .secret.txt and updating permissions..." 1>&3
 
 # The .secret.txt file is automatically generated and saved here. It may also need to have the appropriate write permissions as well.
 touch .secret.txt
@@ -26,11 +25,11 @@ echo "Moving original schema file to "$TARGET"/config/bak/original/" 1>&3
 mkdir -p $TARGET/config/bak/original
 
 # Copy the updated Schema to the config folder in the nhl-led-scoreboard directory. Backs up original first.
-mv $TARGET/config/config.schema.json $TARGET/config/bak/original/config.schema.json
+mv $TARGET/config/config.schema.json $TARGET/config/bak/original/$(date +"%Y_%m_%d_%I_%M_%p")-config.schema.json
 
 echo "Updating schema with modified version..." 1>&3
 
-cp ./scoreboard/fixtures/config.json $TARGET/config/config.json
+# THIS NEEDS TO BE UPDATED FOR THE 2021-2022 Season!!! Updated schema file with divisions is in static/schema dir.
 cp ./scoreboard/static/schema/config.schema.json $TARGET/config/config.schema.json
 
 echo "Generating WebGUI database and loading initial data..." 1>&3
@@ -40,12 +39,5 @@ python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py loaddata teams.json
 
-
-echo "Starting server on: 0.0.0.0:9002. Access on your local network @ http://YOURIP:9002" 1>&3
-
-
-# Start server on localhost
-python3 manage.py runserver 0:9002 --noreload & 1>&3
-
-echo "Setup completed." 1>&3
+echo "Setup completed. Start the server with command 'python3 manage.py runserver 0:9002 --noreload &', or './autorun.sh'" 1>&3
 exit 0

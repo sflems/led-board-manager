@@ -290,6 +290,8 @@
                             "weather"
                         ],
                         "enum": [
+                            "wxalert",
+                            "wxforecast",
                             "scoreticker",
 							"seriesticker",
                             "standings",
@@ -328,6 +330,8 @@
                             "scoreticker"
                         ],
                         "enum": [
+                            "wxalert",
+                            "wxforecast",
                             "scoreticker",
 							"seriesticker",
                             "standings",
@@ -362,6 +366,8 @@
                             "clock"
                         ],
                         "enum": [
+                            "wxalert",
+                            "wxforecast",
                             "scoreticker",
 							"seriesticker",
                             "standings",
@@ -396,6 +402,8 @@
                             "scoreticker"
                         ],
                         "enum": [
+                            "wxalert",
+                            "wxforecast",
                             "scoreticker",
 							"seriesticker",
                             "standings",
@@ -421,7 +429,7 @@
                     "standings": {
                         "standing_type": "wild_card",
                         "preferred_standings_only": true,
-                        "divisions": "central",
+                        "divisions": "north",
                         "conference": "eastern"
                     },
                     "covid19": {
@@ -546,7 +554,7 @@
                     "default": {},
                     "examples": [
                         {
-                            "divisions": "central",
+                            "divisions": "north",
                             "conference": "eastern",
                             "standing_type": "wild_card",
                             "preferred_standings_only": true
@@ -588,17 +596,17 @@
                         "divisions": {
                             "$id": "#/properties/boards/properties/standings/properties/divisions",
                             "type": "string",
-                            "title": "divisions (central, pacific, atlanic, metropolitan",
+                            "title": "divisions (north, south, east, west)",
                             "description": "Your preferred division",
                             "default": "",
                             "examples": [
-                                "central"
+                                "north"
                             ],
                             "enum": [
-                                "central",
-                                "pacific", 
-                                "atlanic", 
-                                "metropolitan"
+                                "north",
+                                "west",
+                                "south",
+                                "east"
                             ]
                         },
                         "conference": {
