@@ -39,12 +39,5 @@ python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py loaddata teams.json
 
-
-echo "Starting server on: 0.0.0.0:9002. Access on your local network @ http://YOURIP:9002" 1>&3
-
-
-# Start server on localhost
-python3 manage.py runserver 0:9002 --noreload & 1>&3
-
-echo "Setup completed." 1>&3
+echo "Setup completed. Start the server with 'command python3 manage.py runserver 0:9002 --noreload &', or './autorun.sh'" 1>&3
 exit 0
