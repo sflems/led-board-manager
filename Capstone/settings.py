@@ -40,6 +40,7 @@ ALLOWED_HOSTS = ['192.168.{}.{}'.format(i,j) for i in range(256) for j in range(
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'scoreboard',
     'django.contrib.admin',
     'django.contrib.auth',
