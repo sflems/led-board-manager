@@ -54,12 +54,14 @@ chmod g+w .secret.txt
 ```
 
 ###### Back up originals and then copy the updated Schema to the config folder in the nhl-led-scoreboard directory.
+```
 mkdir -p ../nhl-led-scoreboard/config/bak/original 
 mv ../nhl-led-scoreboard/config/config.schema.json ../nhl-led-scoreboard/config/bak/original/$(date +"%Y_%m_%d_%I_%M_%p")-config.schema.json
 cp ../nhl-led-scoreboard/config/config.json ../nhl-led-scoreboard/config/bak/original/$(date +"%Y_%m_%d_%I_%M_%p")-config.json
+```
 
 ###### THIS NEEDS TO BE UPDATED FOR THE 2021-2022 Season!!! Updated schema file with divisions is in /nhl-led-scoreboard-webgui/scoreboard/static/schema dir.
-cp ./scoreboard/static/schema/config.schema.json ../nhl-led-scoreboard/config/config.schema.json
+`cp ./scoreboard/static/schema/config.schema.json ../nhl-led-scoreboard/config/config.schema.json`
 
 ###### Install the app requirements and dependencies from the included requirements.txt file:
 `pip3 install -r requirements`
