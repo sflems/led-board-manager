@@ -17,7 +17,7 @@ def todays_games():
 
 # defines the users home/user/nhl-led-scoreboard/config folder path.
 def conf_path():
-    path = os.path.dirname(os.getcwd()) + "/nhl-led-scoreboard/config/"
+    path = os.getcwd() + "/nhl-led-scoreboard/config/"
     return path
 
 # Opens default config from model object if found, otherwise from file, and then loads into Settings Profile
