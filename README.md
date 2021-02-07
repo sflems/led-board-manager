@@ -29,6 +29,7 @@ __Be sure to back up any previous configurations before use!!!__ The original fi
 git clone --recursive https://github.com/sflems/nhl-led-scoreboard-webgui.git
 cd nhl-led-scoreboard-webgui
 ./install.sh
+python3 manage.py runserver 0:9002 --noreload
 ```
 If all is working, you should then be able to access the app @ `YOUR_IP:9002` in the browser. 
 
