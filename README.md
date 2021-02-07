@@ -8,6 +8,9 @@ The app uses the current configuration schema found in the `nhl-led-scoreboard/c
 _(Work in Progress)_
 
 ## Requirements
+- [Raspberry Pi (Zero WH, 3B+, 3A+, 4B)](https://github.com/riffnshred/nhl-led-scoreboard)
+
+- [NHL LED Scoreboard](https://github.com/riffnshred/nhl-led-scoreboard)
 
 - [Hockey](https//www.nhl.com)
 
@@ -16,13 +19,12 @@ _(Work in Progress)_
 ## Installation
 #### From the `/home/user` directory:
 ###### (or the same location as your `nhl-led-scoreboard` directory)
-__Be sure to back up any previous configurations before use!!!__
-The original files are overwritten and saved as `config.json.webgui.bak` and `config.schema.json.webgui.bak` in the `nhl-led-scoreboard/config/bak` subdirectory.
+
+__Be sure to back up any previous configurations before use!!!__ The original files are overwritten and saved as `config.json.webgui.bak` and `config.schema.json.webgui.bak` in the `nhl-led-scoreboard/config/bak` subdirectory.
 
 ```
 git clone --recursive https://github.com/sflems/nhl-led-scoreboard-webgui.git
 cd nhl-led-scoreboard-webgui
-chmod +x install.sh
 ./install.sh
 ```
 If all is working, you should then be able to access the app @ `YOUR_IP:9002` in the browser. 
@@ -43,7 +45,6 @@ _____________
 
 ### Manual Installation:
 ```
-chmod +x autorun.sh
 chmod g+w .secret.txt
 ```
 
@@ -70,10 +71,10 @@ And lastly:
 
 ###### Finally we'll fire up the devserver from Django to test out our install:
 
-To start the server, enter `python3 manage.py runserver 0:9002` in your console from the directory that you installed the app in.
+To start the server, enter `python3 manage.py runserver 0:9002 --noreload` in your console from the directory that you installed the app in.
 You can also run `./autorun.sh` from the same location.
 
-This command, and the default configuration, start the server on `0.0.0.0` and port `9002` making it available to any connected devices on your local network. Alternatively, you can run the server on a different port, e.g. `0:8000`, `0:PORT`, or available to _just_ the `localhost` machine by running `python3 manage.py runserver`.
+This command, and the default configuration, start the server on `0.0.0.0` and port `9002` making it available to any connected devices on your local network. Alternatively, you can run the server on a different port, e.g. `0:8000`, `0:PORT`, or available to _just_ the `localhost` machine by running `python3 manage.py runserver --noreload`.
 
 __Note__: *This feature is for local/development use only. It should not be served over a public connection or used in a production environment. If you wish to view the scoreboard WebGUI remotely, you can do so securely by accessing your local network using a VPN service.*
 
@@ -136,7 +137,7 @@ Password: `scoreboard`
 
 __Please change this password!__ You can do this by visiting `YOUR IP:PORT/admin` and clicking the change password button. Email currently isn't configured.
 
-When a config is activated, the config.json contents are replaced with an updated configuration. You can do this on the profiles page. 
+When a config is activated, the config.json contents are replaced with an updated configuration. You can do this on the profiles page. Your previous config.json is still "active" until you active one here. The create a profile form is populated by the current config.json file, if found, so you can import your configuration to the dashboard via this method.
 
 When a profile is backed up, a file is created in the same folder as profile.config.json.bak. It's path is displayed as a message in the browser. Deleted profiles do not delete the config.json or .bak files; it only removes them from the Django Sqlite database. 
 
