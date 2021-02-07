@@ -5,7 +5,10 @@ Designed as a solution to manage the NHL LED Scoreboard project by [Joel Joannis
 
 The app uses the current configuration schema found in the `nhl-led-scoreboard/config` directory and generates a form to modify the config. At the moment, configurations you edit are validated against this current schema exclusively. I'd certainly like to get cross version editing working sooner than later.
 
+### Disclaimer
 _(Work in Progress)_
+
+This project is still in development. Development of the NHL LED Scoreboard is similarly evolving. They both rely on the external NHL API which, at any time may be inaccessible or updated. This app does modify your configuration files in the `nhl-led-scoreboard/config` directory. While these are backed up during installation, please backup any _prized_ configurations on your own accord.
 
 ## Requirements
 - [Raspberry Pi (Zero WH, 3B+, 3A+, 4B)](https://github.com/riffnshred/nhl-led-scoreboard)
@@ -29,7 +32,7 @@ cd nhl-led-scoreboard-webgui
 ```
 If all is working, you should then be able to access the app @ `YOUR_IP:9002` in the browser. 
 
-If you can't access the server and are using a firewall such as `ufw` or `iptables`, be sure to allow access _to your local network only_ over the `9002` port (or whatever you set it to if so).
+If you can't access the server and are using a firewall such as `ufw` or `iptables`, be sure to allow access _to your local network only_ over the `9002` port (or whatever you set it to if so). If you have ports 80/443 open in your router, this site WILL be accessable by all, so be sure to have your firewall's in order. 
 _____________
 
 #### Optional but Suggested: 
@@ -45,11 +48,17 @@ _____________
 
 ### Manual Installation:
 ```
+touch .secret.txt
 chmod g+w .secret.txt
 ```
 
-The autorun script needs permission to start the server. The .secret.txt file is automatically generated and saved here. It may also need to have the appropriate write permissions as well.
+###### Back up originals and then copy the updated Schema to the config folder in the nhl-led-scoreboard directory.
+mkdir -p ../nhl-led-scoreboard/config/bak/original 
+mv ../nhl-led-scoreboard/config/config.schema.json ../nhl-led-scoreboard/config/bak/original/$(date +"%Y_%m_%d_%I_%M_%p")-config.schema.json
+cp ../nhl-led-scoreboard/config/config.json ../nhl-led-scoreboard/config/bak/original/$(date +"%Y_%m_%d_%I_%M_%p")-config.json
 
+###### THIS NEEDS TO BE UPDATED FOR THE 2021-2022 Season!!! Updated schema file with divisions is in /nhl-led-scoreboard-webgui/scoreboard/static/schema dir.
+cp ./scoreboard/static/schema/config.schema.json ../nhl-led-scoreboard/config/config.schema.json
 
 ###### Install the app requirements and dependencies from the included requirements.txt file:
 `pip3 install -r requirements`
@@ -91,7 +100,7 @@ su user -c '/home/user/nhl-led-scoreboard-webgui/autorun.sh >> /tmp/scoreboard-g
 
 `tail -f -n 100 /tmp/scoreboard-gui.log`
 
-######_If_ you setup a `virtualenv`, change the `autorun.sh` contents to the following:
+###### _If_ you setup a `virtualenv`, change the `autorun.sh` contents to the following:
 
 ```
 #!/bin/bash
@@ -118,10 +127,9 @@ Example response:
 ```
 This is the second number in the table following the username (Use caution if you have more than one python/Django server running!). Change the `PID` in the following command to that number to kill the server:
 
-`kill -9 PID` 
+`kill -9 PID`, or `pkill -f runserver` if you'd like to skip the step above.
 
-Or... simply stop the server from the dashboard in the following steps :).
-
+Better yet... simply stop the server from the dashboard in the following steps :).
 
 ## Usage
 __Be sure to back up any previous configurations before use!!!__
@@ -137,7 +145,7 @@ Password: `scoreboard`
 
 __Please change this password!__ You can do this by visiting `YOUR IP:PORT/admin` and clicking the change password button. Email currently isn't configured.
 
-When a config is activated, the config.json contents are replaced with an updated configuration. You can do this on the profiles page. Your previous config.json is still "active" until you active one here. The create a profile form is populated by the current config.json file, if found, so you can import your configuration to the dashboard via this method.
+When a config is activated, the config.json contents are replaced with an updated configuration. You can do this on the profiles page. Your previous config.json is still "active" until you active one here. __The create a profile form is populated by the current config.json file, if found, so you can import your configuration to the dashboard via this method.__
 
 When a profile is backed up, a file is created in the same folder as profile.config.json.bak. It's path is displayed as a message in the browser. Deleted profiles do not delete the config.json or .bak files; it only removes them from the Django Sqlite database. 
 
