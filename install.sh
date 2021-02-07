@@ -11,7 +11,7 @@ echo "Working directory: "$DIR 1>&3
 echo "Target: "$TARGET 1>&3
 
 # A permission issue in the past was solved by creating the file on install and granting the permissions.
-echo "Creating and changing .secret.txt permissions..." 1>&3
+echo "Touching .secret.txt and updating permissions..." 1>&3
 
 # The .secret.txt file is automatically generated and saved here. It may also need to have the appropriate write permissions as well.
 touch .secret.txt
@@ -39,5 +39,5 @@ python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py loaddata teams.json
 
-echo "Setup completed. Start the server with 'command python3 manage.py runserver 0:9002 --noreload &', or './autorun.sh'" 1>&3
+echo "Setup completed. Start the server with command 'python3 manage.py runserver 0:9002 --noreload &', or './autorun.sh'" 1>&3
 exit 0
