@@ -27,8 +27,7 @@ def conf_default():
         path = conf_path() + "config.json"
         with open(path, "r") as f:
             conf = json.load(f)
-            return conf
-        
+            return conf       
     except:
         with open("scoreboard/static/schema/config.json", "r") as f:
             conf = json.load(f)
