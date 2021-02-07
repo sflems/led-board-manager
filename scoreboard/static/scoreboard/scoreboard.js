@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function collapse_forms() {
 	const collapse_buttons = document.querySelectorAll('button.json-editor-btn-collapse');
 		collapse_buttons.forEach(element => {
-			if (element !== collapse_buttons[0] && element !== collapse_buttons[1]) {
+			if (element !== collapse_buttons[0] && element !== collapse_buttons[1] && element !== collapse_buttons[2]) {
 				element.click();	
 			};
 		});
