@@ -23,20 +23,27 @@ def conf_path():
 
 # Opens default config from model object if found, otherwise from file, and then loads into Settings Profile
 def conf_default():
-        try:
-            conf = Settings.objects.get(name__iexact="default").config
+    try:
+        path = conf_path() + "config.json"
+        with open(path, "r") as f:
+            conf = json.load(f)
             return conf
-        except:
-            path = conf_path() + "config.json.sample"
-            with open(path, "r") as f:
-                conf = json.load(f)
-                return conf
+        
+    except:
+        with open("scoreboard/static/schema/config.json", "r") as f:
+            conf = json.load(f)
+            return conf
 
 # Defines config schema used by the current led-scoreboard version. File is opened, converted from binery to a python/django object and then used as a callable object.
 def schema():
-    with open(conf_path() + "config.schema.json", "r") as f:
-        conf = json.load(f)
-        return conf
+    try:
+        with open(conf_path() + "config.schema.json", "r") as f:
+            conf = json.load(f)
+            return conf
+    except:
+        with open("scoreboard/static/schema/config.schema.json", "r") as f:
+            conf = json.load(f)
+            return conf
 
 # Options for JSON created settings form.
 # startval takes in current settings (NOT VALIDATED AGAINST SCHEMA). Others modify which JSON editing options are visible to users, themes, etc.
