@@ -19,7 +19,7 @@
                         <tbody>
                             {% for profile in object_list %}
                                 <tr class="profile-info ">
-                                    <td scope="row" class="modal-link align-middle text-center" data-toggle="modal" data-target="#configModal" data-json="{{ profile.config|safe }}">
+                                    <td scope="row" class="modal-link align-middle text-center" data-toggle="modal" data-target="#configModal" data-json="{{ profile.config|pprint }}">
                                         {% if profile.isActive %}
                                             <img src={% static 'scoreboard/check-square-fill.svg' %} width="32" height="32" class="check-square-fill">
                                             </img>
@@ -28,7 +28,7 @@
                                             </img>
                                         {% endif %}                                            
                                     </td>
-                                    <td class="modal-link align-middle" data-toggle="modal" data-target="#configModal" data-json="{{ profile.config|safe }}" >
+                                    <td class="modal-link align-middle" data-toggle="modal" data-target="#configModal" data-json="{{ profile.config|pprint }}">
                                         {{ profile.name }}
                                     </td>
                                     <td style="text-align:center">
@@ -77,7 +77,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <pre><code id="prettyJSON"></code></pre>
+                    <pre id="prettyJSON"></pre>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
