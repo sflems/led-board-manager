@@ -29,6 +29,7 @@ __Be sure to back up any previous configurations before use!!!__ The original fi
 git clone --recursive https://github.com/sflems/nhl-led-scoreboard-webgui.git
 cd nhl-led-scoreboard-webgui
 ./install.sh
+python3 manage.py runserver 0:9002 --noreload
 ```
 If all is working, you should then be able to access the app @ `YOUR_IP:9002` in the browser. 
 
@@ -53,25 +54,29 @@ chmod g+w .secret.txt
 ```
 
 ###### Back up originals and then copy the updated Schema to the config folder in the nhl-led-scoreboard directory.
+```
 mkdir -p ../nhl-led-scoreboard/config/bak/original 
 mv ../nhl-led-scoreboard/config/config.schema.json ../nhl-led-scoreboard/config/bak/original/$(date +"%Y_%m_%d_%I_%M_%p")-config.schema.json
 cp ../nhl-led-scoreboard/config/config.json ../nhl-led-scoreboard/config/bak/original/$(date +"%Y_%m_%d_%I_%M_%p")-config.json
+```
 
 ###### THIS NEEDS TO BE UPDATED FOR THE 2021-2022 Season!!! Updated schema file with divisions is in /nhl-led-scoreboard-webgui/scoreboard/static/schema dir.
+```
 cp ./scoreboard/static/schema/config.schema.json ../nhl-led-scoreboard/config/config.schema.json
+```
 
 ###### Install the app requirements and dependencies from the included requirements.txt file:
-`pip3 install -r requirements`
+`pip3 install -r requirements.txt`
 
 ###### Once complete, we'll make, migrate and fill our sqlite3 database with the supplied teams data in the fixtures folder:
 
 First, run:
 
-`python3 manage.py makemigrations`.
+`python3 manage.py makemigrations`
 
 Followed by:
 
-`python3 manage.py migrate`.
+`python3 manage.py migrate`
 
 And lastly:
 
@@ -104,6 +109,7 @@ su user -c '/home/user/nhl-led-scoreboard-webgui/autorun.sh >> /tmp/scoreboard-g
 
 ```
 #!/bin/bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 ${DIR}/env/bin/python3 ${DIR}/manage.py runserver 0:9002 --noreload &
 
