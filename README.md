@@ -10,7 +10,7 @@ _(Work in Progress)_
 
 This project is still in development. Development of the NHL LED Scoreboard is similarly evolving. They both rely on the external NHL API which, at any time may be inaccessible or updated. This app does modify your configuration files in the `nhl-led-scoreboard/config` directory. While these are backed up during installation, please backup any _prized_ configurations on your own accord.
 
-## Requirements
+## Requirements 
 - [Raspberry Pi (Zero WH, 3B+, 3A+, 4B)](https://github.com/riffnshred/nhl-led-scoreboard)
 
 - [NHL LED Scoreboard](https://github.com/riffnshred/nhl-led-scoreboard)
@@ -61,7 +61,9 @@ cp ../nhl-led-scoreboard/config/config.json ../nhl-led-scoreboard/config/bak/ori
 ```
 
 ###### THIS NEEDS TO BE UPDATED FOR THE 2021-2022 Season!!! Updated schema file with divisions is in /nhl-led-scoreboard-webgui/scoreboard/static/schema dir.
-`cp ./scoreboard/static/schema/config.schema.json ../nhl-led-scoreboard/config/config.schema.json`
+```
+cp ./scoreboard/static/schema/config.schema.json ../nhl-led-scoreboard/config/config.schema.json
+```
 
 ###### Install the app requirements and dependencies from the included requirements.txt file:
 `pip3 install -r requirements.txt`
@@ -70,11 +72,11 @@ cp ../nhl-led-scoreboard/config/config.json ../nhl-led-scoreboard/config/bak/ori
 
 First, run:
 
-`python3 manage.py makemigrations`.
+`python3 manage.py makemigrations`
 
 Followed by:
 
-`python3 manage.py migrate`.
+`python3 manage.py migrate`
 
 And lastly:
 
@@ -107,6 +109,7 @@ su user -c '/home/user/nhl-led-scoreboard-webgui/autorun.sh >> /tmp/scoreboard-g
 
 ```
 #!/bin/bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 ${DIR}/env/bin/python3 ${DIR}/manage.py runserver 0:9002 --noreload &
 
