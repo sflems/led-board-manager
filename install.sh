@@ -14,11 +14,11 @@ echo "Target: "$TARGET 1>&3
 echo "Touching .secret.txt and updating permissions..." 1>&3
 
 # The .secret.txt file is automatically generated and saved here. It may also need to have the appropriate write permissions as well.
-touch .secret.txt
-chmod g+w .secret.txt
+touch .secret.txt && chmod g+w .secret.txt
 
 # Install the app requirements and dependencies from the included requirements.txt file:
-pip3 install -r requirements.txt
+echo "Installing requirements.txt..." 1>&3
+pip3 install -r requirements.txt | tee -a /dev/tty
 
 echo "Backing up config, and moving original schema file to "$TARGET"/config/bak/original/" 1>&3
 
@@ -36,9 +36,9 @@ cp ./scoreboard/static/schema/config.schema.json $TARGET/config/config.schema.js
 echo "Generating WebGUI database and loading initial data..." 1>&3
 
 # Create Django DB and load default data.
-python3 manage.py makemigrations
-python3 manage.py migrate
-python3 manage.py loaddata teams.json
+python3 manage.py makemigrations | tee -a /dev/tty
+python3 manage.py migrate | tee -a /dev/tty
+python3 manage.py loaddata teams.json | tee -a /dev/tty
 
 echo "Setup completed. Start the server with command 'python3 manage.py runserver 0:9002 --noreload &', or './autorun.sh'" 1>&3
 exit 0
