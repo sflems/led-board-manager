@@ -10,7 +10,7 @@ _(Work in Progress)_
 
 This project is still in development. Development of the NHL LED Scoreboard is similarly evolving. They both rely on the external NHL API which, at any time may be inaccessible or updated. This app does modify your configuration files in the `nhl-led-scoreboard/config` directory. While these are backed up during installation, please backup any _prized_ configurations on your own accord.
 
-## Requirements
+## Requirements 
 - [Raspberry Pi (Zero WH, 3B+, 3A+, 4B)](https://github.com/riffnshred/nhl-led-scoreboard)
 
 - [NHL LED Scoreboard](https://github.com/riffnshred/nhl-led-scoreboard)
