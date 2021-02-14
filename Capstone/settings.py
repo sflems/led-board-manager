@@ -27,13 +27,11 @@ SECRET_KEY = secret_key_generator.generate()
 DEBUG = True
 
 
-# Allows server to be hosted on local subnet 192.168.[0-255]].[0-255]
-# This can be modified for your local subnet.
-ALLOWED_HOSTS = ['192.168.{}.{}'.format(i,j) for i in range(256) for j in range(256)]
-
-
-# IF YOU CANT ACCESS THE DEVSERVER
 # Allows server to be hosted on local subnet with unrestricted IPs. Make sure your firewall is accepting local network traffic only!!!
+# This can be modified for your local subnet. See below.
+ALLOWED_HOSTS = ['*']
+
+# i.e. for subnet 192.168.0.0/16
 # ALLOWED_HOSTS = ['192.168.{}.{}'.format(i,j) for i in range(256) for j in range(256)]
 
 
