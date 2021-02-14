@@ -14,7 +14,7 @@ def delete_selected(SettingsAdmin, request, queryset):
 
 class SettingsAdmin(admin.ModelAdmin):
     formfield_overrides = {
-        models.JSONField: {'widget': PrettyJSONWidget }
+        models.JSONField: {'widget': PrettyJSONWidget(attrs={'initial': 'parsed'})}
     }
     list_display = ('id', 'name', 'isActive')
     list_display_links = ('id', 'name',)
