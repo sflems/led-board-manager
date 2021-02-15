@@ -99,7 +99,8 @@ def profiles(request, id):
             return render(request, "scoreboard/settings_edit.html", { 
                 "detailform": SettingsDetailForm(instance=profile), 
                 "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True),
-                "profile_id": profile.pk
+                "profile_id": profile.pk,
+                "profile_name": profile.name
                 })
         else:
             messages.error(request, "Cannot edit the default profile!")

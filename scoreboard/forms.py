@@ -7,7 +7,7 @@ class SettingsDetailForm(forms.ModelForm):
         model = Settings
         fields = ('name', 'isActive')
         labels = {
-            "name": "Profile Name",
+            "name": "Name:",
             "isActive": "Make this the active profile?"
         }
         

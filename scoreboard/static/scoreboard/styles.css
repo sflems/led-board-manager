@@ -104,10 +104,11 @@ div#configModal div.modal-body {
 }
 
 /* Json Forms */
-div.je-object__container h3 {
-    margin-bottom: 0em!important;
+#settingsform {
+    padding: 0.5em;
 }
-.je-object__title label {
+
+.je-object__title label, h3.card-title label {
     padding-top:1rem;
     margin-bottom:0rem!important;
     font-size:75%!important;

@@ -6,6 +6,7 @@
 
 	<div class="page-nav row mt-2 justify-content-center">
 		<div class="col">
+			<h3 class="form-title text-center">Create a Profile</h3>
 			<form id="settingsform" class="m-n1" action="{% url 'create' %}" method="post">
 				{% csrf_token %}
 				{{ detailform|crispy }}
