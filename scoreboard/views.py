@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed, JsonResponse
 from django.core.exceptions import FieldError
 
-from .forms import schema, SettingsDetailForm, SettingsJSONForm
+from .forms import SettingsDetailForm
 from django_jsonforms.forms import JSONSchemaForm
 from .models import *
 from . import services
@@ -179,11 +179,14 @@ def profiles(request, id):
 @login_required
 def profiles_create(request):
     if request.method == "GET":
+        schema = services.schema()
+        startval = services.conf_default()
+        options = services.form_options(startval)
+
         # Settings Forms are instantiated in forms.py
         detailform = SettingsDetailForm()
-        JSONform = SettingsJSONForm()
         return render(request, "scoreboard/settings_create.html", {
-            "JSONform":JSONform, 
+            "JSONform":JSONSchemaForm(schema=schema, options=options, ajax=True), 
             "detailform":detailform,
         })
         

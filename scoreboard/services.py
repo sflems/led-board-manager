@@ -1,14 +1,17 @@
+from django.conf import settings
+from django.http import Http404
 import requests
 import json
 from .models import *
-from django.conf import settings
 
+# Gets the team abbreviation by id from the NHL API.
 def team_abbrev(id):
     url = 'https://statsapi.web.nhl.com/api/v1/teams' + id
     response = requests.get(url)
     team = response.json()
     return team
-                
+
+# Gets todays games from the NHL API.        
 def todays_games():
     url = 'https://statsapi.web.nhl.com/api/v1/schedule?expand=schedule.linescore'
     response = requests.get(url)
@@ -21,28 +24,20 @@ def conf_path():
     path = os.path.dirname(settings.BASE_DIR) + "/nhl-led-scoreboard/config/"
     return path
 
-# Opens default config from model object if found, otherwise from file, and then loads into Settings Profile
+# Opens default config from current config in the nhl-led-scoreboard folder if found, otherwise from static config, and then loads into Settings Profile
 def conf_default():
-    try:
-        path = conf_path() + "config.json"
-        with open(path, "r") as f:
-            conf = json.load(f)
-            return conf       
-    except:
-        with open("scoreboard/static/schema/config.json", "r") as f:
-            conf = json.load(f)
-            return conf
+    with open("scoreboard/static/schema/config.json", "r") as f:
+        conf = json.load(f)
+        return conf
 
-# Defines config schema used by the current led-scoreboard version. File is opened, converted from binery to a python/django object and then used as a callable object.
+# Defines config schema used by the current led-scoreboard version. File is opened, converted from binary to a python/django object and then used as a callable object.
 def schema():
     try:
         with open(conf_path() + "config.schema.json", "r") as f:
             conf = json.load(f)
             return conf
     except:
-        with open("scoreboard/static/schema/config.schema.json", "r") as f:
-            conf = json.load(f)
-            return conf
+        raise Http404("Schema does not exist.")
 
 # Options for JSON created settings form.
 # startval takes in current settings (NOT VALIDATED AGAINST SCHEMA). Others modify which JSON editing options are visible to users, themes, etc.

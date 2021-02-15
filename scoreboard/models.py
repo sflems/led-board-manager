@@ -63,7 +63,6 @@ class Settings(models.Model):
     def save_to_file(self):
         path = services.conf_path() + "bak/" + self.name.lower().replace(" ", ".") + ".config.json.bak"
         with open(path, "w") as outfile:
-            # indent=4 makes content human readable
             json.dump(self.config, outfile, indent=4)
             return path
 
@@ -75,12 +74,11 @@ def pre_save(sender, instance, **kwargs):
                 profile.isActive = False
                 profile.save()
 
-# TO DO: Implement method of changing config path. Is a reboot necessary? Also add a static default config file for good measure.
+# TO DO: Implement method of changing config path.
 @receiver(post_save, sender=Settings)
 def post_save(sender, instance, **kwargs):
     if instance.isActive:
         with open(services.conf_path() + "config.json", "w") as outfile:
-            # indent=4 makes content human readable
             json.dump(instance.config, outfile, indent=4)
 
 

@@ -1,7 +1,6 @@
 from django.contrib import admin, messages
 from django.db import models
 from .models import Settings, Team, User
-from .forms import SettingsDetailForm, SettingsJSONForm
 from prettyjson import PrettyJSONWidget
 
 # Tests if a profile is selected as active. Otherwise sets to default profile.
@@ -15,7 +14,7 @@ def delete_selected(SettingsAdmin, request, queryset):
 
 class SettingsAdmin(admin.ModelAdmin):
     formfield_overrides = {
-        models.JSONField: {'widget': PrettyJSONWidget }
+        models.JSONField: {'widget': PrettyJSONWidget(attrs={'initial': 'parsed'})}
     }
     list_display = ('id', 'name', 'isActive')
     list_display_links = ('id', 'name',)
@@ -49,6 +48,7 @@ class SettingsAdmin(admin.ModelAdmin):
             super().save_model(request, obj, form, change)
         else:
             super().save_model(request, obj, form, change) 
+            
 '''
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('id', 'teamName', 'abbreviation',)
