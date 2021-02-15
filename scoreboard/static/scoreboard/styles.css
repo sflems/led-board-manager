@@ -1,3 +1,66 @@
+/* Font Imports */
+@font-face {
+    font-family: 'NHLEWas_';
+    src: local('NHLEWas_'),
+         url('/static/fonts/NHLEWas_.ttf') format("truetype");
+  }
+
+@font-face {
+    font-family: 'NHLEBuf_';
+    src: local('NHLEBuf_'),
+         url('/static/fonts/NHLEBuf_.ttf') format("truetype");
+  }
+
+@font-face {
+    font-family: 'NHLBUF06';
+    src: local('NHLBUF06'),
+         url('/static/fonts/NHLBUF06.ttf') format("truetype");
+  }
+
+@font-face {
+    font-family: 'NHLMONTR';
+    src: local('NHLMONTR'),
+         url('/static/fonts/NHLMONTR.ttf') format("truetype");
+  }
+
+@font-face {
+    font-family: 'NHLMINNE';
+    src: local('NHLMINNE'),
+         url('/static/fonts/NHLMINNE.ttf') format("truetype");
+  }
+
+@font-face {
+    font-family: 'NHLVANCO';
+    src: local('NHLVANCO'),
+         url('/static/fonts/NHLVANCO.ttf') format("truetype");
+  }
+
+@font-face {
+    font-family: 'NHLWASHI';
+    src: local('NHLWASHI'),
+         url('/static/fonts/NHLWASHI.ttf') format("truetype");
+  }
+
+/* Heading Fonts */
+h1, h2, h3, h4, th {
+    font-family: 'NHLEWas_';
+}
+
+/* Navbar */
+.navbar {
+    min-height: 5rem;
+    font-family: 'NHLEWas_';
+}
+
+.navbar-brand {
+    max-width: 75%!important;
+    white-space: normal!important;
+}
+
+.navbar-toggler-icon {
+    height: 2.5em!important;
+}
+
 /* Config Modals */
 pre {
     white-space: pre-wrap;
@@ -38,16 +101,19 @@ div#configModal div.modal-body {
 
 .table-nested {
     margin: auto;
-    width: 50% !important;
 }
 
 /* Json Forms */
-h3.card-title.je-object__title label {
+div.je-object__container h3 {
+    margin-bottom: 0em!important;
+}
+.je-object__title label {
     padding-top:1rem;
-    margin-bottom:-1rem;
+    margin-bottom:0rem!important;
+    font-size:75%!important;
 }
 
-label[for=id_json] {
+.je-object__controls, label[for=id_json] {
     display: none;
 }
 
@@ -56,10 +122,18 @@ label[for=id_json] {
 }
 
 .json-editor-btntype-add, .json-editor-btntype-deletelast, .json-editor-btntype-deleteall {
-    margin-top:-0.5rem;
+    margin-top: 0.5rem;
+}
+
+.json-editor-btntype-toggle {
+    margin-top: 0.5rem!important;
 }
 
 .json-editor-btntype-editjson {
     margin-top:-0.25rem;
     border-radius: .2rem!important;
 }
+
+input[type="submit"]{
+    float: right;
+  }
