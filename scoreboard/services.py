@@ -26,15 +26,9 @@ def conf_path():
 
 # Opens default config from current config in the nhl-led-scoreboard folder if found, otherwise from static config, and then loads into Settings Profile
 def conf_default():
-    try:
-        path = conf_path() + "config.json"
-        with open(path, "r") as f:
-            conf = json.load(f)
-            return conf       
-    except:
-        with open("scoreboard/static/schema/config.json", "r") as f:
-            conf = json.load(f)
-            return conf
+    with open("scoreboard/static/schema/config.json", "r") as f:
+        conf = json.load(f)
+        return conf
 
 # Defines config schema used by the current led-scoreboard version. File is opened, converted from binary to a python/django object and then used as a callable object.
 def schema():
