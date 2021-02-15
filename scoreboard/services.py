@@ -19,14 +19,17 @@ def todays_games():
     games = games['dates'][0]['games']
     return games
 
-# defines the users home/user/nhl-led-scoreboard/config folder path.
+# defines the users home/user/nhl-led-scoreboard/config folder path. Checks if DEMO_CS50 mode is enabled.
 def conf_path():
-    path = os.path.dirname(settings.BASE_DIR) + "/nhl-led-scoreboard/config/"
+    if settings.DEMO_CS50 != True:
+        path = os.path.dirname(settings.BASE_DIR) + "/nhl-led-scoreboard/config/"
+    else:
+        path = os.path.join(settings.BASE_DIR, 'demo/config/')
     return path
 
 # Opens default config from current config in the nhl-led-scoreboard folder if found, otherwise from static config, and then loads into Settings Profile
 def conf_default():
-    with open("scoreboard/static/schema/config.json", "r") as f:
+    with open(os.path.join(settings.BASE_DIR, "scoreboard/static/schema/config.json"), "r") as f:
         conf = json.load(f)
         return conf
 
