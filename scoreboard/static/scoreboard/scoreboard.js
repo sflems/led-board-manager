@@ -255,8 +255,15 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function sysinfo() {
+	function handleErrors(response) {
+		if (!response.ok) {
+			throw Error(response.statusText);
+		}
+		return response;
+	};
 	const element = document.getElementById("monitor-card");
 	fetch(`${element.dataset.url}`)
+	.then(handleErrors)
 	.then(response => response.json())
 	.then(result => {
 		console.log(result);
@@ -272,6 +279,15 @@ function sysinfo() {
 		<div class="col-lg-4">
 			<h5>Disk</h5>
 			<p class="resource mt-n1 mb-0">${result.disk}</p>
+		</div>
+		`);
+	})
+	.catch(error => {
+		console.log(error);
+		$('div#monitor-card div.card-text').html(`
+		<div class="col">
+			<h5>ERROR</h5>
+			<p class="resource mt-n1">No system info returned.</p>
 		</div>
 		`);
 	});

@@ -31,11 +31,13 @@
                                         </tr>
                                         <tr>
                                             {% if game.linescore.currentPeriod == 0 %}
-                                                <td scope="row" class="game-time" data-datetime="{{ game.gameDate }}"></td>
+                                                {% if game.status.statusCode == "9" %}
+                                                    <td scope="row" class="game-date">POSTPONED</td>
+                                                {% else %}
+                                                    <td scope="row" class="game-time" data-datetime="{{ game.gameDate }}"></td>
+                                                {% endif %}
                                             {% elif game.status.detailedState != "Final" %}
                                                 <td scope="row" class="game-state">{{ game.linescore.currentPeriodOrdinal }} - {{ game.linescore.currentPeriodTimeRemaining }}</td>
-                                            {% elif game.status.detailedState == "Postponed" %}
-                                                <td scope="row" class="game-state"> {{ POSTPONED }}</td>
                                             {% else %}
                                                 {% if game.linescore.currentPeriod > 3%}   
                                                     <td scope="row" class="game-state">{{ game.status.detailedState }}/{{ game.linescore.currentPeriodOrdinal }}</td>
