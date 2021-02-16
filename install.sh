@@ -25,8 +25,8 @@ echo "Backing up config, and moving original schema file to "$TARGET"/config/bak
 mkdir -p $TARGET/config/bak/original >&3
 
 # Backs up original and then copy the updated Schema to the config folder in the nhl-led-scoreboard directory. 
-mv $TARGET/config/config.schema.json $TARGET/config/bak/original/$(date +"%Y_%m_%d_%I_%M_%p")-config.schema.json >&3 && echo "SUCCESS: Schema backup complete." >&3 || { echo "ERROR: Schema backup failed." >&3; exit 1; }
-cp $TARGET/config/config.json $TARGET/config/bak/original/$(date +"%Y_%m_%d_%I_%M_%p")-config.json >&3 && echo "SUCCESS: Config backed complete." >&3 || { echo "ERROR: Config backup failed. Check webgui-log.out for details" >&3; exit 1; }
+mv $TARGET/config/config.schema.json $TARGET/config/bak/original/$(date +"%Y_%m_%d_%I_%M_%p")-config.schema.json >&3 && echo "SUCCESS: Schema backup complete." >&3 || { echo "ERROR: Schema backup failed. Check webgui-log.out for details." >&3; }
+cp $TARGET/config/config.json $TARGET/config/bak/original/$(date +"%Y_%m_%d_%I_%M_%p")-config.json >&3 && echo "SUCCESS: Config backed complete." >&3 || { echo "ERROR: Config backup failed. Check webgui-log.out for details." >&3; }
 
 echo "Updating schema with modified version..." >&3
 
