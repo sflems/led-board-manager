@@ -1,22 +1,21 @@
 {% extends "scoreboard/layout.html" %}
 
 {% block form %}
+    <div class="page-nav row mt-2 mb-2 justify-content-center">
+        <div class="col">
+            <h3 class="mb-4">Login</h3>
 
-    <h2>Login</h2>
-
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
-
-    <form action="{% url 'login' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input autofocus class="form-control" type="text" name="username" placeholder="Username">
+            <form action="{% url 'login' %}" method="post" class="m-3">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input autofocus class="form-control" type="text" name="username" placeholder="Username">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" name="password" placeholder="Password">
+                </div>
+                <input class="btn btn-primary" type="submit" value="Login">
+            </form>
         </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Login">
-    </form>
+    </div>
 
 {% endblock %}

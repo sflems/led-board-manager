@@ -21,6 +21,28 @@ document.addEventListener('DOMContentLoaded', function () {
 		this.innerText = new Date(this.dataset.datetime).toLocaleTimeString();
 	});
 
+	// AJAX Calls for Footer Cards here
+	$('div#profile-card').ready(function () {
+		const element = document.getElementById("profile-card");
+		fetch(`${element.dataset.url}`)
+		.then(response => response.json())
+		.then(result => {
+			console.log(result);
+			$('div#profile-card h5.card-title').text(result.profile.name);
+			$('div#profile-card div.card-text').html(`
+				<p class="m-0">Favourite Team(s): ${JSON.stringify(result.profile.config.preferences.teams,null," ").replace("[","").replace("]","").replace(/["]+/g,"")}</p>
+				<p class="m-0">Live Mode: ${result.profile.config.live_mode}</p>
+				<p class="m-0">Debug: ${result.profile.config.debug}</p>
+				<p class="m-0">Log Level: ${result.profile.config.loglevel}</p>
+			`);
+		});
+	});
+
+	$('div#monitor-card').ready(function () {
+		sysinfo();
+		setInterval(sysinfo, 10000);
+	});
+
 	// Auto-collapses json forms for easier viewing on load. The "collapsed" option does not work!
 	$(document).ready(function(){
 			collapse_forms();
@@ -158,7 +180,6 @@ document.addEventListener('DOMContentLoaded', function () {
 						</button>
 					</div>  
 				`;
-				// make this the no response. not result.
 			};
 		})
 	});
@@ -230,7 +251,31 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
+
 });
+
+function sysinfo() {
+	const element = document.getElementById("monitor-card");
+	fetch(`${element.dataset.url}`)
+	.then(response => response.json())
+	.then(result => {
+		console.log(result);
+		$('div#monitor-card div.card-text').html(`
+		<div class="col-lg-4">
+			<h5>CPU</h5>
+			<p class="resource mt-n1">${result.cpu} @ ${result.cputemp.replace("temp=","")}</p>
+		</div>
+		<div class="col-lg-4">
+			<h5>Memory</h5>
+			<p class="resource mt-n1">${result.memory}</p>
+		</div>
+		<div class="col-lg-4">
+			<h5>Disk</h5>
+			<p class="resource mt-n1 mb-0">${result.disk}</p>
+		</div>
+		`);
+	});
+};
 
 function collapse_forms() {
 	const collapse_buttons = document.querySelectorAll('button.json-editor-btn-collapse');

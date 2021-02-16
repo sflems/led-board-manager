@@ -9,7 +9,9 @@ urlpatterns = [
     path("logout", views.logout_view, name="logout"),
 
     path("profiles/", login_required(views.SettingsList.as_view()), name="profiles_list"), 
+    path("profiles/active", views.active_profile, name="active_profile"), 
     path("profiles/create", views.profiles_create, name="create"),
     path("profiles/<int:id>", views.profiles, name="profiles"),
     path("command", views.command, name="command_pi"),
+    path("resources/", views.resource_monitor, name="resources"),
 ]

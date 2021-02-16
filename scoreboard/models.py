@@ -56,9 +56,17 @@ class Settings(models.Model):
         verbose_name_plural = _("Settings")
         db_table = 'settings'
         ordering = ["-id"]
-        
+
     def __str__(self):
         return self.name + " Profile"
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "config": self.config,
+            "isActive": self.isActive,
+        }
 
     def save_to_file(self):
         path = services.conf_path() + "bak/" + self.name.lower().replace(" ", ".") + ".config.json.bak"

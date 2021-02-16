@@ -87,6 +87,30 @@ class SettingsList(ListView):
     model = Settings
 
 @login_required
+def active_profile(request):
+    if request.method == "GET":
+        profile = Settings.objects.get(isActive=1)
+
+        return JsonResponse({
+            "profile": profile.serialize()
+        }, status=200)
+
+@login_required
+def resource_monitor(request):
+    if request.method == "GET":
+        cpu = services.cpu()
+        cputemp = services.cputemp()
+        disk = services.disk()
+        memory = services.memory()
+
+        return JsonResponse({
+            "cpu": cpu,
+            "cputemp": cputemp,
+            "disk": disk,
+            "memory": memory
+        }, status=200)
+
+@login_required
 def profiles(request, id):
     if request.method == "GET":
         profile = get_object_or_404(Settings, pk=id)

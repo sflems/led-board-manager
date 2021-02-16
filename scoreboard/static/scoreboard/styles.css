@@ -42,8 +42,9 @@
   }
 
 /* Heading Fonts */
-h1, h2, h3, h4, th {
+h1, h2, h3, h4, h5, th {
     font-family: 'NHLEWas_';
+    letter-spacing: -0.2rem;
 }
 
 /* Navbar */
@@ -59,6 +60,11 @@ h1, h2, h3, h4, th {
 
 .navbar-toggler-icon {
     height: 2.5em!important;
+}
+
+/* Footer */
+p.resource {
+    white-space: break-spaces;
 }
 
 /* Config Modals */

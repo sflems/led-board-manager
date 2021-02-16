@@ -1,9 +1,32 @@
 from django.conf import settings
 from django.http import Http404
-import requests
-import json
+import json, psutil, requests
+from gpiozero import CPUTemperature
 from .models import *
 
+# Pi System Stats Functions
+# Imported from https://learn.pimoroni.com/tutorial/networked-pi/raspberry-pi-system-stats-python and modified for this use case.
+def cpu():
+    return str(psutil.cpu_percent()) + '%'
+
+def cputemp():
+    return str(CPUTemperature().temperature) + '&deg;C'
+
+def memory():
+    memory = psutil.virtual_memory()
+    # Divide from Bytes -> KB -> MB
+    available = round(memory.available/1024.0/1024.0,1)
+    total = round(memory.total/1024.0/1024.0,1)
+    return str(available) + 'MB free / ' + str(total) + 'MB total (' + str(memory.percent) + '%)'
+
+def disk():
+    disk = psutil.disk_usage('/')
+    # Divide from Bytes -> KB -> MB -> GB
+    free = round(disk.free/1024.0/1024.0/1024.0,1)
+    total = round(disk.total/1024.0/1024.0/1024.0,1)
+    return str(free) + 'GB free / ' + str(total) + 'GB total (' + str(disk.percent) + '%)'
+
+# NHL API Functions
 # Gets the team abbreviation by id from the NHL API.
 def team_abbrev(id):
     url = 'https://statsapi.web.nhl.com/api/v1/teams' + id

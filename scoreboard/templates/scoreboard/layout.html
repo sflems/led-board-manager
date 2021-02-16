@@ -10,8 +10,7 @@
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
 		<link href="{% static 'scoreboard/styles.css' %}" rel="stylesheet">	
     </head>
-    <body>
-	
+    <body class="d-flex flex-column min-vh-100">
 	{% load bootstrap4 %}
 
 	{# Load CSS and JavaScript #}
@@ -35,7 +34,6 @@
             </div>  
         </div>
 	{% endif %}
-
 	
 		<nav class="navbar navbar-expand-lg bg-dark navbar-dark mb-1">
 			<a class="navbar-brand" style="color:rgba(255,255,255,.5)" href="{% url 'index' %}"><strong>LED Scoreboard Configurator</strong></a>
@@ -80,57 +78,70 @@
 				</ul>
 			</div>
 		</nav>
-
-		<!--<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Pricing</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown link
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-    </ul>
-  </div>
-</nav> -->
-        
-        <div class="body container-fluid mt-1 p-0">
-            {% block body %}
-            {% endblock body %}
+		
+		<div class="body container-fluid mt-1 p-0">
+			{% block body %}
+			{% endblock body %}
 
 			{% block settingslist %}
 			{% endblock settingslist %}
-        </div>
+		</div>
 
-		<div class="body container mt-4">
+		<div class="body container my-3">
 			{% block form %}	
 			{% endblock form %}
 		</div>
-		
-		{% block script %}
-			<script src="{% static 'scoreboard/scoreboard.js' %}"></script>
-   			<script src="{% static 'scoreboard/jsoneditor.js' %}"></script>
-			<script src="{% static 'scoreboard/js.cookie.js' %}"></script>
-			<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-			<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
 
-		{% endblock %}
+	<footer class="footer border-top mt-auto p-4 text-light bg-dark">
+		<div class="container text-center">
+			<span class="text-center">
+			{% if user.is_authenticated %}
+			<div class="card-deck">
+
+				<div id="profile-card" class="card text-white bg-secondary mt-3 mb-3"  data-url="{% url 'active_profile' %}">
+					<div class=""><h4 class="card-header text-smaller">Active Profile</h4></div>
+					<div class="card-body" style="display: grid;">
+						<h5 class="card-title">Profile Name HERE</h5>
+						<div class="card-text" style="display: contents;">JS Function to Query active profile goes here.</div>
+					</div>
+				</div>
+	
+				<div id="monitor-card" class="card text-white bg-secondary mt-3 mb-3" data-url="{% url 'resources' %}">
+					<div class=""><h4 class="card-header text-smaller">Resource Monitor</h4></div>
+					<div class="card-body">
+						<div class="card-text row">
+						</div>
+					</div>
+				</div>
+
+			</div>
+			{% endif %}
+			</span>
+			<div class="row">
+				<div class="col">
+					<h5 class="m-1"><a href="https://github.com/sflems/nhl-led-scoreboard-webgui/blob/main/README.md" class="text-info" target="blank">Readme</a></h5>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<small class="text-secondary">View the project on <a href="https://github.com/sflems/nhl-led-scoreboard-webgui" class="text-info" target="blank">GitHub</a>.</small>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<small class="text-secondary">Created by <a href="https://github.com/sflems/" class="text-info" target="blank">@sflems</a>.</small>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	{% block script %}
+		<script src="{% static 'scoreboard/scoreboard.js' %}"></script>
+		<script src="{% static 'scoreboard/jsoneditor.js' %}"></script>
+		<script src="{% static 'scoreboard/js.cookie.js' %}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+	{% endblock %}
+
     </body>
 </html>
