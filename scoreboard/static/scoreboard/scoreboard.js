@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (result.activated != true) {
 				document.querySelector('#message').innerHTML = `
 					<div class="alert alert-danger alert-dismissible fade show">
-						<strong>Error!</strong> Profile activation unsuccessful.
+						<strong>Error!</strong> <small>Profile activation unsuccessful.</small>
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (result.backup != true) {
 				document.querySelector('#message').innerHTML = `
 					<div class="alert alert-danger alert-dismissible fade show">
-						<strong>Error!</strong> File save unsuccessful! Attempted to save file as ${result.path}
+						<strong>Error!</strong> <small>File save unsuccessful! Attempted to save file as ${result.path}</small>
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			} else {
 				document.querySelector('#message').innerHTML = `
 					<div class="alert alert-success alert-dismissible fade show">
-						<strong>Success!</strong> File saved to ${result.path}
+						<strong>Success!</strong> <small>File saved to ${result.path}</small>
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (result.delete != true) {
 				document.querySelector('#message').innerHTML = `
 					<div class="alert alert-danger alert-dismissible fade show">
-						<strong>Error!</strong> Profile "${result.profile}" deleted <strong>unsuccessfully!</strong>
+						<strong>Error!</strong> <small>Profile "${result.profile}" deleted <strong>unsuccessfully!</strong></small>
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('button#stopserver').click(function () {
 		document.querySelector('#message').innerHTML = `
 				<div class="alert alert-success alert-dismissible fade show">
-					<strong>Success!</strong> Web interface will shutdown in 5 seconds...
+					<strong>Success!</strong> <small>Web interface will shutdown in 5 seconds...</small>
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (result.stopserver != true) {
 				document.querySelector('#message').innerHTML = `
 					<div class="alert alert-danger alert-dismissible fade show">
-						<strong>Error!</strong> Server shutdown unsuccessful.
+						<strong>Error!</strong> <small>Server shutdown unsuccessful.</small>
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('button#reboot').click(function () {
 		document.querySelector('#message').innerHTML = `
 			<div class="alert alert-success alert-dismissible fade show">
-				<strong>Success!</strong> Rebooting in 5 seconds...
+				<strong>Success!</strong> <small>Rebooting in 5 seconds...</small>
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (result.reboot != true) {
 				document.querySelector('#message').innerHTML = `
 					<div class="alert alert-danger alert-dismissible fade show">
-						<strong>Error!</strong> Reboot unsuccessful.
+						<strong>Error!</strong> <small>Reboot unsuccessful.</small>
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('button#shutdown').click(function () {
 		document.querySelector('#message').innerHTML = `
 					<div class="alert alert-success alert-dismissible fade show">
-						<strong>Success!</strong> Shutdown initiated.
+						<strong>Success!</strong> <small>Shutdown initiated.</small>
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (result.shutdown != true) {
 				document.querySelector('#message').innerHTML = `
 					<div class="alert alert-danger alert-dismissible fade show">
-						<strong>Error!</strong> Shutdown unsuccessful.
+						<strong>Error!</strong> <small>Shutdown unsuccessful.</small>
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>

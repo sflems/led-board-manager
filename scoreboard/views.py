@@ -152,9 +152,8 @@ def profiles(request, id):
 
             if data.get("backup"):
                 try:
-                    path = profile.save_to_file()
+                    path = profile.save_to_file().strip()
                     message = "Profile saved to " + path
-                    messages.success(request, message)
                     return JsonResponse({
                         "backup": True,
                         "path": path

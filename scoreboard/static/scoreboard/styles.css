@@ -100,6 +100,10 @@ div#configModal div.modal-body {
     margin-top:-0.25rem;
 }
 
+.alert small {
+    word-break: break-all;
+}
+
 /* Tables */
 .table-nostriped {
     background-color:transparent!important;
