@@ -18,6 +18,7 @@ psutil==5.8.0
 pyrsistent==0.17.3
 pytz==2020.5
 requests==2.25.1
+RPi.GPIO==0.7.0
 secret-key-generator==0.0.7
 six==1.15.0
 soupsieve==2.1
