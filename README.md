@@ -1,14 +1,21 @@
 # NHL LED Scoreboard Web GUI & Configurator
 #### A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
 
-Designed as a solution to manage the NHL LED Scoreboard project by [Joel Joannisse](https://github.com/riffnshred). 
+## Description
+Designed as a solution to manage the NHL LED Scoreboard project by [Joel Joannisse](https://github.com/riffnshred). The app uses a Django webserver to manage profiles in a simple SQLite database. Users can access the web interface which can be hosted on their local machine or network. 
 
-The app uses the current configuration schema found in the `nhl-led-scoreboard/config` directory and generates a form to modify the config. At the moment, configurations you edit are validated against this current schema exclusively. I'd certainly like to get cross version editing working sooner than later.
+The webserver uses the `current config.schema.json` found in the `nhl-led-scoreboard/config` directory and generates an easy to use form to create a `config.json` file. At the moment, configurations you edit are validated against this current schema exclusively. It the saves a new `config.json` in the `nhl-led-scoreboard/config` directory. The app also has the ability to backup configurations to file from the dashboard. 
+
+JSON can also be edited manually in the `/admin` interface. __Be Careful!__ The entries in the admin panel are currently __not__ validated against the config schema. This allows you to enter custom configurations during testing.
+
+_____________
 
 ### Disclaimer
 _(Work in Progress)_
 
 This project is still in development. Development of the NHL LED Scoreboard is similarly evolving. They both rely on the external NHL API which, at any time may be inaccessible or updated. This app does modify your configuration files in the `nhl-led-scoreboard/config` directory. While these are backed up during installation, please backup any _prized_ configurations on your own accord.
+
+_____________
 
 ## Table of Contents
   - [Requirements](#requirements)
@@ -17,10 +24,13 @@ This project is still in development. Development of the NHL LED Scoreboard is s
     - [Manual Installation](#manual-installation)
   - [Screenshots](#screenshots)
   - [Usage](#usage)
-    - [Default Login](#default-admin-login)
-    - [Starting the Webserver](#finally-well-fire-up-the-devserver-from-django-to-test-out-our-install)
+    - [Starting the Webserver](#to-start-the-webserver)
+    - [Accessing the Server](#to-access-the-server)
     - [Autostarting the Webserver](#auto-starting-the-server--boot)
     - [To Stop the Server](#to-stop-the-server)
+    - [Default Login](#default-admin-login)
+    - [Info](#info)
+_____________
 
 ## Requirements 
 - [Raspberry Pi (Zero WH, 3B+, 3A+, 4B)](https://github.com/riffnshred/nhl-led-scoreboard)
@@ -30,6 +40,8 @@ This project is still in development. Development of the NHL LED Scoreboard is s
 - [Hockey](https//www.nhl.com)
 
 - [App Dependancies](requirements.txt)
+
+_____________
 
 ## Installation
 #### From the `/home/user` directory:
@@ -57,6 +69,7 @@ pip3 install virtualenv
 virtualenv env
 source env/bin/activate
 ```
+_____________
 
 ## Screenshots
 ##### It's Mobile Freindly Too! (Responsive)
@@ -71,7 +84,6 @@ source env/bin/activate
   
 ###### Settings Admin
   <img src="/assets/images/LED Scoreboard Configurator - Settings Admin.png" alt="LED Scoreboard Configurator - Settings Admin" width="100%"/>
-
 
 _____________
 
@@ -110,8 +122,11 @@ And lastly:
 
 `python3 manage.py loaddata teams.json`
 
+_____________
 
-###### Finally we'll fire up the devserver from Django to test out our install:
+## Usage
+__Be sure to back up any previous configurations before use!!!__
+#### To start the webserver:
 
 To start the server, enter `python3 manage.py runserver 0:9002 --noreload` in your console from the directory that you installed the app in.
 You can also run `./autorun.sh` from the same location.
@@ -119,6 +134,13 @@ You can also run `./autorun.sh` from the same location.
 This command, and the default configuration, start the server on `0.0.0.0` and port `9002` making it available to any connected devices on your local network. Alternatively, you can run the server on a different port, e.g. `0:8000`, `0:PORT`, or available to _just_ the `localhost` machine by running `python3 manage.py runserver --noreload`.
 
 __Note__: *This feature is for local/development use only. It should not be served over a public connection or used in a production environment. If you wish to view the scoreboard WebGUI remotely, you can do so securely by accessing your local network using a VPN service.*
+
+_____________
+
+### To access the server:
+_Access the dashboard at `YOUR_IP:PORT` in the browser._
+
+_____________
 
 #### Auto-Starting the server @ boot: 
 ###### Create a script and use `rc.local` to autostart the devserver on startup:
@@ -134,7 +156,6 @@ su user -c '/home/user/nhl-led-scoreboard-webgui/autorun.sh >> /tmp/scoreboard-g
 `tail -f -n 100 /tmp/scoreboard-gui.log`
 
 ###### _If_ you setup a `virtualenv`, change the `autorun.sh` contents to the following:
-
 ```
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
@@ -145,6 +166,8 @@ exit 0
 ```
 
 Alternatively, you can setup a [crontab](https://www.raspberrypi.org/documentation/linux/usage/cron.md), [systemd](https://www.raspberrypi.org/documentation/linux/usage/systemd.md), or another method of your choice to autostart the app.
+
+_____________
 
 ### To stop the server:
 In a terminal with the server running, `Ctrl` + `C` will terminate the process.
@@ -165,12 +188,11 @@ This is the second number in the table following the username (Use caution if yo
 
 Better yet... simply stop the server from the dashboard in the following steps :).
 
-## Usage
-__Be sure to back up any previous configurations before use!!!__
-
-Access the dashboard at `YOUR_IP:PORT` in the browser.
+_____________
 
 #### Default Admin Login
+
+`YOUR_IP:9002/admin`
 
 Username: `admin`
 
@@ -178,10 +200,13 @@ Password: `scoreboard`
 
 __Please change this password!__ You can do this by visiting `YOUR IP:PORT/admin` and clicking the change password button. Email currently isn't configured.
 
+_____________
+
+#### Info
 When a config is activated, the config.json contents are replaced with an updated configuration. You can do this on the profiles page. Your previous config.json is still "active" until you active one here.
 
 When a profile is backed up, a file is created in the same folder as profile.config.json.bak. It's path is displayed as a message in the browser. Deleted profiles do not delete the config.json or .bak files; it only removes them from the Django Sqlite database. 
 
 Speaking of which... _did you back up your profiles?_ ;)
 
-### Please let me know if you experience any bugs or issues as this is still in the testing phase!
+### Please let me know if you experience any bugs, feature suggestions or issues. Enjoy!
