@@ -186,7 +186,7 @@ This is the second number in the table following the username (Use caution if yo
 
 `kill -9 PID`, or `pkill -f runserver` if you'd like to skip the step above.
 
-Better yet... simply stop the server from the dashboard in the following steps :).
+Better yet... simply stop the server from the dashboard :).
 
 _____________
 
