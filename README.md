@@ -10,6 +10,18 @@ _(Work in Progress)_
 
 This project is still in development. Development of the NHL LED Scoreboard is similarly evolving. They both rely on the external NHL API which, at any time may be inaccessible or updated. This app does modify your configuration files in the `nhl-led-scoreboard/config` directory. While these are backed up during installation, please backup any _prized_ configurations on your own accord.
 
+## Table of Contents
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+    - [Optional Steps](#optional-but-suggested)
+    - [Manual Installation](#manual-installation)
+  - [Screenshots](#screenshots)
+  - [Usage](#usage)
+    - [Default Login](#default-admin-login)
+    - [Starting the Webserver](#finally-well-fire-up-the-devserver-from-django-to-test-out-our-install)
+    - [Autostarting the Webserver](#auto-starting-the-server--boot)
+    - [To Stop the Server](#to-stop-the-server)
+
 ## Requirements 
 - [Raspberry Pi (Zero WH, 3B+, 3A+, 4B)](https://github.com/riffnshred/nhl-led-scoreboard)
 
@@ -33,7 +45,7 @@ python3 manage.py runserver 0:9002 --noreload
 ```
 If all is working, you should then be able to access the app @ `YOUR_IP:9002` in the browser. 
 
-If you can't access the server and are using a firewall such as `ufw` or `iptables`, be sure to allow access _to your local network only_ over the `9002` port (or whatever you set it to if so). If you have ports 80/443 open in your router, this site WILL be accessable by all, so be sure to have your firewall's in order. 
+If you can't access the server and are using a firewall such as `ufw` or `iptables`, be sure to allow access _to your local network only_ over the `9002` port (or whatever you set it to if so). If you have ports 80/443 open on your Pi/Router, this site WILL be accessable by all, so be sure to have your firewall(s) in order. 
 _____________
 
 #### Optional but Suggested: 
@@ -45,6 +57,22 @@ pip3 install virtualenv
 virtualenv env
 source env/bin/activate
 ```
+
+## Screenshots
+##### It's Mobile Freindly Too! (Responsive)
+###### Dashboard
+  <img src="/assets/images/LED Scoreboard Configurator - Dashboard.png" alt="LED Scoreboard Configurator - Dashboard" width="100%"/>
+  
+###### Profiles Dashboard
+  <img src="/assets/images/LED Scoreboard Configurator - Profiles Dashboard.png" alt="LED Scoreboard Configurator - Profiles Dashboard" width="100%"/>
+  
+###### Create/Edit A Profile
+  <img src="/assets/images/LED Scoreboard Configurator - Create_Edit A Profile.png" alt="LED Scoreboard Configurator - Create_Edit A Profile" width="100%"/>
+  
+###### Settings Admin
+  <img src="/assets/images/LED Scoreboard Configurator - Settings Admin.png" alt="LED Scoreboard Configurator - Settings Admin" width="100%"/>
+
+
 _____________
 
 ### Manual Installation:
@@ -142,8 +170,7 @@ __Be sure to back up any previous configurations before use!!!__
 
 Access the dashboard at `YOUR_IP:PORT` in the browser.
 
-__Default Admin Login__
-
+#### Default Admin Login
 
 Username: `admin`
 
