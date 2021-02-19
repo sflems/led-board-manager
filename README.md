@@ -55,7 +55,7 @@ cd nhl-led-scoreboard-webgui
 ./install.sh
 python3 manage.py runserver 0:9002 --noreload
 ```
-If all is working, you should then be able to access the app @ `YOUR_IP:9002` in the browser. 
+If all is working, you should then be able to access the app @ `YOUR_PI_IP:9002` in the browser. 
 
 If you can't access the server and are using a firewall such as `ufw` or `iptables`, be sure to allow access _to your local network only_ over the `9002` port (or whatever you set it to if so). If you have ports 80/443 open on your Pi/Router, this site WILL be accessable by all, so be sure to have your firewall(s) in order. 
 _____________
@@ -138,7 +138,7 @@ __Note__: *This feature is for local/development use only. It should not be serv
 _____________
 
 ### To access the server:
-_Access the dashboard at `YOUR_IP:PORT` in the browser._
+_Access the dashboard at `YOUR_PI_IP:PORT` in the browser._
 
 _____________
 
@@ -192,7 +192,7 @@ _____________
 
 #### Default Admin Login
 
-`YOUR_IP:9002/admin`
+`YOUR_PI_IP:9002/admin`
 
 Username: `admin`
 
