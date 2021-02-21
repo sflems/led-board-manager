@@ -35,6 +35,13 @@ document.addEventListener('DOMContentLoaded', function () {
 				<p class="m-0">Debug: ${result.profile.config.debug}</p>
 				<p class="m-0">Log Level: ${result.profile.config.loglevel}</p>
 			`);
+		})
+		.catch(error => {
+			console.log(error);
+			$('div#profile-card h5.card-title').text("ERROR");
+			$('div#profile-card div.card-text').html(`
+				<p class="mt-n2">No active profile returned.</p>
+			`);
 		});
 	});
 
