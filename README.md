@@ -1,6 +1,18 @@
 # NHL LED Scoreboard Web GUI & Configurator
 #### A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
 
+## *** CS50 DEMO MODE NOTE ***
+DEMO_CS50 is enabled in the `Capstone/settings.py` file. This allows demonstration of saving and editing the configurations withing the project file structure. These files can be found in the `/demo/config` directory. When disabled, the app will attempt to pull the config files from an active NHL LED Scoreboard installation. The demo feature _should_ work on all operating systems for the above purposes. Otherwise, if you have a Raspberry Pi and would like to fully test the app functionality with the scoreboard, you're welcome to follow the complete guide by settings `CS50_DEMO` to `False`.
+
+### To test in CS50 Demo mode:
+```
+pip3 install -r requirements.txt
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py loaddata teams.json
+gunicorn Capstone.wsgi
+```
+
 ## Description
 Designed as a solution to manage the NHL LED Scoreboard project by [Joel Joannisse](https://github.com/riffnshred). 
 
@@ -20,7 +32,7 @@ _____________
 ## Table of Contents
   - [Requirements](#requirements)
   - [Installation](#installation)
-    - [Optional Steps](#optional-but-suggested)
+    - [Optional Steps](#optional-but-highly-suggested)
     - [Manual Installation](#manual-installation)
   - [Screenshots](#screenshots)
   - [Usage](#usage)
@@ -29,7 +41,7 @@ _____________
     - [Autostarting the Webserver](#auto-starting-the-server--boot)
     - [To Stop the Server](#to-stop-the-server)
     - [Default Login](#default-admin-login)
-    - [Info](#info)
+    - [Info & Troubleshooting](#info-/-troubleshooting)
 _____________
 
 ## Requirements 
@@ -73,7 +85,6 @@ gunicorn Capstone.wsgi -b 0:9002
 If all is working, you should then be able to access the app @ `YOUR_IP:9002` in the browser.
 
 #### Default Login (Change me in the admin panel!)
-
 Username: `admin`
 Password: `scoreboard`
 
@@ -243,10 +254,12 @@ __Please change this password!__ You can do this by visiting `YOUR IP:PORT/admin
 
 _____________
 
-#### Info
-When a config is activated, the config.json contents are replaced with an updated configuration. You can do this on the profiles page. Your previous config.json is still "active" until you active one here.
+#### Info / Troubleshooting
+- When a config is activated, the config.json contents are replaced with an updated configuration. You can do this on the profiles page. Your previous config.json is still "active" until you active one here.
 
-When a profile is backed up, a file is created in the same folder as profile.config.json.bak. It's path is displayed as a message in the browser. Deleted profiles do not delete the config.json or .bak files; it only removes them from the Django Sqlite database. 
+- When a profile is backed up, a file is created in the same folder as profile.config.json.bak. It's path is displayed as a message in the browser. Deleted profiles do not delete the config.json or .bak files; it only removes them from the Django Sqlite database. 
+
+- The GUI Defaults (ie Scoreboard path, Supervisor Program Name, etc.) can be changed in the Constance admin panel. Alternatively, they can be modified manually in the `Capstone/settings.py` file under the `CONSTANCE_CONFIG` variable.
 
 Speaking of which... _did you back up your profiles?_ ;)
 
