@@ -4,7 +4,7 @@
 ## Description
 Designed as a solution to manage the NHL LED Scoreboard project by [Joel Joannisse](https://github.com/riffnshred). 
 
-The app uses a Django webserver to manage profiles in a simple SQLite database. Users can access the web interface which can be hosted on their local machine or network. The current `config.schema.json` found in the `nhl-led-scoreboard/config` directory generates an easy to use form to create a `config.json` file. At the moment, configurations you edit are validated against this current schema exclusively. It the saves a new `config.json` in the `nhl-led-scoreboard/config` directory. The app also has the ability to backup configurations to file from the dashboard. 
+The app uses a Django webserver to manage profiles in a simple SQLite database. Users can access the web interface which can be hosted on their local machine or network. The current `config.schema.json` found in the `nhl-led-scoreboard/config` directory generates an easy to use form to create a `config.json` file. At the moment, configurations you edit are validated against this current schema exclusively. It saves a new `config.json` in the `nhl-led-scoreboard/config` directory. The app also has the ability to backup configurations to file from the dashboard. 
 
 JSON can also be edited manually in the `/admin` interface. __Be Careful!__ The entries in the admin panel are currently __not__ validated against the config schema. This allows you to enter custom configurations during testing.
 
