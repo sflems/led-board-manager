@@ -1,18 +1,6 @@
 # NHL LED Scoreboard Web GUI & Configurator
 #### A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
 
-## *** CS50 DEMO MODE NOTE ***
-DEMO_CS50 is enabled in the `Capstone/settings.py` file. This allows demonstration of saving and editing the configurations withing the project file structure. These files can be found in the `/demo/config` directory. When disabled, the app will attempt to pull the config files from an active NHL LED Scoreboard installation. The demo feature _should_ work on all operating systems for the above purposes. Otherwise, if you have a Raspberry Pi and would like to fully test the app functionality with the scoreboard, you're welcome to follow the complete guide by settings `CS50_DEMO` to `False`.
-
-### To test in CS50 Demo mode:
-```
-pip3 install -r requirements.txt
-python3 manage.py makemigrations
-python3 manage.py migrate
-python3 manage.py loaddata teams.json
-gunicorn Capstone.wsgi
-```
-
 ## Description
 Designed as a solution to manage the NHL LED Scoreboard project by [Joel Joannisse](https://github.com/riffnshred). 
 
