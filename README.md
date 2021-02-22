@@ -50,6 +50,7 @@ _____________
 
 #### Optional, but _Highly_ Suggested: 
 ###### Install `virtualenv` using `pip3`, create and activate the environment:
+_See [Manual Installation](#manual-installation) instructions for more details._
 
 To run the server in a development environment, or if you have issues with dependencies, `virtualenv` can be a solution to create a separate "environment" for the server to run in.
 ```
@@ -58,9 +59,10 @@ virtualenv nhl-led-scoreboard-webgui/env
 source nhl-led-scoreboard-webgui/env/bin/activate
 ```
 
-To exit the `virtualenv`, enter the command `deactivate` in the terminal.
+To exit the `virtualenv` at any time after installing, enter the command `deactivate` in the terminal.
 _____________
 
+## Installation (Cont.)
 #### From the `/home/user` directory:
 ###### (or the same location as your `nhl-led-scoreboard` directory)
 
@@ -174,7 +176,7 @@ user=pi
 
 ###### _If_ you setup a `virtualenv`, change the `autorun.sh` contents to the following:
 ```
-[program:scoreboard-gui]
+[program:scoreboard-webgui]
 command=/home/pi/nhl-led-scoreboard-webgui/env/bin/gunicorn Capstone.wsgi -b 0:9002
 directory=/home/pi/nhl-led-scoreboard-webgui
 autostart=true
@@ -243,12 +245,19 @@ __Please change this password!__ You can do this by visiting `YOUR IP:PORT/admin
 _____________
 
 #### Info / Troubleshooting
+- When updating, it may be necessary to run the following:
+```
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py load data teams.json
+```
+
+Then, restart the web server.
+
 - When a config is activated, the config.json contents are replaced with an updated configuration. You can do this on the profiles page. Your previous config.json is still "active" until you active one here.
 
 - When a profile is backed up, a file is created in the same folder as profile.config.json.bak. It's path is displayed as a message in the browser. Deleted profiles do not delete the config.json or .bak files; it only removes them from the Django Sqlite database. 
 
 - The GUI Defaults (ie Scoreboard path, Supervisor Program Name, etc.) can be changed in the Constance admin panel. Alternatively, they can be modified manually in the `Capstone/settings.py` file under the `CONSTANCE_CONFIG` variable.
-
-Speaking of which... _did you back up your profiles?_ ;)
 
 ### Please let me know if you experience any bugs, feature suggestions or issues. Enjoy!
