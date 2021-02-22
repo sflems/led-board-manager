@@ -41,5 +41,5 @@ python3 manage.py migrate >&3
 python3 manage.py loaddata teams.json >&3
 
 echo "SETUP COMPLETED!!!" >&3
-echo "Start the Web GUI server with 'python3 manage.py runserver 0:9002 --noreload &' or './autorun.sh'" >&3
+echo "Start the Web GUI server with 'gunicorn Capstone.wsgi -b 0:9002' or './autorun.sh'" >&3
 exit 0
