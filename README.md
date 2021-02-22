@@ -29,7 +29,7 @@ _____________
     - [Autostarting the Webserver](#auto-starting-the-server--boot)
     - [To Stop the Server](#to-stop-the-server)
     - [Default Login](#default-admin-login)
-    - [Info & Troubleshooting](#info-/-troubleshooting)
+    - [Info & Troubleshooting](#info--troubleshooting)
 _____________
 
 ## Requirements 
