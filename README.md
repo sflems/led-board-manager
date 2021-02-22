@@ -247,6 +247,7 @@ _____________
 #### Info / Troubleshooting
 - When updating, it may be necessary to run the following:
 ```
+pip3 install -r requirements.txt
 python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py load data teams.json
