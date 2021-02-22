@@ -36,7 +36,7 @@
                                         {% if not profile.isActive %}
                                             <button href="#" id="activate" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-block btn-sm btn-success b-2">Activate</button>
                                         {% endif %}
-                                        {% if not profile.isActive and profile.name != "Default" %}
+                                        {% if profile.name != "Default" %}
                                             <button href="#" id="edit" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-block btn-sm btn-outline-dark mb-2">Edit</button>
                                             <button href="#" id="backup" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-block btn-sm btn-outline-dark mb-0">Backup</button>
                                         {% endif %}

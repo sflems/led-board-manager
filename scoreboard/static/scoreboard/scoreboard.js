@@ -34,7 +34,17 @@ document.addEventListener('DOMContentLoaded', function () {
 				<p class="m-0">Live Mode: ${result.profile.config.live_mode}</p>
 				<p class="m-0">Debug: ${result.profile.config.debug}</p>
 				<p class="m-0">Log Level: ${result.profile.config.loglevel}</p>
+				<p class="m-0 status"></p>
 			`);
+			if (result.scoreboard_status != true) {
+				$('p.status').html(`
+					Scoreboard Status: Supervisor Process Not Found <img src="/static/scoreboard/x-square-fill.svg" class="x-square-fill" width="24" height="24">
+				`);
+			} else {
+				$('p.status').html(`
+					Scoreboard Status: Running <img src="/static/scoreboard/check-square-fill.svg" class="x-square-fill" width="24" height="24">
+				`);
+			};
 		})
 		.catch(error => {
 			console.log(error);

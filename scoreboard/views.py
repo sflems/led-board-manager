@@ -90,9 +90,11 @@ class SettingsList(ListView):
 def active_profile(request):
     if request.method == "GET":
         profile = Settings.objects.get(isActive=1)
+        scoreboard_status = services.proc_status()
 
         return JsonResponse({
-            "profile": profile.serialize()
+            "profile": profile.serialize(),
+            "scoreboard_status": scoreboard_status
         }, status=200)
 
 @login_required
@@ -183,7 +185,6 @@ def profiles(request, id):
             return render(request, "scoreboard/settings_create.html", {
                 "error": "No profile found."
             })
-
 
 
     elif request.method == "POST":

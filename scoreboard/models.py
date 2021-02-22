@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import pre_save, post_save, pre_delete
 from django.dispatch import receiver
 from django.core.exceptions import *
-import json, os
+import json, os, subprocess
 from . import services
 
 # Default User Class
@@ -82,11 +82,20 @@ def pre_save(sender, instance, **kwargs):
                 profile.isActive = False
                 profile.save()
 
+# Saves config file to nhl-led-scoreboard directory if set as active
 # TO DO: Implement method of changing config path.
 @receiver(post_save, sender=Settings)
 def post_save(sender, instance, **kwargs):
     if instance.isActive:
         with open(services.conf_path() + "config.json", "w") as outfile:
             json.dump(instance.config, outfile, indent=4)
+
+        # Command attemps to restart scoreboard via supervisorctl
+        try:
+            command = "sudo supervisorctl restart scoreboard"
+            subprocess.check_call(command, shell=True)
+            
+        except subprocess.CalledProcessError:
+            pass
 
 

@@ -1,8 +1,20 @@
 from django.conf import settings
 from django.http import Http404
-import json, psutil, requests
+import json, psutil, requests, subprocess
 from gpiozero import CPUTemperature
 from .models import *
+
+# Supervisor Commands for NHL Led Scoreboard
+def proc_status():
+    proc_status = False
+    command = "sudo supervisorctl status scoreboard"
+    process = subprocess.run(command, shell=True, capture_output=True)
+
+    # Checks if bytes type string RUNNING is found in output(bytes type).
+    if b'RUNNING' in process.stdout:
+        proc_status = True
+
+    return proc_status
 
 # Pi System Stats Functions
 # Imported from https://learn.pimoroni.com/tutorial/networked-pi/raspberry-pi-system-stats-python and modified for this use case.
@@ -44,7 +56,6 @@ def todays_games():
 
 # defines the users home/user/nhl-led-scoreboard/config folder path. Checks if DEMO_CS50 mode is enabled.
 def conf_path():
-    path = os.path.dirname(settings.BASE_DIR) + "/nhl-led-scoreboard/config/"
     return path
 
 # Opens default config from current config in the nhl-led-scoreboard folder if found, otherwise from static config, and then loads into Settings Profile
