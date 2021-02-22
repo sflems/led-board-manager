@@ -1,6 +1,6 @@
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-
-python3 ${DIR}/manage.py runserver 0:9002 --noreload &
+cd ${DIR}
+gunicorn Capstone.wsgi -b 0:9002
 
 exit 0
