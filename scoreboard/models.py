@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import pre_save, post_save, pre_delete
 from django.dispatch import receiver
 from django.core.exceptions import *
+from constance import config
 import json, os, subprocess
 from . import services
 
@@ -92,7 +93,7 @@ def post_save(sender, instance, **kwargs):
 
         # Command attemps to restart scoreboard via supervisorctl
         try:
-            command = "sudo supervisorctl restart scoreboard"
+            command = "sudo supervisorctl restart " + config.SUPERVISOR_PROGRAM_NAME
             subprocess.check_call(command, shell=True)
             
         except subprocess.CalledProcessError:

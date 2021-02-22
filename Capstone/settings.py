@@ -26,6 +26,8 @@ SECRET_KEY = secret_key_generator.generate()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Activates demo mode: Uses static configs/schmea for CS50 demo purposes.
+DEMO_CS50 = False
 
 # Allows server to be hosted on local subnet with unrestricted IPs. Make sure your firewall is accepting local network traffic only!!!
 # This can be modified for your local subnet. See below.
@@ -39,18 +41,29 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
-    'scoreboard',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'constance',
+    'constance.backends.database',
+    'scoreboard',
     'bootstrap4',
     'crispy_forms',
     'django_jsonforms',
     'prettyjson',
 ]
+
+scoreboard_path = os.path.dirname(BASE_DIR) + "/nhl-led-scoreboard/"
+
+CONSTANCE_CONFIG = {
+    'SCOREBOARD_DIR': (scoreboard_path, 'Path to NHL LED Scoreboard Directory'),
+    'SUPERVISOR_PROGRAM_NAME': ('scoreboard', 'ie. [program:scoreboard] from /etc/supervisor/conf.d/scoreboard.conf'),
+}
+
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

@@ -867,7 +867,7 @@
     },
     {
         "model": "contenttypes.contenttype",
-        "pk": 1,
+        "id": 1,
         "fields": {
             "app_label": "scoreboard",
             "model": "user"
@@ -875,7 +875,7 @@
     },
     {
         "model": "contenttypes.contenttype",
-        "pk": 2,
+        "id": 2,
         "fields": {
             "app_label": "scoreboard",
             "model": "settings"
@@ -883,7 +883,7 @@
     },
     {
         "model": "contenttypes.contenttype",
-        "pk": 3,
+        "id": 3,
         "fields": {
             "app_label": "scoreboard",
             "model": "team"
@@ -891,7 +891,7 @@
     },
     {
         "model": "contenttypes.contenttype",
-        "pk": 4,
+        "id": 4,
         "fields": {
             "app_label": "scoreboard",
             "model": "profile"
@@ -899,7 +899,7 @@
     },
     {
         "model": "contenttypes.contenttype",
-        "pk": 5,
+        "id": 5,
         "fields": {
             "app_label": "admin",
             "model": "logentry"
@@ -907,7 +907,7 @@
     },
     {
         "model": "contenttypes.contenttype",
-        "pk": 6,
+        "id": 6,
         "fields": {
             "app_label": "auth",
             "model": "permission"
@@ -915,7 +915,7 @@
     },
     {
         "model": "contenttypes.contenttype",
-        "pk": 7,
+        "id": 7,
         "fields": {
             "app_label": "auth",
             "model": "group"
@@ -923,7 +923,7 @@
     },
     {
         "model": "contenttypes.contenttype",
-        "pk": 8,
+        "id": 8,
         "fields": {
             "app_label": "contenttypes",
             "model": "contenttype"
@@ -931,7 +931,7 @@
     },
     {
         "model": "contenttypes.contenttype",
-        "pk": 9,
+        "id": 9,
         "fields": {
             "app_label": "sessions",
             "model": "session"

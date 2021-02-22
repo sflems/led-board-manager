@@ -3,11 +3,12 @@ from django.http import Http404
 import json, psutil, requests, subprocess
 from gpiozero import CPUTemperature
 from .models import *
+from constance import config
 
 # Supervisor Commands for NHL Led Scoreboard
 def proc_status():
     proc_status = False
-    command = "sudo supervisorctl status scoreboard"
+    command = "sudo supervisorctl status " + config.SUPERVISOR_PROGRAM_NAME
     process = subprocess.run(command, shell=True, capture_output=True)
 
     # Checks if bytes type string RUNNING is found in output(bytes type).
@@ -56,7 +57,10 @@ def todays_games():
 
 # defines the users home/user/nhl-led-scoreboard/config folder path. Checks if DEMO_CS50 mode is enabled.
 def conf_path():
-    path = os.path.dirname(settings.BASE_DIR) + "/nhl-led-scoreboard/config/"
+    if settings.DEMO_CS50 != True:
+        path = os.path.join(config.SCOREBOARD_DIR, 'config/')
+    else:
+        path = os.path.join(settings.BASE_DIR, 'demo/config/')
     return path
 
 # Opens default config from current config in the nhl-led-scoreboard folder if found, otherwise from static config, and then loads into Settings Profile
