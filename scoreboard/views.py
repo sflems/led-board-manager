@@ -42,19 +42,26 @@ def command(request):
         else:
             pass 
 
+    # Command to stop the web server
     if request.method == "PUT" and data.get("stopserver"):       
         try:
+            # Checks if process is supervisor run
             if not services.proc_status():
                 command = ["kill " + str(os.getpid())]
             else:
                 command = ["sudo supervisorctl stop " + config.SUPERVISOR_GUI_NAME]
-                
-            call = subprocess.check_call(command, shell=True)
+            
+            subprocess.check_call(command, shell=True)
         
         except subprocess.CalledProcessError:
             return JsonResponse({
                 "stopserver": False,
-            }, status=400)        
+            }, status=400)  
+
+        except ValueError:
+            return JsonResponse({
+                "stopserver": False,
+            }, status=400)      
              
 
     if request.method == "PUT" and data.get("reboot"):
