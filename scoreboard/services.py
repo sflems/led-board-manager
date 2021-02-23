@@ -17,6 +17,18 @@ def proc_status():
 
     return proc_status
 
+# Supervisor Commands for NHL Led Scoreboard
+def gui_status():
+    proc_status = False
+    command = "sudo supervisorctl status " + config.SUPERVISOR_GUI_NAME
+    process = subprocess.run(command, shell=True, capture_output=True)
+
+    # Checks if bytes type string RUNNING is found in output(bytes type).
+    if b'RUNNING' in process.stdout:
+        proc_status = True
+
+    return proc_status
+
 # Pi System Stats Functions
 # Imported from https://learn.pimoroni.com/tutorial/networked-pi/raspberry-pi-system-stats-python and modified for this use case.
 def cpu():
