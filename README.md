@@ -13,23 +13,27 @@ _____________
 ### Disclaimer
 _(Work in Progress)_
 
-This project is still in development. Development of the NHL LED Scoreboard is similarly evolving. They both rely on the external NHL API which, at any time may be inaccessible or updated. This app does modify your configuration files in the `nhl-led-scoreboard/config` directory. While these are backed up during installation, please backup any _prized_ configurations on your own accord.
+This project is still in development. Development of the NHL LED Scoreboard is similarly evolving. They both rely on the external NHL API which, at any time may be inaccessible or updated. This app __does__ modify your configuration files in the `nhl-led-scoreboard/config` directory. While these files are cloned during installation, please backup any _prized_ configurations on your own accord.
 
 _____________
 
 ## Table of Contents
+  - [Description](#description)
   - [Requirements](#requirements)
   - [Installation](#installation)
     - [Optional Steps](#optional-but-highly-suggested)
     - [Manual Installation](#manual-installation)
-  - [Screenshots](#screenshots)
-  - [Usage](#usage)
-    - [Starting the Webserver](#to-start-the-webserver)
-    - [Accessing the Server](#to-access-the-server)
     - [Autostarting the Webserver](#auto-starting-the-server--boot)
+    - [Updates](#updates)
+    - [Removal / Uninstall](#removal--uninstall)
+  - [Usage](#usage)
+    - [Starting the Server](#to-start-the-webserver)
+    - [Accessing the Server](#to-access-the-server)
     - [To Stop the Server](#to-stop-the-server)
     - [Default Login](#default-admin-login)
     - [Info & Troubleshooting](#info--troubleshooting)
+  - [Screenshots](#screenshots)
+
 _____________
 
 ## Requirements 
@@ -46,8 +50,6 @@ _____________
 ## Installation
 __Be sure to back up any previous configurations before use!!!__ The original files are overwritten and saved as `config.json.webgui.bak` and `config.schema.json.webgui.bak` in the `nhl-led-scoreboard/config/bak` subdirectory.
 
-_____________
-
 #### Optional, but _Highly_ Suggested: 
 ###### Install `virtualenv` using `pip3`, create and activate the environment:
 _See [Manual Installation](#manual-installation) instructions for more details._
@@ -60,10 +62,8 @@ source nhl-led-scoreboard-webgui/env/bin/activate
 ```
 
 To exit the `virtualenv` at any time after installing, enter the command `deactivate` in the terminal.
-_____________
 
-## Installation (Cont.)
-#### From the `/home/user` directory:
+#### Otherwise, from the `/home/user` directory:
 ###### (or the same location as your `nhl-led-scoreboard` directory)
 
 ```
@@ -80,25 +80,11 @@ Password: `scoreboard`
 
 If you can't access the server and are using a firewall such as `ufw` or `iptables`, be sure to allow access _to your local network only_ over the `9002` port (or whatever you set it to if so). If you have ports 80/443 open on your Pi/Router, this site WILL be accessable by all, so be sure to have your firewall(s) in order. 
 
-_____________
+__To automatically start the webserver on reboot, be sure to follow the [Autostarting the Webserver](#auto-starting-the-server--boot) step.__
 
-## Screenshots
-##### It's Mobile Freindly Too! (Responsive)
-###### Dashboard
-  <img src="/assets/images/LED Scoreboard Configurator - Dashboard.png" alt="LED Scoreboard Configurator - Dashboard" width="100%"/>
-  
-###### Profiles Dashboard
-  <img src="/assets/images/LED Scoreboard Configurator - Profiles Dashboard.png" alt="LED Scoreboard Configurator - Profiles Dashboard" width="100%"/>
-  
-###### Create/Edit A Profile
-  <img src="/assets/images/LED Scoreboard Configurator - Create_Edit A Profile.png" alt="LED Scoreboard Configurator - Create_Edit A Profile" width="100%"/>
-  
-###### Settings Admin
-  <img src="/assets/images/LED Scoreboard Configurator - Settings Admin.png" alt="LED Scoreboard Configurator - Settings Admin" width="100%"/>
+__See also: [Usage Instructions](#usage)__
 
-_____________
-
-### Manual Installation:
+## Manual Installation:
 ```
 touch .secret.txt
 chmod g+w .secret.txt
@@ -133,33 +119,9 @@ And lastly:
 
 `python3 manage.py loaddata teams.json`
 
-_____________
+Follow the next step to setup server autostart, or see [usage instructions](#usage) for more details.
 
-## Usage
-__Be sure to back up any previous configurations before use!!!__
-### To start the webserver:
-
-To start the server, enter `gunicorn Capstone.wsgi -b 0:9002` in your console from the directory that you installed the app in.
-You can also run `./autorun.sh` from the same location.
-
-This command, and the default configuration, start the server on `0.0.0.0` and port `9002` making it available to any connected devices on your local network. Alternatively, you can run the server on a different port, e.g. `0:8000`, `0:PORT`, or available to _just_ the `localhost` machine by running `gunicorn Capstone.wsgi -b 127.0.0.1:9002`.
-
-__Note__: *This server should not be served over a public connection or used in a production environment. If you wish to view the scoreboard WebGUI remotely, you can do so securely by accessing your local network using a VPN service.*
-
-_____________
-
-### To access the server:
-Access the dashboard at `YOUR_IP:PORT` in the browser.
-
-#### Default Login (Change me in the admin panel!)
-
-Username: `admin`
-
-Password: `scoreboard`
-
-_____________
-
-### Auto-Starting the server @ boot: 
+## Auto-Starting the server @ boot: 
 #### OPTION 1: Create a Supervisor Config to start the GUI with Gunicorn (PREFERRED):
 Create a new supervisor config with the command:
 `sudo nano /etc/supervisor/conf.d/scoreboard-webgui.conf`
@@ -207,6 +169,62 @@ exit 0
 
 Alternatively, you can setup a [crontab](https://www.raspberrypi.org/documentation/linux/usage/cron.md), [systemd](https://www.raspberrypi.org/documentation/linux/usage/systemd.md), or another method of your choice to autostart the app.
 
+## Updates
+The latest update notes can be found under the [project releases](https://github.com/sflems/nhl-led-scoreboard-webgui/releases). 
+
+__If you are using `virtualenv`, be sure to [activate]((#optional-but-highly-suggested)) it before manually running these commands.__
+
+When updating, or if stated in the release notes, it may be necessary to run the following:
+```
+pip3 install -r requirements.txt
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py load data teams.json
+```
+Then, restart the web server.
+
+## Removal / Uninstall
+
+##### To remove the webserver:
+```
+cd
+sudo rm -rfv nhl-led-scoreboard-webgui
+```
+The `nhl-led-scoreboard/config/bak` directory created at install will remain. It contains any profiles backed up from the GUI as well the original schema and config files.
+
+##### Remove the Supervisor Configuration if present:
+```
+sudo rm /etc/supervisor/conf.d/scoreboard-webgui.conf
+```
+
+##### Remove the `rc.local` Configuration if present:
+```
+sudo nano /etc/supervisor/rc.local
+```
+...and remove the server's autorun.sh script line.
+
+## Usage
+__Be sure to back up any previous configurations before use!!!__
+### To start the webserver:
+
+To start the server, enter `gunicorn Capstone.wsgi -b 0:9002` in your console from the directory that you installed the app in.
+You can also run `./autorun.sh` from the same location.
+
+This command, and the default configuration, start the server on `0.0.0.0` and port `9002` making it available to any connected devices on your local network. Alternatively, you can run the server on a different port, e.g. `0:8000`, `0:PORT`, or available to _just_ the `localhost` machine by running `gunicorn Capstone.wsgi -b 127.0.0.1:9002`.
+
+__Note__: *This server should not be served over a public connection or used in a production environment. If you wish to view the scoreboard WebGUI remotely, you can do so securely by accessing your local network using a VPN service.*
+
+_____________
+
+### To access the server:
+Access the dashboard at `YOUR_IP:PORT` in the browser.
+
+###### Default Login (Change me in the admin panel!)
+
+Username: `admin`
+
+Password: `scoreboard`
+
 _____________
 
 ### To stop the server:
@@ -232,7 +250,7 @@ Better yet... simply stop the server from supervisor, or the dashboard  :).
 
 _____________
 
-#### Default Admin Login
+### Default Admin Login
 
 `YOUR_IP:9002/admin`
 
@@ -244,21 +262,30 @@ __Please change this password!__ You can do this by visiting `YOUR IP:PORT/admin
 
 _____________
 
-#### Info / Troubleshooting
-- When updating, it may be necessary to run the following:
-```
-pip3 install -r requirements.txt
-python3 manage.py makemigrations
-python3 manage.py migrate
-python3 manage.py load data teams.json
-```
-
-Then, restart the web server.
+## Info / Troubleshooting
+- After updating, it may be necessary to update the database. See [Updates](#updates) for more info.
 
 - When a config is activated, the config.json contents are replaced with an updated configuration. You can do this on the profiles page. Your previous config.json is still "active" until you active one here.
 
 - When a profile is backed up, a file is created in the same folder as profile.config.json.bak. It's path is displayed as a message in the browser. Deleted profiles do not delete the config.json or .bak files; it only removes them from the Django Sqlite database. 
 
 - The GUI Defaults (ie Scoreboard path, Supervisor Program Name, etc.) can be changed in the Constance admin panel. Alternatively, they can be modified manually in the `Capstone/settings.py` file under the `CONSTANCE_CONFIG` variable.
+
+_____________
+
+## Screenshots
+##### It's Mobile Freindly Too! (Responsive)
+###### Dashboard
+  <img src="/assets/images/LED Scoreboard Configurator - Dashboard.png" alt="LED Scoreboard Configurator - Dashboard" width="100%"/>
+  
+###### Profiles Dashboard
+  <img src="/assets/images/LED Scoreboard Configurator - Profiles Dashboard.png" alt="LED Scoreboard Configurator - Profiles Dashboard" width="100%"/>
+  
+###### Create/Edit A Profile
+  <img src="/assets/images/LED Scoreboard Configurator - Create_Edit A Profile.png" alt="LED Scoreboard Configurator - Create_Edit A Profile" width="100%"/>
+  
+###### Settings Admin
+  <img src="/assets/images/LED Scoreboard Configurator - Settings Admin.png" alt="LED Scoreboard Configurator - Settings Admin" width="100%"/>
+
 
 ### Please let me know if you experience any bugs, feature suggestions or issues. Enjoy!
