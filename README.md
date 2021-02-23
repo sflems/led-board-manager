@@ -52,13 +52,12 @@ __Be sure to back up any previous configurations before use!!!__ The original fi
 
 #### Optional, but _Highly_ Suggested: 
 ###### Install `virtualenv` using `pip3`, create and activate the environment:
-_See [Manual Installation](#manual-installation) instructions for more details._
-
 To run the server in a development environment, or if you have issues with dependencies, `virtualenv` can be a solution to create a separate "environment" for the server to run in.
 ```
 pip3 install virtualenv
-virtualenv nhl-led-scoreboard-webgui/env
-source nhl-led-scoreboard-webgui/env/bin/activate
+cd ~/nhl-led-scoreboard-webgui
+virtualenv env
+source env/bin/activate
 ```
 
 To exit the `virtualenv` at any time after installing, enter the command `deactivate` in the terminal.
