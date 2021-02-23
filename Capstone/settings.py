@@ -61,6 +61,7 @@ scoreboard_path = os.path.dirname(BASE_DIR) + "/nhl-led-scoreboard/"
 CONSTANCE_CONFIG = {
     'SCOREBOARD_DIR': (scoreboard_path, 'Path to NHL LED Scoreboard Directory'),
     'SUPERVISOR_PROGRAM_NAME': ('scoreboard', 'ie. [program:scoreboard] from /etc/supervisor/conf.d/scoreboard.conf'),
+    'SUPERVISOR_GUI_NAME': ('scoreboard-webgui', 'ie. [program:scoreboard-webgui] from /etc/supervisor/conf.d/scoreboard-webgui.conf'),
 }
 
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'

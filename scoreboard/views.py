@@ -47,7 +47,7 @@ def command(request):
             if not services.proc_status():
                 command = ["kill " + str(os.getpid())]
             else:
-                command = ["sudo supervisorctl stop " + config.SUPERVISOR_PROGRAM_NAME]
+                command = ["sudo supervisorctl stop " + config.SUPERVISOR_GUI_NAME]
                 
             call = subprocess.check_call(command, shell=True)
         
