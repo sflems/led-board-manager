@@ -201,7 +201,7 @@ sudo rm /etc/supervisor/conf.d/scoreboard-webgui.conf
 
 ##### Remove the `rc.local` Configuration if present:
 ```
-sudo nano /etc/supervisor/rc.local
+sudo nano /etc/rc.local
 ```
 ...and remove the server's autorun.sh script line.
 
