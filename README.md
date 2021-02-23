@@ -118,7 +118,7 @@ And lastly:
 
 `python3 manage.py loaddata teams.json`
 
-Follow the next step to setup server autostart, or see [usage instructions](#usage) for more details.
+Either follow the next step to setup server autostart, or see [usage instructions](#usage) for more details.
 
 ## Auto-Starting the server @ boot: 
 #### OPTION 1: Create a Supervisor Config to start the GUI with Gunicorn (PREFERRED):
@@ -171,9 +171,13 @@ Alternatively, you can setup a [crontab](https://www.raspberrypi.org/documentati
 ## Updates
 The latest update notes can be found under the [project releases](https://github.com/sflems/nhl-led-scoreboard-webgui/releases). 
 
-__If you are using `virtualenv`, be sure to [activate]((#optional-but-highly-suggested)) it before manually running these commands.__
+__If you are using `virtualenv`, be sure to [activate]((#optional-but-highly-suggested)) it before updating.__
 
-When updating, or if stated in the release notes, it may be necessary to run the following:
+When updating, or if stated in the release notes, it may be necessary to run the update script:
+```./update.sh``` 
+Then, restart the web server.
+
+Alternatively, manually enter the following commands:
 ```
 pip3 install -r requirements.txt
 python3 manage.py makemigrations
@@ -183,7 +187,6 @@ python3 manage.py load data teams.json
 Then, restart the web server.
 
 ## Removal / Uninstall
-
 ##### To remove the webserver:
 ```
 cd
