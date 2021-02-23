@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('button#stopserver').click(function () {
 		document.querySelector('#message').innerHTML = `
 				<div class="alert alert-success alert-dismissible fade show">
-					<strong>Success!</strong> <small>Web interface will shutdown in 5 seconds...</small>
+					<strong>Success!</strong> <small>Web interface shutdown commencing...</small>
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
