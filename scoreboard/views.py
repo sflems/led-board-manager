@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed, JsonResponse
 from django.core.exceptions import FieldError
+from constance import config
 
 from .forms import SettingsDetailForm
 from django_jsonforms.forms import JSONSchemaForm
@@ -31,7 +32,7 @@ def command(request):
     data = json.loads(request.body)
     if request.method == "PUT" and data.get("autostart"):
         try:
-            # Autostart toggle option for autostart.sh here
+            # Autostart toggle option for autostart.sh or supervisor here
             pass
         
         except subprocess.CalledProcessError:
@@ -41,17 +42,19 @@ def command(request):
         else:
             pass 
 
-    if request.method == "PUT" and data.get("stopserver"):
+    if request.method == "PUT" and data.get("stopserver"):       
         try:
-            #call = subprocess.call(["sudo", "reboot"])
-            command = ["kill -9 " + str(os.getpid()) + " && deactivate"]
+            if not services.proc_status():
+                command = ["kill " + str(os.getpid())]
+            else:
+                command = ["sudo supervisorctl stop " + config.SUPERVISOR_PROGRAM_NAME]
+                
             call = subprocess.check_call(command, shell=True)
-           # call = subprocess.check_call("deactivate", shell=True)
         
         except subprocess.CalledProcessError:
             return JsonResponse({
                 "stopserver": False,
-            }, status=400)             
+            }, status=400)        
              
 
     if request.method == "PUT" and data.get("reboot"):
