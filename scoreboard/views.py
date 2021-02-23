@@ -46,7 +46,7 @@ def command(request):
     if request.method == "PUT" and data.get("stopserver"):       
         try:
             # Checks if process is supervisor run
-            if not services.gui_status()
+            if not services.gui_status():
                 command = ["kill " + str(os.getpid())]
             else:
                 command = ["sudo supervisorctl stop " + config.SUPERVISOR_GUI_NAME]
