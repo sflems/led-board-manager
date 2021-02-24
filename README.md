@@ -76,8 +76,8 @@ __Be sure to back up any previous configurations before use!!!__ The original fi
 To run the server in a development environment, or if you have issues with dependencies, `virtualenv` can be a solution to create a separate "environment" for the server to run in.
 ```
 pip3 install virtualenv
-cd ~/nhl-led-scoreboard-webgui
-virtualenv env
+virtualenv nhl-led-scoreboard-webgui/env
+cd nhl-led-scoreboard-webgui
 source env/bin/activate
 ```
 
