@@ -1,6 +1,13 @@
 # NHL LED Scoreboard Web GUI & Configurator
 #### A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
 
+## *** CS50 DEMO MODE NOTE ***
+`DEMO_CS50` is __enabled__ in the `Capstone/settings.py` file. This allows demonstration of saving and editing the configurations within the project file structure. These files can be found in the `/demo/config` directory. When disabled, the app will attempt to pull the config files from an active NHL LED Scoreboard installation. The demo feature _should_ work on all operating systems for the above purposes. 
+
+Otherwise, if you have a Raspberry Pi and would like to fully test the app functionality with the scoreboard, you're welcome to follow the complete guide, while setting `CS50_DEMO` to `False`.
+
+_____________
+
 ## Table of Contents
   - [Description](#description)
   - [Features](#features)
@@ -77,8 +84,7 @@ To run the server in a development environment, or if you have issues with depen
 ```
 pip3 install virtualenv
 virtualenv nhl-led-scoreboard-webgui/env
-cd nhl-led-scoreboard-webgui
-source env/bin/activate
+source nhl-led-scoreboard-webgui/env/bin/activate
 ```
 
 To exit the `virtualenv` at any time after installing, enter the command `deactivate` in the terminal.
