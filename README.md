@@ -82,8 +82,8 @@ cd nhl-led-scoreboard-webgui
 #### Optional, but _Highly_ Suggested: 
 _To run the server in a development environment, or if you have issues with dependencies, `virtualenv` can be a solution to create a separate "environment" for the server to run in._
 ```
-pip3 install virtualenv
-virtualenv env
+Sudo apt-get install python3-venv
+python3 -m venv env
 source env/bin/activate
 ```
 
