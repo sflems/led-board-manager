@@ -10,6 +10,27 @@ JSON can also be edited manually in the `/admin` interface. __Be Careful!__ The 
 
 _____________
 
+### Features
+- Today's NHL Games Dashboard
+- Profiles Dashboard
+  - Manage Configurations in an easy to use Dashboard
+  - Create Configurations with a Simple Form (based on the current NHL LED Scoreboard schema)
+  - Configuration/Profile Backup
+- Supervisor Integration ([Optional](#option-1-create-a-supervisor-config-to-start-the-gui-with-gunicorn-preferred))
+  - Activating A Profile Restarts the Scoreboard Process
+  - Scoreboard Status Monitor
+- Pi Commands
+  - Stop Server
+  - Reboot
+  - Shutdown
+- Profile Status & Resource Monitor
+- Admin Dashboard
+  - Profiles Management
+  - User Management
+  - WebGUI Defaults for Supervisor and Config Location (Admin Constance Tab or `settings.py`)
+
+_____________
+
 ### Disclaimer
 _(Work in Progress)_
 
@@ -34,8 +55,6 @@ _____________
     - [Info & Troubleshooting](#info--troubleshooting)
   - [Screenshots](#screenshots)
 
-_____________
-
 ## Requirements 
 - [Raspberry Pi (Zero WH, 3B+, 3A+, 4B)](https://github.com/riffnshred/nhl-led-scoreboard)
 
@@ -44,8 +63,6 @@ _____________
 - [Hockey](https//www.nhl.com)
 
 - [App Dependancies](requirements.txt)
-
-_____________
 
 ## Installation
 __Be sure to back up any previous configurations before use!!!__ The original files are overwritten and saved as `config.json.webgui.bak` and `config.schema.json.webgui.bak` in the `nhl-led-scoreboard/config/bak` subdirectory.
