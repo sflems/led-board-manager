@@ -1,6 +1,27 @@
 # NHL LED Scoreboard Web GUI & Configurator
 #### A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
 
+## Table of Contents
+  - [Description](#description)
+  - [Features](#features)
+  - [Disclaimer](#disclaimer)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+    - [Optional Steps](#optional-but-highly-suggested)
+    - [Manual Installation](#manual-installation)
+    - [Autostarting the Webserver](#auto-starting-the-server--boot)
+    - [Updates](#updates)
+    - [Removal / Uninstall](#removal--uninstall)
+  - [Usage](#usage)
+    - [Starting the Server](#to-start-the-webserver)
+    - [Accessing the Server](#to-access-the-server)
+    - [To Stop the Server](#to-stop-the-server)
+    - [Default Login](#default-admin-login)
+    - [Info & Troubleshooting](#info--troubleshooting)
+  - [Screenshots](#screenshots)
+
+_____________
+
 ## Description
 Designed as a solution to manage the NHL LED Scoreboard project by [Joel Joannisse](https://github.com/riffnshred). 
 
@@ -10,7 +31,7 @@ JSON can also be edited manually in the `/admin` interface. __Be Careful!__ The 
 
 _____________
 
-### Features
+## Features
 - Today's NHL Games Dashboard
 - Profiles Dashboard
   - Manage Configurations in an easy to use Dashboard
@@ -27,7 +48,7 @@ _____________
 - Admin Dashboard
   - Profiles Management
   - User Management
-  - WebGUI Defaults for Supervisor and Config Location (Admin Constance Tab or `settings.py`)
+  - WebGUI Defaults for Supervisor Program Names and Config Location (Admin Constance Tab or change `CONSTANCE_CONFIG` in `Capstone/settings.py`)
 
 _____________
 
@@ -37,23 +58,6 @@ _(Work in Progress)_
 This project is still in development. Development of the NHL LED Scoreboard is similarly evolving. They both rely on the external NHL API which, at any time may be inaccessible or updated. This app __does__ modify your configuration files in the `nhl-led-scoreboard/config` directory. While these files are cloned during installation, please backup any _prized_ configurations on your own accord.
 
 _____________
-
-## Table of Contents
-  - [Description](#description)
-  - [Requirements](#requirements)
-  - [Installation](#installation)
-    - [Optional Steps](#optional-but-highly-suggested)
-    - [Manual Installation](#manual-installation)
-    - [Autostarting the Webserver](#auto-starting-the-server--boot)
-    - [Updates](#updates)
-    - [Removal / Uninstall](#removal--uninstall)
-  - [Usage](#usage)
-    - [Starting the Server](#to-start-the-webserver)
-    - [Accessing the Server](#to-access-the-server)
-    - [To Stop the Server](#to-stop-the-server)
-    - [Default Login](#default-admin-login)
-    - [Info & Troubleshooting](#info--troubleshooting)
-  - [Screenshots](#screenshots)
 
 ## Requirements 
 - [Raspberry Pi (Zero WH, 3B+, 3A+, 4B)](https://github.com/riffnshred/nhl-led-scoreboard)
