@@ -160,7 +160,7 @@ autostart=true
 user=pi
 ```
 
-###### _If_ you setup a `virtualenv`, change the `autorun.sh` contents to the following:
+###### _If_ you setup a `virtualenv`, change the `/etc/supervisor/conf.d/scoreboard-webgui.conf` contents to the following:
 ```
 [program:scoreboard-webgui]
 command=/home/pi/nhl-led-scoreboard-webgui/env/bin/gunicorn Capstone.wsgi -b 0:9002
