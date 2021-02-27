@@ -297,11 +297,66 @@ _____________
 - When a profile is backed up, a file is created in the same folder as profile.config.json.bak. It's path is displayed as a message in the browser. Deleted profiles do not delete the config.json or .bak files; it only removes them from the Django Sqlite database. 
 
 - The GUI Defaults (ie Scoreboard path, Supervisor Program Name, etc.) can be changed in the Constance admin panel. Alternatively, they can be modified manually in the `Capstone/settings.py` file under the `CONSTANCE_CONFIG` variable.
-
+- File Structure
+  ```
+  nhl-led-scoreboard-webgui/      <-- Project Base Folder
+  |
+  ├── assets/                     <-- Assets used in README.md.
+  |
+  ├── Capstone/                   <-- Capstone Django Project Directory
+  │   ├── __init__.py
+  │   ├── asgi.py
+  │   ├── settings.py             <-- Django server config / settings.
+  │   ├── urls.py                 <-- Django server base URLs.
+  │   └── wsgi.py                 <-- Used to launch nhl-led-scoreboard-webgui.
+  |
+  ├── env/                        <-- Virtual environent folder (if installed).
+  |
+  ├── scoreboard/                 <-- Scoreboard Django App Directory
+  |   |
+  │   ├── fixtures/               <-- Contains teams.json DB initialization data as well as sample config JSON files for the nhl-led-scoreboard.
+  │       ├── config.json
+  │       ├── config.schema.json
+  │       └── teams.json
+  │   ├── migrations/           
+  │   ├── static/
+  │       ├── fonts/              <-- Fonts used.
+  │       ├── schema/             <-- Schema Files used during install for correct django-jsonforms function.
+  │       └── scoreboard/         <-- CSS / SVG's / JS for Pages, JSONEditor, and JSCookie.
+  |   ├── templates/
+  │       └── scoreboard/         <-- Django HTML Templates for Various Pages
+  │   ├── __init__.py
+  │   ├── asgi.py
+  │   ├── admin.py
+  │   ├── apps.py
+  │   ├── forms.py                <-- Forms: SettingsDetailForm setup, used for name and active state of config profiles. The JSON forms are insantiated from services.py.
+  │   ├── LICENSE
+  │   ├── models.py               <-- Models: Settings, Constance, User/Profile, Teams
+  │   ├── services.py             <-- Services: Various functions used throughout the scoreboard app, ie JSONForms, NHL API, Resource Monitor Functions, etc.
+  │   ├── tests.py
+  │   ├── urls.py                 <-- Scoreboard specific URLs setup.
+  │   └── views.py                <-- Views created for scoreboard app.
+  |
+  ├── .secret.txt                   <-- Created by secret-key-generator for key randomization.
+  ├── autorun.sh                    <-- Server start script.
+  ├── db.sqlite3                    <-- Nhl-led-scoreboard-webgui database.
+  ├── install.sh                    <-- App install script. Automates django installation / installs requirements, and sets up database.
+  ├── LICENSE
+  ├── manage.py                     <-- Django manage.py file used to operate project.
+  ├── README.md                     <-- Just RTFM.
+  ├── requirements.txt              <-- Project requirements, used by pip and install.sh.
+  ├── TODO.txt                      <-- To-do list.
+  ├── update.sh                     <-- Script used to simplify if required in an update. Runs migration/loaddata commands, etc.
+  └── webgui-log.out                <-- Log created by install.sh script. 
+  ```
 _____________
 
-## Screenshots
+## Screenshots / Demo
 ##### It's Mobile Freindly Too! (Responsive)
+I encourage anyone interested to take a quick peek at the demo on YouTube:
+
+[![Web GUI YouTube Demo Video](https://img.youtube.com/vi/5byJf5v6Hnc/0.jpg)](https://www.youtube.com/watch?v=5byJf5v6Hnc)
+
 ###### Dashboard
   <img src="/assets/images/LED Scoreboard Configurator - Dashboard.png" alt="LED Scoreboard Configurator - Dashboard" width="100%"/>
   
@@ -313,6 +368,5 @@ _____________
   
 ###### Settings Admin
   <img src="/assets/images/LED Scoreboard Configurator - Settings Admin.png" alt="LED Scoreboard Configurator - Settings Admin" width="100%"/>
-
 
 ### Please let me know if you experience any bugs, feature suggestions or issues. Enjoy!

@@ -10,7 +10,6 @@
  Backend
 ---------
 TODO: DRF.
-TODO: Functions to restart nhl scoreboard app without reboot? (Supervisor?)
 
  HTML/CSS/JS
 ---------
@@ -20,5 +19,3 @@ TODO: Functions to restart nhl scoreboard app without reboot? (Supervisor?)
 
  Misc.
 -------
-
-TODO: Update readme.md with Demo, How It Works, Uninstall instructions, etc.
