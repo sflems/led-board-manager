@@ -351,8 +351,12 @@ _____________
   ```
 _____________
 
-## Screenshots
+## Screenshots / Demo
 ##### It's Mobile Freindly Too! (Responsive)
+I encourage anyone interested to take a quick peek at the demo on YouTube:
+
+[![Web GUI YouTube Demo Video](https://img.youtube.com/vi/5byJf5v6Hnc/0.jpg)](https://www.youtube.com/watch?v=5byJf5v6Hnc)
+
 ###### Dashboard
   <img src="/assets/images/LED Scoreboard Configurator - Dashboard.png" alt="LED Scoreboard Configurator - Dashboard" width="100%"/>
   
