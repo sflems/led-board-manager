@@ -18,7 +18,7 @@
     - [To Stop the Server](#to-stop-the-server)
     - [Default Login](#default-admin-login)
     - [Info & Troubleshooting](#info--troubleshooting)
-  - [Screenshots](#screenshots)
+  - [Screenshots](#screenshots--demo)
 
 _____________
 
