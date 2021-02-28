@@ -87,7 +87,7 @@ python3 -m venv env
 source env/bin/activate
 ```
 
-Your shell should have the `(env)` appended if active:
+Your shell should have the `(env)` prepended if active:
 ```
 (env) pi@raspberrypi:~/nhl-led-scoreboard-webgui $ 
 ```
@@ -137,7 +137,7 @@ python3 -m venv env
 source env/bin/activate
 ```
 
-Your shell should have the `(env)` appended if active:
+Your shell should have the `(env)` prepended if active:
 ```
 (env) pi@raspberrypi:~/nhl-led-scoreboard-webgui $ 
 ```
