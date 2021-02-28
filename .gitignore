@@ -119,3 +119,4 @@ media/
 # !**/migrations/__init__.py
 *.pyc
 webgui-log.out
+*.tmp

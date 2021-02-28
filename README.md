@@ -1,6 +1,13 @@
 # NHL LED Scoreboard Web GUI & Configurator
 #### A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
 
+## *** CS50 DEMO MODE NOTE ***
+`DEMO_CS50` is __enabled__ in the `Capstone/settings.py` file. This allows demonstration of saving and editing the configurations within the project file structure. These files can be found in the `/demo/config` directory. When disabled, the app will attempt to pull the config files from an active NHL LED Scoreboard installation. The demo feature _should_ work on all operating systems for the above purposes. 
+
+Otherwise, if you have a Raspberry Pi and would like to fully test the app functionality with the scoreboard, you're welcome to follow the complete guide, while setting `CS50_DEMO` to `False`.
+
+_____________
+
 ## Table of Contents
   - [Description](#description)
   - [Features](#features)
@@ -18,7 +25,7 @@
     - [To Stop the Server](#to-stop-the-server)
     - [Default Login](#default-admin-login)
     - [Info & Troubleshooting](#info--troubleshooting)
-  - [Screenshots](#screenshots--demo)
+  - [Screenshots](#screenshots)
 
 _____________
 
@@ -299,7 +306,7 @@ _____________
 - The GUI Defaults (ie Scoreboard path, Supervisor Program Name, etc.) can be changed in the Constance admin panel. Alternatively, they can be modified manually in the `Capstone/settings.py` file under the `CONSTANCE_CONFIG` variable.
 - File Structure
   ```
-  nhl-led-scoreboard-webgui/      <-- Project Base Folder
+  Capstone/      <-- Project Base Folder
   |
   ├── assets/                     <-- Assets used in README.md.
   |
@@ -309,6 +316,8 @@ _____________
   │   ├── settings.py             <-- Django server config / settings.
   │   ├── urls.py                 <-- Django server base URLs.
   │   └── wsgi.py                 <-- Used to launch nhl-led-scoreboard-webgui.
+  ├── demo/                       
+  |   └── config/                 <-- CS50_DEMO Folder for activation/saving of scoreboard config.json files and backups.
   |
   ├── env/                        <-- Virtual environent folder (if installed).
   |

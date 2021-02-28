@@ -27,7 +27,7 @@ SECRET_KEY = secret_key_generator.generate()
 DEBUG = True
 
 # Activates demo mode: Uses static configs/schmea for CS50 demo purposes.
-DEMO_CS50 = False
+DEMO_CS50 = True
 
 # Allows server to be hosted on local subnet with unrestricted IPs. Make sure your firewall is accepting local network traffic only!!!
 # This can be modified for your local subnet. See below.
