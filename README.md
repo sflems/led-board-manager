@@ -87,7 +87,7 @@ python3 -m venv env
 source env/bin/activate
 ```
 
-Your shell should have the `(env)` appended if active:
+Your shell should have the `(env)` prepended if active:
 ```
 (env) pi@raspberrypi:~/nhl-led-scoreboard-webgui $ 
 ```
@@ -137,7 +137,7 @@ python3 -m venv env
 source env/bin/activate
 ```
 
-Your shell should have the `(env)` appended if active:
+Your shell should have the `(env)` prepended if active:
 ```
 (env) pi@raspberrypi:~/nhl-led-scoreboard-webgui $ 
 ```
@@ -196,12 +196,16 @@ Alternatively, you can setup a [crontab](https://www.raspberrypi.org/documentati
 ## Updates
 The latest update notes can be found under the [project releases](https://github.com/sflems/nhl-led-scoreboard-webgui/releases). 
 
-When updating, or if stated in the release notes, it may be necessary to run the update script from the `nhl-led-scoreboard-webgui` directory.
-
 [Stop the server](#to-stop-the-server), then:
 ```
 cd nhl-led-scoreboard-webgui/
+git reset --hard
+git checkout main
 git pull
+```
+
+_When updating, or if stated in the release notes, it may be necessary to run the update script from the `nhl-led-scoreboard-webgui` directory._
+```
 ./update.sh
 ``` 
 Then, restart the web server.
