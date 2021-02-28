@@ -131,12 +131,15 @@ cp ./scoreboard/static/schema/config.schema.json ../nhl-led-scoreboard/config/co
 ```
 
 ###### Install `python3-venv` and create the Web Gui environment: 
-_To run the server in a development environment, `python3-venv` can be a solution to create a separate "environment" for the server to run in._
-
 ```
 sudo apt-get install python3-venv
 python3 -m venv env
 source env/bin/activate
+```
+
+Your shell should have the `(env)` appended if active:
+```
+(env) pi@raspberrypi:~/nhl-led-scoreboard-webgui $ 
 ```
 
 _To exit the `(env)` at any time __after__ installing and running the `loaddata` step, enter the command `deactivate` in the terminal._
