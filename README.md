@@ -87,7 +87,12 @@ python3 -m venv env
 source env/bin/activate
 ```
 
-_To exit the `venv` at any time after installing, enter the command `deactivate` in the terminal._
+Your shell should have the `(env)` appended if active:
+```
+(env) pi@raspberrypi:~/nhl-led-scoreboard-webgui $ 
+```
+
+_To exit the `(env)` state at any time after installing, enter the command `deactivate` in the terminal._
 
 #### Install (Cont.)
 ```
@@ -98,6 +103,7 @@ If all is working, you should then be able to access the app @ `YOUR_IP:9002` in
 
 #### Default Login (Change me in the admin panel!)
 Username: `admin`
+
 Password: `scoreboard`
 
 If you can't access the server and are using a firewall such as `ufw` or `iptables`, be sure to allow access _to your local network only_ over the `9002` port (or whatever you set it to if so). If you have ports 80/443 open on your Pi/Router, this site WILL be accessable by all, so be sure to have your firewall(s) in order. 
