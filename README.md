@@ -7,7 +7,7 @@
   - [Disclaimer](#disclaimer)
   - [Requirements](#requirements)
   - [Installation](#installation)
-    - [Optional Steps](#optional-but-highly-suggested)
+    - [First Steps](#first-steps)
     - [Manual Installation](#manual-installation)
     - [Autostarting the Webserver](#auto-starting-the-server--boot)
     - [Updates](#updates)
@@ -78,18 +78,16 @@ __Be sure to back up any previous configurations before use!!!__ The original fi
 git clone --recursive https://github.com/sflems/nhl-led-scoreboard-webgui.git
 cd nhl-led-scoreboard-webgui
 ```
-
-#### Optional, but _Highly_ Suggested: 
-_To run the server in a development environment, or if you have issues with dependencies, `virtualenv` can be a solution to create a separate "environment" for the server to run in._
+#### First Steps
+###### Install and Start `python3-venv`: 
+_To run the server in a development environment, `python3-venv` can be a solution to create a separate "environment" for the server to run in._
 ```
 sudo apt-get install python3-venv
 python3 -m venv env
 source env/bin/activate
 ```
 
-_To exit the `virtualenv` at any time after installing, enter the command `deactivate` in the terminal._
-
-_____________
+_To exit the `venv` at any time after installing, enter the command `deactivate` in the terminal._
 
 #### Install (Cont.)
 ```
@@ -126,6 +124,17 @@ cp ../nhl-led-scoreboard/config/config.json ../nhl-led-scoreboard/config/bak/ori
 cp ./scoreboard/static/schema/config.schema.json ../nhl-led-scoreboard/config/config.schema.json
 ```
 
+###### Install `python3-venv` and create the Web Gui environment: 
+_To run the server in a development environment, `python3-venv` can be a solution to create a separate "environment" for the server to run in._
+
+```
+sudo apt-get install python3-venv
+python3 -m venv env
+source env/bin/activate
+```
+
+_To exit the `(env)` at any time __after__ installing and running the `loaddata` step, enter the command `deactivate` in the terminal._
+
 ###### Install the app requirements and dependencies from the included requirements.txt file:
 `pip3 install -r requirements.txt`
 
@@ -152,15 +161,7 @@ Create a new supervisor config with the command:
 
 And copy into it the following contents:
 _Be sure to change the `pi` username _if_ you have done so._
-```
-[program:scoreboard-gui]
-command=/home/pi/.local/bin/gunicorn Capstone.wsgi -b 0:9002
-directory=/home/pi/nhl-led-scoreboard-webgui
-autostart=true
-user=pi
-```
 
-###### _If_ you setup a `virtualenv`, change the `/etc/supervisor/conf.d/scoreboard-webgui.conf` contents to the following:
 ```
 [program:scoreboard-webgui]
 command=/home/pi/nhl-led-scoreboard-webgui/env/bin/gunicorn Capstone.wsgi -b 0:9002
@@ -181,38 +182,34 @@ su user -c '/home/user/nhl-led-scoreboard-webgui/autorun.sh >> /tmp/scoreboard-g
 
 `tail -f -n 100 /tmp/scoreboard-gui.log`
 
-###### _If_ you setup a `virtualenv`, change the `autorun.sh` contents to the following:
-```
-#!/bin/bash
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-cd ${DIR}
-${DIR}/env/bin/gunicorn Capstone.wsgi -b 0:9002
-
-exit 0
-```
-
 Alternatively, you can setup a [crontab](https://www.raspberrypi.org/documentation/linux/usage/cron.md), [systemd](https://www.raspberrypi.org/documentation/linux/usage/systemd.md), or another method of your choice to autostart the app.
 
 ## Updates
 The latest update notes can be found under the [project releases](https://github.com/sflems/nhl-led-scoreboard-webgui/releases). 
 
-__If you are using `virtualenv`, be sure to [activate]((#optional-but-highly-suggested)) it before updating.__
+When updating, or if stated in the release notes, it may be necessary to run the update script from the `nhl-led-scoreboard-webgui` directory.
 
-When updating, or if stated in the release notes, it may be necessary to run the update script:
-```./update.sh``` 
+[Stop the server](#to-stop-the-server), then:
+```
+./update.sh
+``` 
 Then, restart the web server.
 
 Alternatively, manually enter the following commands:
 ```
+source env/bin/activate
 pip3 install -r requirements.txt
 python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py load data teams.json
 ```
-Then, restart the web server.
+Then, restart the web server. You can `deactivate` the `(env)` if you are using the `./autorun.sh` script or `supervisor`.
 
 ## Removal / Uninstall
 ##### To remove the webserver:
+
+`deactivate` the `(env)`, then:
+
 ```
 cd
 sudo rm -rfv nhl-led-scoreboard-webgui
@@ -234,10 +231,20 @@ sudo nano /etc/rc.local
 __Be sure to back up any previous configurations before use!!!__
 ### To start the webserver:
 
-To start the server, enter `gunicorn Capstone.wsgi -b 0:9002` in your console from the directory that you installed the app in.
-You can also run `./autorun.sh` from the same location.
+To start the server manually, and from the `nhl-led-scoreboard-webgui` directory, enter:
+```
+source env/bin/activate
+gunicorn Capstone.wsgi -b 0:9002
+```
 
-This command, and the default configuration, start the server on `0.0.0.0` and port `9002` making it available to any connected devices on your local network. Alternatively, you can run the server on a different port, e.g. `0:8000`, `0:PORT`, or available to _just_ the `localhost` machine by running `gunicorn Capstone.wsgi -b 127.0.0.1:9002`.
+### To start the webserver with a script:
+Simply run `./autorun.sh` from the same location.
+
+This command, and the default configuration, start the server on `0.0.0.0` and port `9002` making it available to any connected devices on your local network. Alternatively, you can run the server on a different port, e.g. `0:8000`, `0:PORT`, or available to _just_ the `localhost` machine by running:
+```
+source env/bin/activate
+gunicorn Capstone.wsgi -b 127.0.0.1:9002
+```
 
 __Note__: *This server should not be served over a public connection or used in a production environment. If you wish to view the scoreboard WebGUI remotely, you can do so securely by accessing your local network using a VPN service.*
 
@@ -255,7 +262,7 @@ Password: `scoreboard`
 _____________
 
 ### To stop the server:
-In a terminal shell with the server running, `Ctrl` + `C` will terminate the process.
+In a terminal shell with the server running, `Ctrl` + `C` will terminate the process. Then, `deactivate` at any time to stop the `venv`.
 
 ###### If the server is running in the background:
 `pkill -f Capstone.wsgi`
@@ -273,7 +280,7 @@ This is the second number in the table following the username (Use caution if yo
 
 `kill -9 PID`
 
-Better yet... simply stop the server from supervisor, or the dashboard  :).
+_Better yet_... simply stop the server from supervisor, or the dashboard  :).
 
 _____________
 
@@ -356,6 +363,8 @@ _____________
 I encourage anyone interested to take a quick peek at the demo on YouTube:
 
 [![Web GUI YouTube Demo Video](https://img.youtube.com/vi/5byJf5v6Hnc/0.jpg)](https://www.youtube.com/watch?v=5byJf5v6Hnc)
+
+_____________
 
 ###### Dashboard
   <img src="/assets/images/LED Scoreboard Configurator - Dashboard.png" alt="LED Scoreboard Configurator - Dashboard" width="100%"/>

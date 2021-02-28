@@ -9,6 +9,8 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 echo "Working directory: "$DIR >&3
 
+source env/bin/activate >&3
+
 # Install the app requirements and dependencies from the included requirements.txt file:
 echo "Installing requirements.txt. This may take a few moments..." >&3
 pip3 install -r requirements.txt >&3
@@ -21,5 +23,7 @@ python3 manage.py loaddata teams.json >&3
 
 echo "UPDATE COMPLETED!!!" >&3
 echo "Start the Web GUI server with 'gunicorn Capstone.wsgi -b 0:9002' or './autorun.sh'" >&3
+
+deactivate >&3
 
 exit 0
