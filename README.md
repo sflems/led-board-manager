@@ -199,6 +199,7 @@ The latest update notes can be found under the [project releases](https://github
 [Stop the server](#to-stop-the-server), then:
 ```
 cd nhl-led-scoreboard-webgui/
+git reset --hard
 git checkout main
 git pull
 ```
