@@ -139,7 +139,7 @@
                     "$id": "#/properties/preferences/properties/teams",
                     "type": "array",
                     "title": "teams",
-                    "description": "List of preferred teams. First one in the list is considered the favorite. If left empty, the scoreboard will be in offday mode",
+                    "description": "List of preferred teams. First one in the list is considered the favorite. If left empty, the scoreboard will be in off_day mode",
                     "default": ["Avalanche"],
                     "examples": [
                             "Jets",
@@ -270,7 +270,7 @@
                     "$id": "#/properties/states/properties/off_day",
                     "type": "array",
                     "title": "off_day",
-                    "description": "Offday is when your team is not playing.  This could be off season as well",
+                    "description": "Off_day is when your team is not playing.  This could be off season as well",
                     "default": [],
                     "examples": [
                         [
@@ -283,7 +283,7 @@
                         "$id": "#/properties/states/properties/off_day/items",
                         "type": "string",
                         "title": "boards",
-                        "description": "Boards to display on offday",
+                        "description": "Boards to display on off_day",
                         "default": "",
                         "examples": [
                             "clock",
@@ -1367,14 +1367,14 @@
                             "$id": "#/properties/sbio/properties/dimmer/properties/mode",
                             "type": "string",
                             "title": "mode",
-                            "description": "Run the dimmer always or just on offday",
+                            "description": "Run the dimmer always or just on off_day",
                             "default": "always",
                             "examples": [
                                 "always"
                             ],
                             "enum": [
                                 "always",
-                                "offday"
+                                "off_day"
                             ]
                         },
                         "daytime": {
