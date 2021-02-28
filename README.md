@@ -200,6 +200,7 @@ When updating, or if stated in the release notes, it may be necessary to run the
 
 [Stop the server](#to-stop-the-server), then:
 ```
+cd nhl-led-scoreboard-webgui/
 ./update.sh
 ``` 
 Then, restart the web server.

@@ -9,7 +9,8 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 echo "Working directory: "$DIR >&3
 
-source env/bin/activate >&3
+cd $DIR
+source env/bin/activate 
 
 # Install the app requirements and dependencies from the included requirements.txt file:
 echo "Installing requirements.txt. This may take a few moments..." >&3

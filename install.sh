@@ -11,6 +11,8 @@ TARGET="$( cd ../nhl-led-scoreboard && pwd )"
 echo "Working directory: "$DIR >&3
 echo "Target: "$TARGET >&3
 
+cd $DIR
+
 # A permission issue in the past was solved by creating the file on install and granting the permissions.
 echo "Touching .secret.txt and updating permissions..." >&3
 
