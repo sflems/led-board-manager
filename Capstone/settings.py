@@ -56,12 +56,80 @@ INSTALLED_APPS = [
     'prettyjson',
 ]
 
-scoreboard_path = os.path.dirname(BASE_DIR) + "/nhl-led-scoreboard/"
+# These paths can be hard coded for specific usage or as fix if server breaks on change.
+scoreboard_path = os.path.dirname(BASE_DIR) + "/nhl-led-scoreboard"
+gui_path = os.path.dirname(BASE_DIR) + "/nhl-led-scoreboard-webgui"
 
 CONSTANCE_CONFIG = {
+    'GUI_DIR': (gui_path, 'Path to GUI Directory'),
     'SCOREBOARD_DIR': (scoreboard_path, 'Path to NHL LED Scoreboard Directory'),
     'SUPERVISOR_PROGRAM_NAME': ('scoreboard', 'ie. [program:scoreboard] from /etc/supervisor/conf.d/scoreboard.conf'),
     'SUPERVISOR_GUI_NAME': ('scoreboard-webgui', 'ie. [program:scoreboard-webgui] from /etc/supervisor/conf.d/scoreboard-webgui.conf'),
+
+    # Flags for the Scoreboard Process
+    'LED_ROWS': (32, '16 for 16x32, 32 for 32x32 and 64x32.', int),
+    'LED_COLS': (64, 'Panel columns. Typically 32 or 64.', int),
+    'LED_CHAIN': (1, 'Daisy_chained boards.', int),
+    'LED_PARALLEL': (1, 'For Plus_models or RPi2: parallel chains. 1..3.', int),
+    'LED_PWM_BITS': (11, 'Bits used for PWM. Range 1..11.', int),
+    'LED_BRIGHTNESS': (80, 'Sets brightness level. Range: 1..100.', int),
+    'LED_GPIO_MAPPING': ('adafruit-hat', 'Hardware Mapping: regular, adafruit-hat, adafruit-hat-pwm', str),
+    'LED_SCAN_MODE': (1, 'Progressive or interlaced scan. 0 = Progressive, 1 = Interlaced.', int),
+    'LED_PWM_LSB_NANOSECOND': (130, 'Base time-unit for the on-time in the lowest significant bit in nanoseconds.', int),
+    'LED_SHOW_REFRESH': (False, 'Shows the current refresh rate of the LED panel.', bool),
+    'LED_SLOWDOWN_GPIO': (1, 'Slow down writing to GPIO. Range: 0..4.', int),
+    'LED_NO_HARDWARE_PULSE': (False, 'Dont use hardware pin-pulse generation.', bool),
+    'LED_RGB_SEQUENCE': ('RGB', ' Switch if your matrix has led colors swapped.', str),
+    'LED_PIXEL_MAPPER': ('', 'Apply pixel mappers. Optional params after a colon e.g. "U-mapper;Rotate:90"', str),
+    'LED_ROW_ADDR_TYPE': (0, '0 = default; 1 = AB-addressed panels.', int),
+    'LED_MULTIPLEXING': (0, 'Multiplexing type: 0 = direct; 1 = strip; 2 = checker; 3 = spiral; 4 = Z-strip; 5 = ZnMirrorZStripe; 6 = coreman; 7 = Kaler2Scan; 8 = ZStripeUneven.', int),
+    'TERMINAL_MODE': (False, 'Enable terminal mode for testing.', bool),
+    'TESTING_MODE': (False, "Allow to put use a loop in the renderer to do testing. For Development only", bool),
+    'TESTSCCHAMPIONS': ("", "A flag to test the stanley cup champions board. Put your team's ID."),
+    'TEST_GOAL_ANIMATION': (False, "A flag to test the goal animation.", bool),
+    'GHTOKEN': ("", 'Github API token for doing update checks.', str),
+    'UPDATECHECK': (False, 'Enable update check.', bool),
+    'UPDATE_REPO': ('https://github.com/riffnshred/nhl-led-scoreboard', 'Enable update check.', str),
+
+
+
+}
+
+CONSTANCE_CONFIG_FIELDSETS = {
+    'General Options': (
+        'GUI_DIR',
+        'SCOREBOARD_DIR',
+        'SUPERVISOR_PROGRAM_NAME',
+        'SUPERVISOR_GUI_NAME',
+    ),
+    'Scoreboard Flags': {
+        'fields': (
+            'LED_ROWS',
+            'LED_COLS',
+            'LED_CHAIN',
+            'LED_PARALLEL',
+            'LED_PWM_BITS',
+            'LED_BRIGHTNESS',
+            'LED_GPIO_MAPPING',
+            'LED_SCAN_MODE',
+            'LED_PWM_LSB_NANOSECOND',
+            'LED_SHOW_REFRESH',
+            'LED_SLOWDOWN_GPIO',
+            'LED_NO_HARDWARE_PULSE',
+            'LED_RGB_SEQUENCE',
+            'LED_PIXEL_MAPPER',
+            'LED_ROW_ADDR_TYPE',
+            'LED_MULTIPLEXING',
+            'TERMINAL_MODE',
+            'TESTING_MODE',
+            'TESTSCCHAMPIONS',
+            'TEST_GOAL_ANIMATION',
+            'GHTOKEN',
+            'UPDATECHECK',
+            'UPDATE_REPO',
+        ),
+        'collapse': False
+    },
 }
 
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
@@ -88,6 +156,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'constance.context_processors.config',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',

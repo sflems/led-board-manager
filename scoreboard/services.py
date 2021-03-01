@@ -1,9 +1,11 @@
-from django.conf import settings
+from django import template
+from django.utils.formats import localize
 from django.http import Http404
-import json, psutil, requests, subprocess
+import json, os, psutil, requests, subprocess
 from gpiozero import CPUTemperature
 from .models import *
-from constance import config
+from constance import config, settings
+from constance.signals import config_updated
 
 # Supervisor Commands for NHL Led Scoreboard
 def proc_status():
@@ -69,15 +71,12 @@ def todays_games():
 
 # defines the users home/user/nhl-led-scoreboard/config folder path. Checks if DEMO_CS50 mode is enabled.
 def conf_path():
-    if settings.DEMO_CS50 != True:
-        path = os.path.join(config.SCOREBOARD_DIR, 'config/')
-    else:
-        path = os.path.join(settings.BASE_DIR, 'demo/config/')
+    path = os.path.join(config.SCOREBOARD_DIR, 'config/')
     return path
 
 # Opens default config from current config in the nhl-led-scoreboard folder if found, otherwise from static config, and then loads into Settings Profile
 def conf_default():
-    with open(os.path.join(settings.BASE_DIR, "scoreboard/static/schema/config.json"), "r") as f:
+    with open(os.path.join(config.GUI_DIR, "scoreboard/static/schema/config.json"), "r") as f:
         conf = json.load(f)
         return conf
 
@@ -120,3 +119,62 @@ def form_options(startval):
             "prompt_before_delete": 1,
         }
     return options
+
+# The below functions render the supervisor config file with django template logic to allow constance variables.
+# Taken from  deprecated django-supervisor pypi module. See https://github.com/rfk/django-supervisor for reference.
+def render_sv_config(data,ctx):
+    """Render the given config data using Django's template system.
+    This function takes a config data string and a dict of context variables,
+    renders the data through Django's template system, and returns the result.
+    """
+    t = template.Template(data)
+    c = template.Context(ctx)
+    return t.render(c).encode("ascii")
+
+@receiver(config_updated)
+def constance_updated(sender, key, old_value, new_value, **kwargs):
+    print(sender, key, old_value, new_value)
+
+    return sv_template()
+
+def sv_template():
+    # Interpret paths relative to the project directory.
+    path = os.path.join(config.GUI_DIR, 'scoreboard/templates/scoreboard/daemon-template.conf')
+    templated_path = os.path.join(config.GUI_DIR, 'supervisor-daemon.conf')
+
+    # Read and process the source file. Import flags from constance and save to supervisor config.
+    flags = []
+    flag_fields = settings.CONFIG_FIELDSETS['Scoreboard Flags']['fields']
+    for flag in flag_fields:
+        key = flag.lower().replace('_', '-')
+        default = settings.CONFIG[str(flag)][0]
+        value = str(getattr(config, flag))
+        
+        def is_modified():
+            return localize(value) != localize(default)
+
+        if is_modified() != False and value != "":
+            basic_args = ["led-show-refresh", "updatecheck",]
+            if key in basic_args and value == "True":
+                full_flag = " --" + key
+                flags.append(full_flag)
+            else: 
+                full_flag = " --" + key + "=" + value
+                flags.append(full_flag)
+
+    with open(path, "r") as f:
+        templated = render_sv_config(f.read(), { 'config': config, 'flags': flags, })
+
+    # Write it out to the corresponding .conf file.
+    with open(templated_path, "w") as f:
+        f.write(str(templated, 'utf-8'))
+
+    if proc_status() == True:
+        command = "sudo supervisorctl update"
+        subprocess.call(command, shell=True,)
+
+        command = "sudo supervisorctl reread"
+        subprocess.call(command, shell=True,)
+
+    # Copy metadata if necessary.
+    return templated_path
