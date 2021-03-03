@@ -154,7 +154,7 @@ def sv_template():
         def is_modified():
             return localize(value) != localize(default)
         
-        def render_flags():
+        def render_flag():
             if key in basic_args:
                 full_flag = " --" + key
                 flags.append(full_flag)
@@ -163,10 +163,10 @@ def sv_template():
                 flags.append(full_flag)
 
         if key in default_args:
-            render_flags()
+            render_flag()
 
         elif is_modified():
-            render_flags()
+            render_flag()
 
     # Renders from daemon template with config and flags passed in as context.
     with open(path, "r") as f:
