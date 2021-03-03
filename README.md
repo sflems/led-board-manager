@@ -118,16 +118,21 @@ touch .secret.txt
 chmod g+w .secret.txt
 ```
 
-###### Back up originals and then copy the updated Schema to the config folder in the nhl-led-scoreboard directory.
+###### Install `supervisor` (as root): 
 ```
-mkdir -p ../nhl-led-scoreboard/config/bak/original 
-mv ../nhl-led-scoreboard/config/config.schema.json ../nhl-led-scoreboard/config/bak/original/$(date +"%Y_%m_%d_%I_%M_%p")-config.schema.json
-cp ../nhl-led-scoreboard/config/config.json ../nhl-led-scoreboard/config/bak/original/$(date +"%Y_%m_%d_%I_%M_%p")-config.json
-```
+sudo mkdir /etc/supervisor && sudo cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
+sudo chmod 644 /etc/supervisor/supervisord.conf
+sudo mkdir /etc/supervisor/conf.d && sudo cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/scoreboard.conf /etc/supervisor/conf.d/scoreboard.conf
+sudo chmod 644 /etc/supervisor/conf.d/scoreboard.conf
 
-###### THIS NEEDS TO BE UPDATED FOR THE 2021-2022 Season!!! Updated schema file with divisions is in /nhl-led-scoreboard-webgui/scoreboard/static/schema dir.
-```
-cp ./scoreboard/static/schema/config.schema.json ../nhl-led-scoreboard/config/config.schema.json
+sudo cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
+sudo chmod 644
+
+sudo python3 -m pip install supervisor
+
+sudo systemctl unmask supervisord
+sudo systemctl enable supervisord 
+sudo systemctl disable supervisord
 ```
 
 ###### Install `python3-venv` and create the Web Gui environment: 
@@ -166,10 +171,10 @@ Either follow the next step to setup server autostart, or see [usage instruction
 ## Auto-Starting the server @ boot: 
 #### OPTION 1: Create a Supervisor Config to start the GUI with Gunicorn (PREFERRED):
 ###### Either:
-Add the following _to the end of the files line_, under the`[Include]` section of your `supervisord.conf`
+Add the following __to the end of the `files =` line__, under the`[Include]` section of your `supervisord.conf` with just a space between the two paths. This will tell supervisor to use the updated program configurations that the webgui generates. To disable this feature, simply remove this line.
 
 ```
-/home/pi/nhl-led-scoreboard-webgui/supervisor-daemon.conf
+ /home/pi/nhl-led-scoreboard-webgui/supervisor-daemon.conf
 ```
 ###### Or:
 Create a new supervisor config with the command:
