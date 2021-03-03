@@ -122,6 +122,7 @@ chmod g+w .secret.txt
 ```
 sudo mkdir /etc/supervisor && sudo cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 sudo chmod 644 /etc/supervisor/supervisord.conf
+
 sudo mkdir /etc/supervisor/conf.d && sudo cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/scoreboard.conf /etc/supervisor/conf.d/scoreboard.conf
 sudo chmod 644 /etc/supervisor/conf.d/scoreboard.conf
 
@@ -138,7 +139,7 @@ sudo systemctl disable supervisord
 
 ##### Install `python3-venv` and create the Web Gui environment: 
 ```
-sudo apt-get install python3-venv
+sudo apt install python3-venv
 python3 -m venv env
 source env/bin/activate
 ```
