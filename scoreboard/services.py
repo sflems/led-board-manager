@@ -5,7 +5,7 @@ import json, os, psutil, requests, subprocess
 from gpiozero import CPUTemperature
 from .models import *
 from constance import config, settings
-from constance.signals import config_updated
+from constance.signals import admin_form_save
 
 # Supervisor Commands for NHL Led Scoreboard
 def proc_status():
@@ -132,8 +132,8 @@ def render_sv_config(data,ctx):
     return t.render(c).encode("ascii")
 
 # Listens for Constance settings update. If signal rcv'd, the below functions run to update supervisor-daemon.conf and reload.
-@receiver(config_updated)
-def constance_updated(sender, key, old_value, new_value, **kwargs):
+@receiver(admin_form_save)
+def constance_updated(sender, **kwargs):
     return sv_template()
 
 def sv_template():
@@ -148,17 +148,17 @@ def sv_template():
         key = flag.lower().replace('_', '-')
         default = settings.CONFIG[str(flag)][0]
         value = str(getattr(config, flag))
-        default_args = ["led-brightness", "led-gpio-mapping", "led-slowdown-gpio",  "led-rows", "led-cols", "updatecheck",]
+        default_args = ["led-brightness", "led-gpio-mapping", "led-slowdown-gpio",  "led-rows", "led-cols",]
         basic_args = ["led-show-refresh", "updatecheck",]
 
         def is_modified():
             return localize(value) != localize(default)
-        
+
         def render_flag():
-            if key in basic_args:
+            if key in basic_args and value:
                 full_flag = " --" + key
                 flags.append(full_flag)
-            else: 
+            else:
                 full_flag = " --" + key + "=" + value
                 flags.append(full_flag)
 
@@ -166,6 +166,9 @@ def sv_template():
             render_flag()
 
         elif is_modified():
+            render_flag()
+
+        elif key == "update-check":
             render_flag()
 
     # Renders from daemon template with config and flags passed in as context.
