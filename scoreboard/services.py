@@ -154,14 +154,22 @@ def sv_template():
         def is_modified():
             return localize(value) != localize(default)
 
-        if is_modified() != False and value != "":
-            basic_args = ["led-show-refresh", "updatecheck",]
+        default_args = ["led-brightness", "led-gpio-mapping", "led-slowdown-gpio",  "led-rows", "led-cols", "updatecheck",]
+        basic_args = ["led-show-refresh", "updatecheck",]
+
+        def render_flags():
             if key in basic_args and value == "True":
                 full_flag = " --" + key
                 flags.append(full_flag)
             else: 
                 full_flag = " --" + key + "=" + value
                 flags.append(full_flag)
+
+        for key in default_args:
+            return render_flags()
+
+        if is_modified() != False and value != "":
+            return render_flags()
 
     # Renders from daemon template with config and flags passed in as context.
     with open(path, "r") as f:
