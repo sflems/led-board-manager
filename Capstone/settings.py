@@ -72,11 +72,13 @@ CONSTANCE_CONFIG = {
     'LED_CHAIN': (1, 'Daisy_chained boards.', int),
     'LED_PARALLEL': (1, 'For Plus_models or RPi2: parallel chains. 1..3.', int),
     'LED_PWM_BITS': (11, 'Bits used for PWM. Range 1..11.', int),
+    'LED_PWM_DITHER_BITS': (0, 'Time dithering of lower bits (Default: 0)', int),
     'LED_BRIGHTNESS': (80, 'Sets brightness level. Range: 1..100.', int),
-    'LED_GPIO_MAPPING': ('adafruit-hat', 'Hardware Mapping: regular, adafruit-hat, adafruit-hat-pwm', str),
+    'LED_GPIO_MAPPING': ('adafruit-hat-pwm', 'Hardware Mapping: regular, adafruit-hat, adafruit-hat-pwm', str),
     'LED_SCAN_MODE': (1, 'Progressive or interlaced scan. 0 = Progressive, 1 = Interlaced.', int),
     'LED_PWM_LSB_NANOSECOND': (130, 'Base time-unit for the on-time in the lowest significant bit in nanoseconds.', int),
     'LED_SHOW_REFRESH': (False, 'Shows the current refresh rate of the LED panel.', bool),
+    'LED_LIMIT_REFRESH': (120, 'Limit refresh rate to this frequency in Hz.', int),
     'LED_SLOWDOWN_GPIO': (1, 'Slow down writing to GPIO. Range: 0..4.', int),
     'LED_NO_HARDWARE_PULSE': (False, 'Dont use hardware pin-pulse generation.', bool),
     'LED_RGB_SEQUENCE': ('RGB', ' Switch if your matrix has led colors swapped.', str),
@@ -96,7 +98,7 @@ CONSTANCE_CONFIG = {
 }
 
 CONSTANCE_CONFIG_FIELDSETS = {
-    'General Options': (
+    'WebGUI Configuration': (
         'GUI_DIR',
         'SCOREBOARD_DIR',
         'SUPERVISOR_PROGRAM_NAME',
@@ -106,14 +108,16 @@ CONSTANCE_CONFIG_FIELDSETS = {
         'fields': (
             'LED_ROWS',
             'LED_COLS',
+            'LED_BRIGHTNESS',
+            'LED_GPIO_MAPPING',
             'LED_CHAIN',
             'LED_PARALLEL',
             'LED_PWM_BITS',
-            'LED_BRIGHTNESS',
-            'LED_GPIO_MAPPING',
+            'LED_PWM_DITHER_BITS',
             'LED_SCAN_MODE',
             'LED_PWM_LSB_NANOSECOND',
             'LED_SHOW_REFRESH',
+            'LED_LIMIT_REFRESH',
             'LED_SLOWDOWN_GPIO',
             'LED_NO_HARDWARE_PULSE',
             'LED_RGB_SEQUENCE',

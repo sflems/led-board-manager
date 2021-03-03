@@ -131,6 +131,7 @@ def render_sv_config(data,ctx):
     c = template.Context(ctx)
     return t.render(c).encode("ascii")
 
+# Listens for Constance settings update. If signal rcv'd, the below functions run to update supervisor-daemon.conf and reload.
 @receiver(config_updated)
 def constance_updated(sender, key, old_value, new_value, **kwargs):
     print(sender, key, old_value, new_value)
@@ -162,6 +163,7 @@ def sv_template():
                 full_flag = " --" + key + "=" + value
                 flags.append(full_flag)
 
+    # Renders from daemon template with config and flags passed in as context.
     with open(path, "r") as f:
         templated = render_sv_config(f.read(), { 'config': config, 'flags': flags, })
 
@@ -169,11 +171,12 @@ def sv_template():
     with open(templated_path, "w") as f:
         f.write(str(templated, 'utf-8'))
 
-    if proc_status() == True:
-        command = "sudo supervisorctl update"
+    # Resart supervisor if supervisor process found.
+    if proc_status() == True or gui_status() == True:
+        command = "sudo supervisorctl reread"
         subprocess.call(command, shell=True,)
 
-        command = "sudo supervisorctl reread"
+        command = "sudo supervisorctl update"
         subprocess.call(command, shell=True,)
 
     # Copy metadata if necessary.
