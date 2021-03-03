@@ -179,7 +179,7 @@ def sv_template():
         f.write(str(templated, 'utf-8'))
 
     # Resart supervisor if supervisor process found. Checks if keys belong to GUI or scoreboard to restart respective process.
-    if proc_status() == True and key in flag_fields:
+    if proc_status() == True:
         command = "sudo supervisorctl update " + config.SUPERVISOR_PROGRAM_NAME
         subprocess.call(command, shell=True,)
     else:
