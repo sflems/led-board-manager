@@ -151,7 +151,7 @@ def sv_template():
         default_args = ["led-brightness", "led-gpio-mapping", "led-slowdown-gpio",  "led-rows", "led-cols", "updatecheck",]
         basic_args = ["led-show-refresh", "updatecheck",]
 
-        def is_changed():
+        def is_modified():
             return localize(value) != localize(default)
         
         def render_flags():
