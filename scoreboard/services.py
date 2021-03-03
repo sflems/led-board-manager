@@ -134,8 +134,6 @@ def render_sv_config(data,ctx):
 # Listens for Constance settings update. If signal rcv'd, the below functions run to update supervisor-daemon.conf and reload.
 @receiver(config_updated)
 def constance_updated(sender, key, old_value, new_value, **kwargs):
-    print(sender, key, old_value, new_value)
-
     return sv_template()
 
 def sv_template():
@@ -153,7 +151,7 @@ def sv_template():
         default_args = ["led-brightness", "led-gpio-mapping", "led-slowdown-gpio",  "led-rows", "led-cols", "updatecheck",]
         basic_args = ["led-show-refresh", "updatecheck",]
 
-        def is_modified():
+        def is_changed():
             return localize(value) != localize(default)
         
         def render_flags():
@@ -167,7 +165,7 @@ def sv_template():
         if key in default_args:
             render_flags()
 
-        elif is_modified() != False and value != "":
+        elif is_modified():
             render_flags()
 
     # Renders from daemon template with config and flags passed in as context.
