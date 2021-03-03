@@ -71,7 +71,7 @@ _____________
 ## Installation
 __Be sure to back up any previous configurations before use!!!__ The original files are overwritten and saved as `config.json.webgui.bak` and `config.schema.json.webgui.bak` in the `nhl-led-scoreboard/config/bak` subdirectory.
 
-#### From the `/home/user` directory:
+#### From the `/home/pi` directory:
 ###### (or the same location as your `nhl-led-scoreboard` directory)
 
 ```
@@ -82,7 +82,7 @@ cd nhl-led-scoreboard-webgui
 ###### Install and Start `python3-venv`: 
 _To run the server in a development environment, `python3-venv` can be a solution to create a separate "environment" for the server to run in._
 ```
-sudo apt-get install python3-venv
+sudo apt install python3-venv
 python3 -m venv env
 source env/bin/activate
 ```
