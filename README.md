@@ -198,9 +198,9 @@ We're going to use the Raspberry Pi's `/etc/rc.local` file to start our script o
 Enter `sudo nano /etc/rc.local` to add the following line before `exit 0`:
 
 ```
-su user -c '/home/user/nhl-led-scoreboard-webgui/autorun.sh >> /tmp/scoreboard-gui.log 2>&1'
+su pi -c '/home/pi/nhl-led-scoreboard-webgui/autorun.sh >> /tmp/scoreboard-gui.log 2>&1'
 ```
-...substituting your own username for `user`, or `pi` if it is still the default. This will also create a log file for the server: `/tmp/scoreboard-gui.log`. You can tail the log with the following command:
+...substituting your own username for `pi`, if changed. This method will also create a log file for the server: `/tmp/scoreboard-gui.log`. You can tail the log with the following command:
 
 `tail -f -n 100 /tmp/scoreboard-gui.log`
 
