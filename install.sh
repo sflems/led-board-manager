@@ -26,19 +26,6 @@ source env/bin/activate >&3
 echo "Installing requirements.txt. This may take a few moments..." >&3
 pip3 install -r requirements.txt >&3
 
-echo "Backing up config, and moving original schema file to "$TARGET"/config/bak/original/" >&3
-
-mkdir -p $TARGET/config/bak/original >&3
-
-# Backs up original and then copy the updated Schema to the config folder in the nhl-led-scoreboard directory. 
-mv $TARGET/config/config.schema.json $TARGET/config/bak/original/$(date +"%Y_%m_%d_%I_%M_%p")-config.schema.json >&3 && echo "SUCCESS: Schema backup complete." >&3 || { echo "ERROR: Schema backup failed. Check webgui-log.out for details." >&3; }
-cp $TARGET/config/config.json $TARGET/config/bak/original/$(date +"%Y_%m_%d_%I_%M_%p")-config.json >&3 && echo "SUCCESS: Config backed complete." >&3 || { echo "ERROR: Config backup failed. Check webgui-log.out for details." >&3; }
-
-echo "Updating schema with modified version..." >&3
-
-# THIS NEEDS TO BE UPDATED FOR THE 2021-2022 Season!!! Updated schema file with divisions is in static/schema dir.
-cp ./scoreboard/static/schema/config.schema.json $TARGET/config/config.schema.json >&3 && echo "SUCCESS: Schema updated." >&3 || { echo "ERROR: Schema update transfer failed." >&3; exit 1; }
-
 echo "Generating WebGUI database and loading initial data..." >&3
 
 # Create Django DB and load default data.
