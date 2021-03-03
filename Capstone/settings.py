@@ -78,7 +78,7 @@ CONSTANCE_CONFIG = {
     'LED_SCAN_MODE': (1, 'Progressive or interlaced scan. 0 = Progressive, 1 = Interlaced.', int),
     'LED_PWM_LSB_NANOSECOND': (130, 'Base time-unit for the on-time in the lowest significant bit in nanoseconds.', int),
     'LED_SHOW_REFRESH': (False, 'Shows the current refresh rate of the LED panel.', bool),
-    'LED_LIMIT_REFRESH': (120, 'Limit refresh rate to this frequency in Hz.', int),
+    'LED_LIMIT_REFRESH': (0, 'Limit refresh rate to this frequency in Hz.', int),
     'LED_SLOWDOWN_GPIO': (1, 'Slow down writing to GPIO. Range: 0..4.', int),
     'LED_NO_HARDWARE_PULSE': (False, 'Dont use hardware pin-pulse generation.', bool),
     'LED_RGB_SEQUENCE': ('RGB', ' Switch if your matrix has led colors swapped.', str),
