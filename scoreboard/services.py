@@ -150,26 +150,25 @@ def sv_template():
         key = flag.lower().replace('_', '-')
         default = settings.CONFIG[str(flag)][0]
         value = str(getattr(config, flag))
-        
-        def is_modified():
-            return localize(value) != localize(default)
-
         default_args = ["led-brightness", "led-gpio-mapping", "led-slowdown-gpio",  "led-rows", "led-cols", "updatecheck",]
         basic_args = ["led-show-refresh", "updatecheck",]
 
+        def is_modified():
+            return localize(value) != localize(default)
+        
         def render_flags():
-            if key in basic_args and value == "True":
+            if key in basic_args:
                 full_flag = " --" + key
                 flags.append(full_flag)
             else: 
                 full_flag = " --" + key + "=" + value
                 flags.append(full_flag)
 
-        for key in default_args:
-            return render_flags()
+        if key in default_args:
+            render_flags()
 
-        if is_modified() != False and value != "":
-            return render_flags()
+        elif is_modified() != False and value != "":
+            render_flags()
 
     # Renders from daemon template with config and flags passed in as context.
     with open(path, "r") as f:
@@ -179,13 +178,15 @@ def sv_template():
     with open(templated_path, "w") as f:
         f.write(str(templated, 'utf-8'))
 
-    # Resart supervisor if supervisor process found.
-    if proc_status() == True or gui_status() == True:
-        command = "sudo supervisorctl reread"
+    # Resart supervisor if supervisor process found. Checks if keys belong to GUI or scoreboard to restart respective process.
+    if proc_status() == True and key in flag_fields:
+        command = "sudo supervisorctl update " + config.SUPERVISOR_PROGRAM_NAME
         subprocess.call(command, shell=True,)
-
-        command = "sudo supervisorctl update"
-        subprocess.call(command, shell=True,)
+    else:
+        if gui_status() == True:
+            command = "sudo supervisorctl update " + config.SUPERVISOR_GUI_NAME
+            subprocess.call(command, shell=True,)
 
     # Copy metadata if necessary.
     return templated_path
+
