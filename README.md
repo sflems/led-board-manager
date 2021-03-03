@@ -118,7 +118,7 @@ touch .secret.txt
 chmod g+w .secret.txt
 ```
 
-###### Install `supervisor` (as root): 
+##### Install `supervisor` (as root): 
 ```
 sudo mkdir /etc/supervisor && sudo cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 sudo chmod 644 /etc/supervisor/supervisord.conf
@@ -134,8 +134,9 @@ sudo systemctl unmask supervisord
 sudo systemctl enable supervisord 
 sudo systemctl disable supervisord
 ```
+###### Sample configurations can be found in the [`nhl-led-scoreboard-img`](https://github.com/falkyre/nhl-led-scoreboard-img/tree/master/stage2/06-supervisor/files) project, by [@falkyre](https://github.com/falkyre).
 
-###### Install `python3-venv` and create the Web Gui environment: 
+##### Install `python3-venv` and create the Web Gui environment: 
 ```
 sudo apt-get install python3-venv
 python3 -m venv env
@@ -149,10 +150,10 @@ Your shell should have the `(env)` prepended if active:
 
 _To exit the `(env)` at any time __after__ installing and running the `loaddata` step, enter the command `deactivate` in the terminal._
 
-###### Install the app requirements and dependencies from the included requirements.txt file:
+##### Install the app requirements and dependencies from the included requirements.txt file:
 `pip3 install -r requirements.txt`
 
-###### Once complete, we'll make, migrate and fill our sqlite3 database with the supplied teams data in the fixtures folder:
+##### Once complete, we'll make, migrate and fill our sqlite3 database with the supplied teams data in the fixtures folder:
 
 First, run:
 
