@@ -127,20 +127,22 @@ chmod g+w .secret.txt
 
 ##### Install `supervisor` (as root): 
 ```
-sudo mkdir /etc/supervisor && sudo cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
-sudo chmod 644 /etc/supervisor/supervisord.conf
+su
+mkdir /etc/supervisor && cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
+chmod 644 /etc/supervisor/supervisord.conf
 
-sudo mkdir /etc/supervisor/conf.d && sudo cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/scoreboard.conf /etc/supervisor/conf.d/scoreboard.conf
-sudo chmod 644 /etc/supervisor/conf.d/scoreboard.conf
+mkdir /etc/supervisor/conf.d && cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/scoreboard.conf /etc/supervisor/conf.d/scoreboard.conf
+chmod 644 /etc/supervisor/conf.d/scoreboard.conf
 
-sudo cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
-sudo chmod 644
+cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
+chmod 644
 
-sudo python3 -m pip install supervisor
+python3 -m pip install supervisor
 
-sudo systemctl unmask supervisord
-sudo systemctl enable supervisord 
-sudo systemctl disable supervisord
+systemctl unmask supervisord
+systemctl enable supervisord 
+systemctl disable supervisord
+su pi
 ```
 ###### Sample configurations can be found in the [`nhl-led-scoreboard-img`](https://github.com/falkyre/nhl-led-scoreboard-img/tree/master/stage2/06-supervisor/files) project, by [@falkyre](https://github.com/falkyre).
 
