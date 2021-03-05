@@ -10,11 +10,11 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 echo "Working directory: "$DIR >&3
 
 cd $DIR
-source env/bin/activate 
+source env/bin/activate
 
 # Install the app requirements and dependencies from the included requirements.txt file:
 echo "Installing requirements.txt. This may take a few moments..." >&3
-pip3 install -r requirements.txt >&3
+python3 -m pip install --ignore-installed -r requirements.txt >&3
 
 # Create Django DB and load default data.
 echo "Updating WebGUI database and loading initial data..." >&3

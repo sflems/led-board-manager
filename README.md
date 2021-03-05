@@ -55,7 +55,8 @@ _____________
 - Admin Dashboard
   - Profiles Management
   - User Management
-  - WebGUI Defaults for Supervisor Program Names and Config Location (Admin Constance Tab or change `CONSTANCE_CONFIG` in `Capstone/settings.py`)
+  - Scoreboard Flags (ie. `--led-brightnes`s, `--led-gpio-mapping`, `--update-check`, etc.)
+  - WebGUI Defaults (ie. Default paths, Supervisor `[program:names]`)
 
 _____________
 
@@ -76,7 +77,7 @@ _____________
 - [App Dependancies](requirements.txt)
 
 ## Installation
-__Be sure to back up any previous configurations before use!!!__ The original files are overwritten and saved as `config.json.webgui.bak` and `config.schema.json.webgui.bak` in the `nhl-led-scoreboard/config/bak` subdirectory.
+__Be sure to back up any previous configurations before use!!!__
 
 #### From the `/home/pi` directory:
 ###### (or the same location as your `nhl-led-scoreboard` directory)
@@ -246,7 +247,7 @@ Then, restart the web server. You can `deactivate` the `(env)` if you are using 
 cd
 sudo rm -rfv nhl-led-scoreboard-webgui
 ```
-The `nhl-led-scoreboard/config/bak` directory created at install will remain. It contains any profiles backed up from the GUI as well the original schema and config files.
+Any profiles backed up from the GUI and the config file will remain in the `config/` directory.
 
 ##### Remove the Supervisor Configuration if present:
 ```
@@ -331,16 +332,21 @@ _____________
 ## Info / Troubleshooting
 - After updating, it may be necessary to update the database. See [Updates](#updates) for more info.
 
-- When a config is activated, the config.json contents are replaced with an updated configuration. You can do this on the profiles page. Your previous config.json is still "active" until you active one here.
+- When a config is activated, the config.json contents are replaced with an updated configuration. You can do this on the profiles page. Your previous config.json is still "active" until you activate one here.
 
-- When a profile is backed up, a file is created in the same folder as profile.config.json.bak. It's path is displayed as a message in the browser. Deleted profiles do not delete the config.json or .bak files; it only removes them from the Django Sqlite database. 
+- When a profile is backed up, a file is created in the same folder as `profile_name.config.json`. It's path and name are displayed as a message in the browser. Deleted profiles do not delete the config.json files; it only removes them from the Django Sqlite database. 
 
 - The GUI Defaults (ie Scoreboard path, Supervisor Program Name, etc.) can be changed in the Constance admin panel. Alternatively, they can be modified manually in the `Capstone/settings.py` file under the `CONSTANCE_CONFIG` variable.
+
+- Scoreboard Flags (ie. `--led-brightness`, `--led-gpio-mapping`, `--update-check`, , etc.) can be changed here too. ___With supervisor installed___, the GUI will update the supervisor config with any changed flags and restart the process!
+
 - File Structure
   ```
   nhl-led-scoreboard-webgui/      <-- Project Base Folder
   |
   ├── assets/                     <-- Assets used in README.md.
+  |   |
+  |   └── animations/             <-- Animations occasionally updated from GitHub repo. Feel free to use these!
   |
   ├── Capstone/                   <-- Capstone Django Project Directory
   │   ├── __init__.py
