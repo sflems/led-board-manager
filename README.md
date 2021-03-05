@@ -126,6 +126,7 @@ chmod g+w .secret.txt
 ```
 
 ##### Install `supervisor` (as root): 
+###### Skip to [Auto-Starting the Server](#auto-starting-the-server--boot) if you have an active `supervisor' installation.
 ```
 su
 mkdir /etc/supervisor && cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
