@@ -148,22 +148,19 @@ def sv_template():
         key = flag.lower().replace('_', '-')
         default = settings.CONFIG[str(flag)][0]
         value = str(getattr(config, flag))
-        default_args = ["led-brightness", "led-gpio-mapping", "led-slowdown-gpio",  "led-rows", "led-cols",]
+        default_args = ["led-brightness", "led-gpio-mapping", "led-slowdown-gpio",  "led-rows", "led-cols", "updatecheck",]
         basic_args = ["led-show-refresh", "updatecheck",]
 
         def is_modified():
             return localize(value) != localize(default)
 
         def render_flag():
-            if key in basic_args and value:
+            if key in basic_args and value == "True":
                 full_flag = " --" + key
                 flags.append(full_flag)
             else:
                 full_flag = " --" + key + "=" + value
                 flags.append(full_flag)
-
-        if key == "updatecheck" and value == "True":
-            render_flag()
 
         if key in default_args:
             render_flag()
