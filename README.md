@@ -87,26 +87,17 @@ cd nhl-led-scoreboard-webgui
 ```
 #### First Steps
 
-__To fully integrate with `supervisor` and automatically start the webserver on reboot, [install supervisor](#install-supervisor-as-root).__
+__To fully integrate with `supervisor` and automatically start the webserver on reboot, [install supervisor](#install-supervisor-as-root) and then return here for the _easy_ install method__.
 
 ###### Install and Start `python3-venv`: 
 _To run the server in a development environment, `python3-venv` can be a solution to create a separate "environment" for the server to run in._
 ```
 sudo apt install python3-venv
 python3 -m venv env
-source env/bin/activate
-```
-
-Your shell should have the `(env)` prepended if active:
-```
-(env) pi@raspberrypi:~/nhl-led-scoreboard-webgui $ 
-```
-
-_To exit the `(env)` state at any time after installing, enter the command `deactivate` in the terminal._
-
-#### Install (Cont.)
-```
 ./install.sh
+```
+Once finished, you can start the server with:
+```
 gunicorn Capstone.wsgi -b 0:9002
 ```
 If all is working, you should then be able to access the app @ `YOUR_IP:9002` in the browser.
