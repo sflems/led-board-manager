@@ -3,7 +3,7 @@
 
 #### Latest Releases
 ##### Web GUI
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/sflems/nhl-led-scoreboard-webgui?label=version)](https://github.com/sflems/nhl-led-scoreboard-webgui/releases/latest)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/sflems/nhl-led-scoreboard-webgui?label=version)](https://github.com/sflems/nhl-led-scoreboard-webgui/releases)
 
 ##### NHL LED Scoreboard:
 [![GitHub release (latest by date)](https://badgen.net/github/release/riffnshred/nhl-led-scoreboard?label=Version)](https://github.com/riffnshred/nhl-led-scoreboard/releases/latest)
