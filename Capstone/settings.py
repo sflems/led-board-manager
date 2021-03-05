@@ -74,7 +74,7 @@ CONSTANCE_CONFIG = {
     'LED_PWM_BITS': (11, 'Bits used for PWM. Range 1..11.', int),
     'LED_PWM_DITHER_BITS': (0, 'Time dithering of lower bits (Default: 0)', int),
     'LED_BRIGHTNESS': (80, 'Sets brightness level. Range: 1..100.', int),
-    'LED_GPIO_MAPPING': ('adafruit-hat-pwm', 'Hardware Mapping: regular, adafruit-hat, adafruit-hat-pwm', str),
+    'LED_GPIO_MAPPING': ('adafruit-hat', 'Hardware Mapping: regular, adafruit-hat, adafruit-hat-pwm', str),
     'LED_SCAN_MODE': (1, 'Progressive or interlaced scan. 0 = Progressive, 1 = Interlaced.', int),
     'LED_PWM_LSB_NANOSECOND': (130, 'Base time-unit for the on-time in the lowest significant bit in nanoseconds.', int),
     'LED_SHOW_REFRESH': (False, 'Shows the current refresh rate of the LED panel.', bool),

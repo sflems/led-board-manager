@@ -162,7 +162,7 @@ def sv_template():
                 full_flag = " --" + key + "=" + value
                 flags.append(full_flag)
 
-        if key == "updatecheck" and value == True:
+        if key == "updatecheck" and value == "True":
             render_flag()
 
         if key in default_args:
