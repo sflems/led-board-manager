@@ -29,14 +29,11 @@ python3 -m pip install --ignore-installed -r requirements.txt >&3
 echo "Generating WebGUI database and loading initial data..." >&3
 
 # Create Django DB and load default data.
-python3 manage.py makemigrations >&3
-python3 manage.py migrate >&3
-python3 manage.py loaddata teams.json >&3
+env/bin/python3 manage.py makemigrations >&3
+env/bin/python3 manage.py migrate >&3
+env/bin/python3 manage.py loaddata teams.json >&3
 
 echo "SETUP COMPLETED!!!" >&3
 echo "Start the Web GUI server with 'gunicorn Capstone.wsgi -b 0:9002' or './autorun.sh'" >&3
-
-# Deactivate the venv
-deactivate >&3
 
 exit 0
