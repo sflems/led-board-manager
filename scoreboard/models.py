@@ -70,7 +70,7 @@ class Settings(models.Model):
         }
 
     def save_to_file(self):
-        path = services.conf_path() + "bak/" + self.name.lower().replace(" ", ".") + ".config.json.bak"
+        path = os.path.join(services.conf_path(), self.name.lower().replace(" ", ".") + ".config.json")
         with open(path, "w") as outfile:
             json.dump(self.config, outfile, indent=4)
             return path
