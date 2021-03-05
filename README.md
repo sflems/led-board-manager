@@ -1,7 +1,12 @@
 # NHL LED Scoreboard Web GUI & Configurator
 #### A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/sflems/nhl-led-scoreboard-webgui?label=version)
+#### Latest Releases
+##### Web GUI
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/sflems/nhl-led-scoreboard-webgui?label=version)](https://github.com/sflems/nhl-led-scoreboard-webgui/releases/latest)
+
+##### NHL LED Scoreboard:
+[![GitHub release (latest by date)](https://badgen.net/github/release/riffnshred/nhl-led-scoreboard?label=Version)](https://github.com/riffnshred/nhl-led-scoreboard/releases/latest)
 
 ## Table of Contents
   - [Description](#description)
@@ -81,24 +86,19 @@ git clone --recursive https://github.com/sflems/nhl-led-scoreboard-webgui.git
 cd nhl-led-scoreboard-webgui
 ```
 #### First Steps
+
+###### To fully integrate with `supervisor`, [install supervisor](#install-supervisor-as-root) and then return here for the _easy_ install method.
+###### If you have an active install, you can skip to [Auto-Starting the Server](#auto-starting-the-server--boot), then return here.
+
 ###### Install and Start `python3-venv`: 
 _To run the server in a development environment, `python3-venv` can be a solution to create a separate "environment" for the server to run in._
 ```
 sudo apt install python3-venv
 python3 -m venv env
-source env/bin/activate
-```
-
-Your shell should have the `(env)` prepended if active:
-```
-(env) pi@raspberrypi:~/nhl-led-scoreboard-webgui $ 
-```
-
-_To exit the `(env)` state at any time after installing, enter the command `deactivate` in the terminal._
-
-#### Install (Cont.)
-```
 ./install.sh
+```
+Once finished, you can start the server with:
+```
 gunicorn Capstone.wsgi -b 0:9002
 ```
 If all is working, you should then be able to access the app @ `YOUR_IP:9002` in the browser.
@@ -110,8 +110,6 @@ Password: `scoreboard`
 
 If you can't access the server and are using a firewall such as `ufw` or `iptables`, be sure to allow access _to your local network only_ over the `9002` port (or whatever you set it to if so). If you have ports 80/443 open on your Pi/Router, this site WILL be accessable by all, so be sure to have your firewall(s) in order. 
 
-__To automatically start the webserver on reboot, be sure to follow the [Autostarting the Webserver](#auto-starting-the-server--boot) step.__
-
 __See also: [Usage Instructions](#usage)__
 
 ## Manual Installation:
@@ -121,21 +119,24 @@ chmod g+w .secret.txt
 ```
 
 ##### Install `supervisor` (as root): 
+###### Skip to [Auto-Starting the Server](#auto-starting-the-server--boot) if you have an active `supervisor' installation.
 ```
-sudo mkdir /etc/supervisor && sudo cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
-sudo chmod 644 /etc/supervisor/supervisord.conf
+su
+mkdir /etc/supervisor && cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
+chmod 644 /etc/supervisor/supervisord.conf
 
-sudo mkdir /etc/supervisor/conf.d && sudo cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/scoreboard.conf /etc/supervisor/conf.d/scoreboard.conf
-sudo chmod 644 /etc/supervisor/conf.d/scoreboard.conf
+mkdir /etc/supervisor/conf.d && cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/scoreboard.conf /etc/supervisor/conf.d/scoreboard.conf
+chmod 644 /etc/supervisor/conf.d/scoreboard.conf
 
-sudo cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
-sudo chmod 644
+cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
+chmod 644
 
-sudo python3 -m pip install supervisor
+python3 -m pip install supervisor
 
-sudo systemctl unmask supervisord
-sudo systemctl enable supervisord 
-sudo systemctl disable supervisord
+systemctl unmask supervisord
+systemctl enable supervisord 
+systemctl disable supervisord
+su pi
 ```
 ###### Sample configurations can be found in the [`nhl-led-scoreboard-img`](https://github.com/falkyre/nhl-led-scoreboard-img/tree/master/stage2/06-supervisor/files) project, by [@falkyre](https://github.com/falkyre).
 
