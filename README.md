@@ -55,7 +55,7 @@ _____________
 - Admin Dashboard
   - Profiles Management
   - User Management
-  - Scoreboard Flags (ie. `--led-brightnes`s, `--led-gpio-mapping`, `--update-check`, etc.)
+  - Scoreboard Flags (ie. `--led-brightness`, `--led-gpio-mapping`, `--update-check`, etc.)
   - WebGUI Defaults (ie. Default paths, Supervisor `[program:names]`)
 
 _____________
