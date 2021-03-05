@@ -158,6 +158,9 @@ def sv_template():
             if key in basic_args and value == "True":
                 full_flag = " --" + key
                 flags.append(full_flag)
+            elif key in basic_args:
+                full_flag = ""
+                flags.append(full_flag)
             else:
                 full_flag = " --" + key + "=" + value
                 flags.append(full_flag)
