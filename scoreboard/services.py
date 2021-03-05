@@ -168,7 +168,7 @@ def sv_template():
         elif is_modified():
             render_flag()
 
-        elif key == "updatecheck" and value:
+        elif key == "updatecheck" and value == True:
             render_flag()
 
     # Renders from daemon template with config and flags passed in as context.
