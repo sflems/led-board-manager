@@ -23,6 +23,7 @@ redis==3.5.3
 requests==2.25.1
 RPi.GPIO==0.7.0
 secret-key-generator==0.0.7
+sh==1.14.1
 six==1.15.0
 soupsieve==2.1
 sqlparse==0.4.1
