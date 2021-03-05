@@ -138,7 +138,10 @@ systemctl unmask supervisord
 systemctl enable supervisord 
 systemctl disable supervisord
 su pi
+
+mv sample.supervisor-daemon.conf supervisor-daemon.conf
 ```
+
 ###### Sample configurations can be found in the [`nhl-led-scoreboard-img`](https://github.com/falkyre/nhl-led-scoreboard-img/tree/master/stage2/06-supervisor/files) project, by [@falkyre](https://github.com/falkyre).
 
 ##### Install `python3-venv` and create the Web Gui environment: 
