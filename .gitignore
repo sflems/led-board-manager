@@ -52,6 +52,7 @@ coverage.xml
 *.pot
 
 # Django stuff:
+supervisor-daemon.conf
 .secret.txt
 autorun2.sh
 *.out
