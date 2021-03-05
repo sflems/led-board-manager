@@ -182,9 +182,12 @@ Either follow the next step to setup server autostart, or see [usage instruction
 ###### Either:
 Add the following __to the end of the `files =` line__, under the`[Include]` section of your `supervisord.conf` with just a space between the two paths. This will tell supervisor to use the updated program configurations that the webgui generates. To disable this feature, simply remove this line.
 
+###### Example:
 ```
- /home/pi/nhl-led-scoreboard-webgui/supervisor-daemon.conf
+[include]
+files = /etc/supervisor/conf.d/*.conf /home/pi/nhl-led-scoreboard-webgui/supervisor-daemon.conf
 ```
+
 ###### Or:
 Create a new supervisor config with the command:
 `sudo nano /etc/supervisor/conf.d/scoreboard-webgui.conf`
@@ -198,6 +201,13 @@ command=/home/pi/nhl-led-scoreboard-webgui/env/bin/gunicorn Capstone.wsgi -b 0:9
 directory=/home/pi/nhl-led-scoreboard-webgui
 autostart=true
 user=pi
+stopasgroup=true
+stderr_logfile=/var/log/scoreboard-webgui.stderr.log
+stderr_logfile_maxbytes=1MB
+stderr_logfile_backups=10
+stdout_logfile=/var/log/scoreboard-webgui.stdout.log
+stdout_logfile_maxbytes=1MB
+stdout_logfile_backups=10
 ```
 
 #### OPTION 2: Create a script and use `rc.local` to autostart the devserver on startup:
