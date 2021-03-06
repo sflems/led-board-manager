@@ -88,7 +88,7 @@ cd nhl-led-scoreboard-webgui
 ```
 #### First Steps
 
-###### To fully integrate with `supervisor`, [install supervisor](#install-supervisor-as-root) and then return here for the _easy_ install method.
+###### Integrate with `supervisor`, [install supervisor](#install-supervisor-as-root) and then return here for the _easy_ install method.
 ###### If you have an active install, you can skip to [Auto-Starting the Server](#auto-starting-the-server--boot), then return here.
 
 ###### Install and Start `python3-venv`: 
