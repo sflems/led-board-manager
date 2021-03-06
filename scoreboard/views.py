@@ -162,6 +162,7 @@ def profiles(request, id):
                 if not profile.isActive:
                     profile.isActive = True
                     profile.save()
+                    messages.success(request, "\"" + profile.name + "\" activated.")
                     return JsonResponse({
                         "activated": True
                     }, status=202)
