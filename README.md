@@ -136,7 +136,6 @@ python3 -m pip install supervisor
 
 systemctl unmask supervisord
 systemctl enable supervisord 
-systemctl disable supervisord
 su pi
 
 mv sample.supervisor-daemon.conf supervisor-daemon.conf
