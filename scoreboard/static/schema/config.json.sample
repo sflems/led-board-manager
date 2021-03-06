@@ -1,7 +1,7 @@
 {
 	"debug": false,
 	"loglevel": "INFO",
-	"live_mode": false,
+	"live_mode": true,
 	"preferences": {
 		"time_format": "12h",
 		"end_of_day": "8:00",
@@ -20,19 +20,22 @@
 		"off_day": [
 			"scoreticker",
 			"standings",
+			"team_summary",
 			"clock"
 		],
 		"scheduled": [
 			"standings",
+			"team_summary",
 			"scoreticker",
 			"clock"
 		],
 		"intermission": [
-			"scoreticker"
+			"scoreticker",
+			"team_summary"
 		],
 		"post_game": [
-			
 			"standings",
+			"team_summary",
 			"scoreticker",
 			"clock"
 		]
@@ -50,7 +53,7 @@
 		"standings": {
 			"preferred_standings_only": true,
 			"standing_type": "wild_card",
-			"divisions": "central",
+			"divisions": "north",
 			"conference": "eastern"
 		},
 		"clock": {
@@ -93,7 +96,7 @@
             "alert_feed": "EC",
             "update_freq": 5,
             "show_alerts": false,
-			"nws_show_expire": false,
+        	"nws_show_expire": false,
             "alert_title": true,
             "scroll_alert": true,
             "alert_duration": 5,
@@ -105,10 +108,10 @@
             "enabled": false,
 			"animations": true,
             "start": "22:00",
-            "stop": "22:05",
+            "stop": "08:00",
             "data_updates": false,
 			"motionsensor": false,
-            "pin": 24,
+            "pin": 7,
             "delay": 30
         },
 		"dimmer": {
@@ -116,7 +119,7 @@
 			"source": "software",
 			"daytime": "",
             "nighttime": "",
-            "offset": 90,
+            "offset": 0,
 			"frequency": 5,
 			"light_level_lux": 400,
 			"mode": "always",
