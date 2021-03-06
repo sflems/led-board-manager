@@ -214,6 +214,8 @@ Add...
 files = /etc/supervisor/conf.d/*.conf /home/pi/nhl-led-scoreboard-webgui/supervisor-daemon.conf
 ```
 
+_To finish the easy GUI install method, [return to the steps above.](#install-and-start-python3-venv)_
+
 #### OPTION 2: Create a script and use `rc.local` to autostart the devserver on startup:
 We're going to use the Raspberry Pi's `/etc/rc.local` file to start our script on boot. In the `/nhl-led-scoreboard-webgui` folder, create a new file using:
 
