@@ -68,9 +68,11 @@ class Settings(models.Model):
             "isActive": self.isActive,
         }
     
-    def save(self):
+    def save(self, *args, **kwargs):
         if not os.path.isdir(services.conf_path()):
             raise ValueError("Config directory not found.")
+        else:
+            super(Settings, self).save(*args, **kwargs)
 
     def save_to_file(self):
         path = services.conf_path()
