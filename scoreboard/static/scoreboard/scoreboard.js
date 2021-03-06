@@ -45,9 +45,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
+	var interval = document.getElementById('monitor-card').dataset.interval*1000;
+	let toggleTimer = setInterval(sysinfo, interval);
+	
 	$('div#monitor-card').ready(function () {
 		sysinfo();
-		setInterval(sysinfo, document.getElementById('monitor-card').dataset.interval*1000);
+		toggleTimer
 	});
 
 	// Auto-collapses json forms for easier viewing on load. The "collapsed" option does not work!
@@ -257,46 +260,50 @@ document.addEventListener('DOMContentLoaded', function () {
 			};
 		});
 	});
-});
 
-$('#sb-toggle').change(function() {
-	if ($(this).prop('checked')) {
-		var command = "sb_start";
-	} else {
-		var command = "sb_stop";
-	};
-
-	const url = document.getElementById('sb-toggle').dataset.url;
-	const csrftoken = Cookies.get('csrftoken');
-
-	fetch(`${url}`, {
-		headers: {'X-CSRFToken': csrftoken},
-		method: 'PUT',
-		body: JSON.stringify({
-			"sb_command": command
-		})
-	})
-	.then(response => response.json())
-	.then(result => {
-		console.log(result);
-		if (result.sb_success != true) {
-			console.log(result);
-			$('#sb-toggle').bootstrapToggle('off', true);
-			document.querySelector('#message').innerHTML = `
-				<div class="alert alert-danger alert-dismissible fade show">
-					<strong>Error!</strong> <small>Unable to change scoreboard process.</small> (ERROR: ${result.error})
-					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>  
-			`;
+	$('#sb-toggle').change(function() {
+		// Clears the Scoreboard Toggle On/Off check. So button doesnt temporarily flip back after turning board on/off.
+		clearInterval(toggleTimer);
+		
+		if ($(this).prop('checked')) {
+			var command = "sb_start";
 		} else {
-			if (result.sb_status) {
-				$('#sb-toggle').bootstrapToggle('on', true);
-			} else {
+			var command = "sb_stop";
+		};
+	
+		const url = document.getElementById('sb-toggle').dataset.url;
+		const csrftoken = Cookies.get('csrftoken');
+	
+		fetch(`${url}`, {
+			headers: {'X-CSRFToken': csrftoken},
+			method: 'PUT',
+			body: JSON.stringify({
+				"sb_command": command
+			})
+		})
+		.then(response => response.json())
+		.then(result => {
+			console.log(result);
+			if (result.sb_success != true) {
+				console.log(result);
 				$('#sb-toggle').bootstrapToggle('off', true);
-			};
-		};			
+				document.querySelector('#message').innerHTML = `
+					<div class="alert alert-danger alert-dismissible fade show">
+						<strong>Error!</strong> <small>Unable to change scoreboard process.</small> (ERROR: ${result.error})
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>  
+				`;
+			} else {
+				if (result.sb_status) {
+					$('#sb-toggle').bootstrapToggle('on', true);
+				} else {
+					$('#sb-toggle').bootstrapToggle('off', true);
+				}
+				toggleTimer = setInterval(sysinfo, interval)
+			};			
+		});
 	});
 });
 
