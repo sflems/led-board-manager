@@ -88,8 +88,29 @@ cd nhl-led-scoreboard-webgui
 ```
 #### First Steps
 
-###### Integrate with `supervisor`, [install supervisor](#install-supervisor-as-root) and then return here for the _easy_ install method.
-###### If you have an active install, you can skip to [Auto-Starting the Server](#auto-starting-the-server--boot), then return here.
+##### Install `supervisor` (as root): 
+###### You can skip to [Auto-Starting the Server](#auto-starting-the-server--boot) if you have an active `supervisor' installation. Then return here for the _easy_ install method.
+```
+su
+mkdir /etc/supervisor && cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
+chmod 644 /etc/supervisor/supervisord.conf
+
+mkdir /etc/supervisor/conf.d && cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/scoreboard.conf /etc/supervisor/conf.d/scoreboard.conf
+chmod 644 /etc/supervisor/conf.d/scoreboard.conf
+
+cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
+chmod 644
+
+python3 -m pip install supervisor
+
+systemctl unmask supervisord
+systemctl enable supervisord 
+su pi
+
+mv sample.supervisor-daemon.conf supervisor-daemon.conf
+```
+
+###### Sample configurations can be found in the [`nhl-led-scoreboard-img`](https://github.com/falkyre/nhl-led-scoreboard-img/tree/master/stage2/06-supervisor/files) project, by [@falkyre](https://github.com/falkyre).
 
 ###### Install and Start `python3-venv`: 
 _To run the server in a development environment, `python3-venv` can be a solution to create a separate "environment" for the server to run in._
@@ -112,6 +133,8 @@ Password: `scoreboard`
 If you can't access the server and are using a firewall such as `ufw` or `iptables`, be sure to allow access _to your local network only_ over the `9002` port (or whatever you set it to if so). If you have ports 80/443 open on your Pi/Router, this site WILL be accessable by all, so be sure to have your firewall(s) in order. 
 
 __See also: [Usage Instructions](#usage)__
+
+_____________
 
 ## Manual Installation:
 ```
