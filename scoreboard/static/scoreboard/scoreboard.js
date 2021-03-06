@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (result.activated != true) {
 				document.querySelector('#message').innerHTML = `
 					<div class="alert alert-danger alert-dismissible fade show">
-						<strong>Error!</strong> <small>Profile activation unsuccessful.</small>
+						<strong>Error!</strong> <small>Profile activation unsuccessful.</small> (ERROR: ${result.error})
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>

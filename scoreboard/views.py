@@ -15,9 +15,10 @@ from .models import *
 from . import services
 import json, os, subprocess
 
+# For Profile Activation Messages
 notes = [
-                    " (Not Active)",
-                    " (Active)" 
+    " (Not Active)",
+    " (Active)" 
                 ]
 
 # Create your views here.
@@ -96,16 +97,23 @@ def command(request):
 class SettingsList(ListView):
     model = Settings
 
+# TODO: Add a check to see if profile matches actual config.json found in scoreboard/config directory.
 @login_required
 def active_profile(request):
     if request.method == "GET":
-        profile = Settings.objects.get(isActive=1)
-        scoreboard_status = services.proc_status()
+        try:
+            profile = Settings.objects.get(isActive=1)
+            scoreboard_status = services.proc_status()
 
-        return JsonResponse({
-            "profile": profile.serialize(),
-            "scoreboard_status": scoreboard_status
-        }, status=200)
+            return JsonResponse({
+                "profile": profile.serialize(),
+                "scoreboard_status": scoreboard_status
+            }, status=200)
+        except:
+                return JsonResponse({
+                    "profile": "NO PROFILE FOUND",
+                    "scoreboard_status": scoreboard_status
+                }, status=200)
 
 @login_required
 def resource_monitor(request):
@@ -142,59 +150,54 @@ def profiles(request, id):
             messages.error(request, "Cannot edit the default profile!")
             return HttpResponseRedirect(reverse('profiles_list'))
         
-
+    # Add checks to see if fille actions have taken place, not just Django DB actions. (JS AJAX calls need changed as well.)
     elif request.method == "PUT":
-        try:
-            profile = Settings.objects.get(pk=id)
-            data = json.loads(request.body)
+        profile = get_object_or_404(Settings, pk=id)
+        data = json.loads(request.body)
 
-            if data.get("activated"):
+        if data.get("activated"):
+            try:
                 if not profile.isActive:
                     profile.isActive = True
                     profile.save()
-                    messages.success(request, "\"" + profile.name + "\" activated.")
                     return JsonResponse({
                         "activated": True
                     }, status=202)
-                else:
-                    return JsonResponse({
-                        "activated": false,
-                        "profile":profile.name
-                    }, status=400)
+            except ValueError as error:
+                return JsonResponse({
+                    "activated": False,
+                    "profile": profile.name,
+                    "error": str(error)
+                }, status=404)
 
-            if data.get("backup"):
-                try:
-                    path = profile.save_to_file().strip()
-                    message = "Profile saved to " + path
-                    return JsonResponse({
-                        "backup": True,
-                        "path": path
-                    }, status=202)
-                except:
-                    return JsonResponse({
-                        "backup": False,
-                        "path": path
-                    }, status=400)
+        if data.get("backup"):
+            try:
+                path = profile.save_to_file().strip()
+                message = "Profile saved to " + path
+                return JsonResponse({
+                    "backup": True,
+                    "path": path
+                }, status=202)
+            except:
+                return JsonResponse({
+                    "backup": False,
+                    "path": path
+                }, status=400)
 
-            if data.get("delete"):
-                try:
-                    name = profile.name
-                    profile.delete()
-                    message = "\"" + name + "\" deleted successfully."
-                    messages.success(request, message)
-                    return JsonResponse({
-                        "delete": True,
-                    }, status=202)
-                except:
-                    return JsonResponse({
-                        "delete": False,
-                        "profile": profile.name,
-                    }, status=400)
-
-        except ObjectDoesNotExist:
-            return render(request, "scoreboard/settings_create.html", {
-                "error": "No profile found."
-            })
+        if data.get("delete"):
+            try:
+                name = profile.name
+                profile.delete()
+                message = "\"" + name + "\" deleted successfully."
+                messages.success(request, message)
+                return JsonResponse({
+                    "delete": True,
+                }, status=202)
+            except:
+                return JsonResponse({
+                    "delete": False,
+                    "profile": profile.name,
+                }, status=400)
 
 
     elif request.method == "POST":

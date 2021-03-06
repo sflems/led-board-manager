@@ -26,8 +26,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     try:
-        instance.profile.save()
-        
+        instance.profile.save() 
     except ObjectDoesNotExist:
         Profile.objects.create(user=instance)
 
@@ -68,23 +67,29 @@ class Settings(models.Model):
             "config": self.config,
             "isActive": self.isActive,
         }
+    
+    def save(self):
+        if not os.path.isdir(services.conf_path()):
+            raise ValueError("Config directory not found.")
 
     def save_to_file(self):
-        path = os.path.join(services.conf_path(), self.name.lower().replace(" ", ".") + ".config.json")
+        path = services.conf_path()
         with open(path, "w") as outfile:
             json.dump(self.config, outfile, indent=4)
             return path
 
 @receiver(pre_save, sender=Settings)
 def pre_save(sender, instance, **kwargs):
+    if not os.path.isdir(services.conf_path()):
+        raise ValueError("Config directory not found.")
+
     active_profiles = Settings.objects.filter(isActive=True).exclude(name=instance.name)
     if instance.isActive and active_profiles:
             for profile in active_profiles:
                 profile.isActive = False
-                profile.save()
+                profile.save()    
 
 # Saves config file to nhl-led-scoreboard directory if set as active
-# TO DO: Implement method of changing config path.
 @receiver(post_save, sender=Settings)
 def post_save(sender, instance, **kwargs):
     if instance.isActive:
@@ -93,10 +98,10 @@ def post_save(sender, instance, **kwargs):
 
         # Command attemps to restart scoreboard via supervisorctl
         try:
-            command = "sudo supervisorctl restart " + config.SUPERVISOR_PROGRAM_NAME
+            command = "sudo supervisorctl update " + config.SUPERVISOR_PROGRAM_NAME
             subprocess.check_call(command, shell=True)
             
-        except subprocess.CalledProcessError:
-            pass
+        except subprocess.CalledProcessError as error:
+            return error
 
 

@@ -31,54 +31,24 @@ def gui_status():
 
     return proc_status
 
-# Pi System Stats Functions
-# Imported from https://learn.pimoroni.com/tutorial/networked-pi/raspberry-pi-system-stats-python and modified for this use case.
-def cpu():
-    return str(psutil.cpu_percent()) + '%'
-
-def cputemp():
-    return str(CPUTemperature().temperature) + '&deg;C'
-
-def memory():
-    memory = psutil.virtual_memory()
-    # Divide from Bytes -> KB -> MB
-    available = round(memory.available/1024.0/1024.0,1)
-    total = round(memory.total/1024.0/1024.0,1)
-    return str(available) + 'MB free / ' + str(total) + 'MB total (' + str(memory.percent) + '%)'
-
-def disk():
-    disk = psutil.disk_usage('/')
-    # Divide from Bytes -> KB -> MB -> GB
-    free = round(disk.free/1024.0/1024.0/1024.0,1)
-    total = round(disk.total/1024.0/1024.0/1024.0,1)
-    return str(free) + 'GB free / ' + str(total) + 'GB total (' + str(disk.percent) + '%)'
-
-# NHL API Functions
-# Gets the team abbreviation by id from the NHL API.
-def team_abbrev(id):
-    url = 'https://statsapi.web.nhl.com/api/v1/teams' + id
-    response = requests.get(url)
-    team = response.json()
-    return team
-
-# Gets todays games from the NHL API.        
-def todays_games():
-    url = 'https://statsapi.web.nhl.com/api/v1/schedule?expand=schedule.linescore'
-    response = requests.get(url)
-    games = response.json()
-    games = games['dates'][0]['games']
-    return games
-
-# defines the users home/user/nhl-led-scoreboard/config folder path. Checks if DEMO_CS50 mode is enabled.
+# defines the users home/user/nhl-led-scoreboard/config folder path.
 def conf_path():
     path = os.path.join(config.SCOREBOARD_DIR, 'config/')
-    return path
+    if not os.path.isdir(path):
+        raise ValueError("Scoreboard directory not found.")
+    else:
+        return path
 
 # Opens default config from current config in the nhl-led-scoreboard folder if found, otherwise from static config, and then loads into Settings Profile
+## TRY TO GET DEFAULT FROM SCOREBOARD .default DIR, then fallback.
 def conf_default():
-    with open(os.path.join(config.GUI_DIR, "scoreboard/static/schema/config.json"), "r") as f:
+    config_file = os.path.join(conf_path(), "config.json")
+    if not os.path.exists(config_file):
+        config_file = os.path.join(config.GUI_DIR, "scoreboard/static/schema/config.json")
+    with open(config_file, "r") as f:
         conf = json.load(f)
         return conf
+            
 
 # Defines config schema used by the current led-scoreboard version. File is opened, converted from binary to a python/django object and then used as a callable object.
 def schema():
@@ -189,3 +159,41 @@ def sv_template():
     # Copy metadata if necessary.
     return templated_path
 
+# NHL API Functions
+# Gets the team abbreviation by id from the NHL API.
+def team_abbrev(id):
+    url = 'https://statsapi.web.nhl.com/api/v1/teams' + id
+    response = requests.get(url)
+    team = response.json()
+    return team
+
+# Gets todays games from the NHL API.        
+def todays_games():
+    url = 'https://statsapi.web.nhl.com/api/v1/schedule?expand=schedule.linescore'
+    response = requests.get(url)
+    games = response.json()
+    games = games['dates'][0]['games']
+    return games
+
+
+# Pi System Stats Functions
+# Imported from https://learn.pimoroni.com/tutorial/networked-pi/raspberry-pi-system-stats-python and modified for this use case.
+def cpu():
+    return str(psutil.cpu_percent()) + '%'
+
+def cputemp():
+    return str(CPUTemperature().temperature) + '&deg;C'
+
+def memory():
+    memory = psutil.virtual_memory()
+    # Divide from Bytes -> KB -> MB
+    available = round(memory.available/1024.0/1024.0,1)
+    total = round(memory.total/1024.0/1024.0,1)
+    return str(available) + 'MB free / ' + str(total) + 'MB total (' + str(memory.percent) + '%)'
+
+def disk():
+    disk = psutil.disk_usage('/')
+    # Divide from Bytes -> KB -> MB -> GB
+    free = round(disk.free/1024.0/1024.0/1024.0,1)
+    total = round(disk.total/1024.0/1024.0/1024.0,1)
+    return str(free) + 'GB free / ' + str(total) + 'GB total (' + str(disk.percent) + '%)'
