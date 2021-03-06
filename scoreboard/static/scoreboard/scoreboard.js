@@ -287,11 +287,11 @@ function sysinfo() {
 		</div>
 		`);
 		if (result.scoreboard_status != true) {
-			$('div#scoreboard-status p').html(`
+			$('div#scoreboard-status').html(`
 				<p class="m-0 status">Scoreboard Status: Supervisor Process Not Running <img src="/static/scoreboard/x-square-fill.svg" class="x-square-fill" width="24" height="24"></p>
 			`);
 		} else {
-			$('div#scoreboard-status p').html(`
+			$('div#scoreboard-status').html(`
 				<p class="m-0 status">Scoreboard Status: Running <img src="/static/scoreboard/check-square-fill.svg" class="x-square-fill" width="24" height="24"></p>
 			`);
 		};
