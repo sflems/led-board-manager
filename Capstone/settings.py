@@ -62,6 +62,7 @@ gui_path = os.path.dirname(BASE_DIR) + "/nhl-led-scoreboard-webgui"
 
 CONSTANCE_CONFIG = {
     'GUI_DIR': (gui_path, 'Path to GUI Directory'),
+    'MONITOR_INTERVAL': (10, 'Resource monitor system ping interval in seconds.', int),
     'SCOREBOARD_DIR': (scoreboard_path, 'Path to NHL LED Scoreboard Directory'),
     'SUPERVISOR_PROGRAM_NAME': ('scoreboard', 'ie. [program:scoreboard] from /etc/supervisor/conf.d/scoreboard.conf'),
     'SUPERVISOR_GUI_NAME': ('scoreboard-webgui', 'ie. [program:scoreboard-webgui] from /etc/supervisor/conf.d/scoreboard-webgui.conf'),
@@ -100,6 +101,7 @@ CONSTANCE_CONFIG = {
 CONSTANCE_CONFIG_FIELDSETS = {
     'WebGUI Configuration': (
         'GUI_DIR',
+        'MONITOR_INTERVAL',
         'SCOREBOARD_DIR',
         'SUPERVISOR_PROGRAM_NAME',
         'SUPERVISOR_GUI_NAME',

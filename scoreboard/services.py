@@ -35,7 +35,7 @@ def gui_status():
 def conf_path():
     path = os.path.join(config.SCOREBOARD_DIR, 'config/')
     if not os.path.isdir(path):
-        raise ValueError("Scoreboard directory not found.")
+        raise ValueError("Scoreboard config directory not found. Check SCOREBOARD_DIR (path) configuration in Admin Panel. Configured path: \"" + conf_path() + "\"")
     else:
         return path
 
@@ -57,7 +57,7 @@ def schema():
             conf = json.load(f)
             return conf
     except:
-        raise Http404("Schema does not exist.")
+        raise Http404("\"config.schema.json\" not found. Check SCOREBOARD_DIR (path) configuration in Admin Panel. Configured path: \"" + conf_path() + "\"")
 
 # Options for JSON created settings form.
 # startval takes in current settings (NOT VALIDATED AGAINST SCHEMA). Others modify which JSON editing options are visible to users, themes, etc.

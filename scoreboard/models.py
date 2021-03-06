@@ -67,12 +67,12 @@ class Settings(models.Model):
             "config": self.config,
             "isActive": self.isActive,
         }
-    
-    def save(self, *args, **kwargs):
-        if not os.path.isdir(services.conf_path()):
-            raise ValueError("Config directory not found.")
-        else:
-            super(Settings, self).save(*args, **kwargs)
+
+#    def save(self, *args, **kwargs):
+#        if not os.path.isdir(services.conf_path()):
+#            raise ValueError("Config directory not found.")
+#        else:
+#            super(Settings, self).save(*args, **kwargs)
 
     def save_to_file(self):
         path = services.conf_path()
@@ -84,12 +84,12 @@ class Settings(models.Model):
 def pre_save(sender, instance, **kwargs):
     if not os.path.isdir(services.conf_path()):
         raise ValueError("Config directory not found.")
-
-    active_profiles = Settings.objects.filter(isActive=True).exclude(name=instance.name)
-    if instance.isActive and active_profiles:
-            for profile in active_profiles:
-                profile.isActive = False
-                profile.save()    
+    else:
+        active_profiles = Settings.objects.filter(isActive=True).exclude(name=instance.name)
+        if instance.isActive and active_profiles:
+                for profile in active_profiles:
+                    profile.isActive = False
+                    profile.save()    
 
 # Saves config file to nhl-led-scoreboard directory if set as active
 @receiver(post_save, sender=Settings)

@@ -122,12 +122,14 @@ def resource_monitor(request):
         cputemp = services.cputemp()
         disk = services.disk()
         memory = services.memory()
+        scoreboard_status = services.proc_status()
 
         return JsonResponse({
             "cpu": cpu,
             "cputemp": cputemp,
             "disk": disk,
-            "memory": memory
+            "memory": memory,
+            "scoreboard_status": scoreboard_status
         }, status=200)
 
 @login_required
@@ -237,8 +239,6 @@ def profiles_create(request):
             
             name = detailform.cleaned_data['name']
             isActive = detailform.cleaned_data['isActive']
-            
-            
 
             new_settings = Settings.objects.create(name=name, isActive=isActive, config=new_config)
             new_settings.save()

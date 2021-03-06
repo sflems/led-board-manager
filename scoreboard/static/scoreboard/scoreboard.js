@@ -34,17 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				<p class="m-0">Live Mode: ${result.profile.config.live_mode}</p>
 				<p class="m-0">Debug: ${result.profile.config.debug}</p>
 				<p class="m-0">Log Level: ${result.profile.config.loglevel}</p>
-				<p class="m-0 status"></p>
 			`);
-			if (result.scoreboard_status != true) {
-				$('p.status').html(`
-					Scoreboard Status: Supervisor Process Not Found <img src="/static/scoreboard/x-square-fill.svg" class="x-square-fill" width="24" height="24">
-				`);
-			} else {
-				$('p.status').html(`
-					Scoreboard Status: Running <img src="/static/scoreboard/check-square-fill.svg" class="x-square-fill" width="24" height="24">
-				`);
-			};
 		})
 		.catch(error => {
 			console.log(error);
@@ -57,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	$('div#monitor-card').ready(function () {
 		sysinfo();
-		setInterval(sysinfo, 10000);
+		setInterval(sysinfo, document.getElementById('monitor-card').dataset.interval*1000);
 	});
 
 	// Auto-collapses json forms for easier viewing on load. The "collapsed" option does not work!
@@ -96,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			} else {
 				location.reload();
 			};			
-		});
+		})
 	});
 
 	$('button#backup').click(function () {
@@ -267,8 +257,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			};
 		});
 	});
-
-
 });
 
 function sysinfo() {
@@ -284,7 +272,7 @@ function sysinfo() {
 	.then(response => response.json())
 	.then(result => {
 		console.log(result);
-		$('div#monitor-card div.card-text').html(`
+		$('div#monitor-card div#pi-stats').html(`
 		<div class="col-lg-4">
 			<h5>CPU</h5>
 			<p class="resource mt-n1">${result.cpu} @ ${result.cputemp.replace("temp=","")}</p>
@@ -298,10 +286,19 @@ function sysinfo() {
 			<p class="resource mt-n1 mb-0">${result.disk}</p>
 		</div>
 		`);
+		if (result.scoreboard_status != true) {
+			$('div#scoreboard-status p').html(`
+				<p class="m-0 status">Scoreboard Status: Supervisor Process Not Running <img src="/static/scoreboard/x-square-fill.svg" class="x-square-fill" width="24" height="24"></p>
+			`);
+		} else {
+			$('div#scoreboard-status p').html(`
+				<p class="m-0 status">Scoreboard Status: Running <img src="/static/scoreboard/check-square-fill.svg" class="x-square-fill" width="24" height="24"></p>
+			`);
+		};
 	})
 	.catch(error => {
 		console.log(error);
-		$('div#monitor-card div.card-text').html(`
+		$('div#monitor-card div#pi-stats').html(`
 		<div class="col">
 			<h5>ERROR</h5>
 			<p class="resource mt-n1">No system info returned.</p>

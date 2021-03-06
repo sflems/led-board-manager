@@ -103,15 +103,17 @@
 					<div class="card-body" style="display: grid;">
 						<h5 class="card-title">Loading . . .</h5>
 						<div class="card-text" style="display: contents;">
-							<p class="m-0 status">Scoreboard Status: <img src="/static/scoreboard/x-square-fill.svg" class="x-square-fill" style="background:#FFF;" width="24" height="24"></p>
 						</div>
 					</div>
 				</div>
 	
-				<div id="monitor-card" class="card text-white bg-secondary mt-3 mb-3" data-url="{% url 'resources' %}">
+				<div id="monitor-card" class="card text-white bg-secondary mt-3 mb-3" data-url="{% url 'resources' %}" data-interval="{{ config.MONITOR_INTERVAL }}">
 					<div class=""><h4 class="card-header text-smaller">Resource Monitor</h4></div>
 					<div class="card-body">
-						<div class="card-text row">
+						<div id="pi-stats" class="card-text row">
+						</div>
+						<div id="scoreboard-status" class="card-text row" style="display: contents;">
+							<p class="m-0 status">Scoreboard Status: Loading...</p>
 						</div>
 					</div>
 				</div>
