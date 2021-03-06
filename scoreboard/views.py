@@ -47,27 +47,31 @@ def command(request):
 
             if data.get("sb_command") == "sb_start" and status:
                 return JsonResponse({
+                    "sb_success": True,
                     "sb_status": status,
                 }, status=202)
             elif data.get("sb_command") == "sb_start" and not status:
                 return JsonResponse({
+                    "sb_success": False,
                     "sb_status": status,
                     "error": "Unable to start scoreboard process."
                 }, status=400)
 
             if data.get("sb_command") == "sb_stop" and not status:
                 return JsonResponse({
+                    "sb_success": True,
                     "sb_status": status,
                 }, status=202)
             elif data.get("sb_command") == "sb_stop" and status:
                 return JsonResponse({
+                    "sb_success": False,
                     "sb_status": status,
                     "error": "Unable to stop scoreboard process, or no running process found."
                 }, status=400)
         
         except subprocess.CalledProcessError as error:
             return JsonResponse({
-                "sb_command": False,
+                "sb_success": False,
                 "error": str(error),
             }, status=400)
 

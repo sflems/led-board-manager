@@ -279,7 +279,7 @@ $('#sb-toggle').change(function() {
 	.then(response => response.json())
 	.then(result => {
 		console.log(result);
-		if (result.sb_status != true) {
+		if (result.sb_success != true) {
 			console.log(result);
 			$('#sb-toggle').bootstrapToggle('off', true);
 			document.querySelector('#message').innerHTML = `
@@ -291,7 +291,11 @@ $('#sb-toggle').change(function() {
 				</div>  
 			`;
 		} else {
-			location.reload();
+			if (result.sb_status) {
+				$('#sb-toggle').bootstrapToggle('on', true);
+			} else {
+				$('#sb-toggle').bootstrapToggle('off', true);
+			};
 		};			
 	});
 });
