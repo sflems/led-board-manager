@@ -179,7 +179,7 @@ Either follow the next step to setup server autostart, or see [usage instruction
 
 ## Auto-Starting the server @ boot: 
 #### OPTION 1: Create a Supervisor Config to start the GUI with Gunicorn (PREFERRED):
-###### Either:
+
 Add...
 ```
 /home/pi/nhl-led-scoreboard-webgui/supervisor-daemon.conf
