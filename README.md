@@ -3,7 +3,7 @@
 
 #### Latest Releases
 ##### Web GUI
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/sflems/nhl-led-scoreboard-webgui?label=version)](https://github.com/sflems/nhl-led-scoreboard-webgui/releases/latest)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/sflems/nhl-led-scoreboard-webgui?label=version)](https://github.com/sflems/nhl-led-scoreboard-webgui/releases)
 
 ##### NHL LED Scoreboard:
 [![GitHub release (latest by date)](https://badgen.net/github/release/riffnshred/nhl-led-scoreboard?label=Version)](https://github.com/riffnshred/nhl-led-scoreboard/releases/latest)
@@ -88,7 +88,7 @@ cd nhl-led-scoreboard-webgui
 ```
 #### First Steps
 
-###### To fully integrate with `supervisor`, [install supervisor](#install-supervisor-as-root) and then return here for the _easy_ install method.
+###### Integrate with `supervisor`, [install supervisor](#install-supervisor-as-root) and then return here for the _easy_ install method.
 ###### If you have an active install, you can skip to [Auto-Starting the Server](#auto-starting-the-server--boot), then return here.
 
 ###### Install and Start `python3-venv`: 
@@ -136,7 +136,6 @@ python3 -m pip install supervisor
 
 systemctl unmask supervisord
 systemctl enable supervisord 
-systemctl disable supervisord
 su pi
 
 mv sample.supervisor-daemon.conf supervisor-daemon.conf
