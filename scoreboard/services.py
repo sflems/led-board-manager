@@ -42,7 +42,7 @@ def conf_path():
 # Opens default config from current config in the nhl-led-scoreboard folder if found, otherwise from static config, and then loads into Settings Profile
 ## TRY TO GET DEFAULT FROM SCOREBOARD .default DIR, then fallback.
 def conf_default():
-    config_file = os.path.join(conf_path(), "config.json")
+    config_file = os.path.join(conf_path(), ".default", "config.json.sample")
     if not os.path.exists(config_file):
         config_file = os.path.join(config.GUI_DIR, "scoreboard/static/schema/config.json")
     with open(config_file, "r") as f:
