@@ -39,19 +39,21 @@ JSON can also be edited manually in the `/admin` interface. __Be Careful!__ The 
 _____________
 
 ## Features
-- Today's NHL Games Dashboard
+- GUI / Today's NHL Games Dashboard
+  - Easily Toggle your scoreboard On and Off
+  - Profile Status & Resource Monitor
 - Profiles Dashboard
-  - Manage Configurations in an easy to use Dashboard
+  - Manage Configurations on the Fly
   - Create Configurations with a Simple Form (based on the current NHL LED Scoreboard schema)
   - Configuration/Profile Backup
 - Supervisor Integration ([Optional](#option-1-create-a-supervisor-config-to-start-the-gui-with-gunicorn-preferred))
-  - Activating A Profile Restarts the Scoreboard Process
+  - Activating A Profile Updates the Scoreboard Live
   - Scoreboard Status Monitor
 - Pi Commands
+  - Scoreboard On/Off Toggle
   - Stop Server
   - Reboot
   - Shutdown
-- Profile Status & Resource Monitor
 - Admin Dashboard
   - Profiles Management
   - User Management
