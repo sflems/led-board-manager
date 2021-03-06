@@ -188,28 +188,6 @@ Add the following __to the end of the `files =` line__, under the`[Include]` sec
 files = /etc/supervisor/conf.d/*.conf /home/pi/nhl-led-scoreboard-webgui/supervisor-daemon.conf
 ```
 
-###### Or:
-Create a new supervisor config with the command:
-`sudo nano /etc/supervisor/conf.d/scoreboard-webgui.conf`
-
-And copy into it the following contents:
-_Be sure to change the `pi` username _if_ you have done so._
-
-```
-[program:scoreboard-webgui]
-command=/home/pi/nhl-led-scoreboard-webgui/env/bin/gunicorn Capstone.wsgi -b 0:9002
-directory=/home/pi/nhl-led-scoreboard-webgui
-autostart=true
-user=pi
-stopasgroup=true
-stderr_logfile=/var/log/scoreboard-webgui.stderr.log
-stderr_logfile_maxbytes=1MB
-stderr_logfile_backups=10
-stdout_logfile=/var/log/scoreboard-webgui.stdout.log
-stdout_logfile_maxbytes=1MB
-stdout_logfile_backups=10
-```
-
 #### OPTION 2: Create a script and use `rc.local` to autostart the devserver on startup:
 We're going to use the Raspberry Pi's `/etc/rc.local` file to start our script on boot. In the `/nhl-led-scoreboard-webgui` folder, create a new file using:
 
@@ -262,9 +240,15 @@ sudo rm -rfv nhl-led-scoreboard-webgui
 ```
 Any profiles backed up from the GUI and the config file will remain in the `config/` directory.
 
-##### Remove the Supervisor Configuration if present:
+##### Remove the Supervisor Configuration if present. Change the following:
 ```
-sudo rm /etc/supervisor/conf.d/scoreboard-webgui.conf
+[include]
+files = /etc/supervisor/conf.d/*.conf /home/pi/nhl-led-scoreboard-webgui/supervisor-daemon.conf
+```
+Back to:
+```
+[include]
+files = /etc/supervisor/conf.d/*.conf
 ```
 
 ##### Remove the `rc.local` Configuration if present:
