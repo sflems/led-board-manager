@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed, JsonResponse
 from django.core.exceptions import FieldError
 from constance import config
+from time import sleep
 
 from .forms import SettingsDetailForm
 from django_jsonforms.forms import JSONSchemaForm
@@ -31,6 +32,45 @@ def index(request):
 @login_required
 def command(request):
     data = json.loads(request.body)
+
+    # Command to start/stop the scoreboard
+    if request.method == "PUT" and data.get("sb_command"):
+        try:
+            if data.get("sb_command") == "sb_start":
+                command = ["sudo supervisorctl restart " + config.SUPERVISOR_PROGRAM_NAME]
+            else:
+                command = ["sudo supervisorctl stop " + config.SUPERVISOR_PROGRAM_NAME]
+            
+            subprocess.check_call(command, shell=True)
+            sleep(3)
+            status = services.proc_status()
+
+            if data.get("sb_command") == "sb_start" and status:
+                return JsonResponse({
+                    "sb_status": status,
+                }, status=202)
+            elif data.get("sb_command") == "sb_start" and not status:
+                return JsonResponse({
+                    "sb_status": status,
+                    "error": "Unable to start scoreboard process."
+                }, status=400)
+
+            if data.get("sb_command") == "sb_stop" and not status:
+                return JsonResponse({
+                    "sb_status": status,
+                }, status=202)
+            elif data.get("sb_command") == "sb_stop" and status:
+                return JsonResponse({
+                    "sb_status": status,
+                    "error": "Unable to stop scoreboard process, or no running process found."
+                }, status=400)
+        
+        except subprocess.CalledProcessError as error:
+            return JsonResponse({
+                "sb_command": False,
+                "error": str(error),
+            }, status=400)
+
     if request.method == "PUT" and data.get("autostart"):
         try:
             # Autostart toggle option for autostart.sh or supervisor here
@@ -48,9 +88,9 @@ def command(request):
         try:
             # Checks if process is supervisor run
             if not services.gui_status():
-                command = ["kill " + str(os.getpid())]
+                command = ["sleep 5 ; kill " + str(os.getpid())]
             else:
-                command = ["sudo supervisorctl stop " + config.SUPERVISOR_GUI_NAME]
+                command = ["sleep 5 ; sudo supervisorctl stop " + config.SUPERVISOR_GUI_NAME]
             
             subprocess.check_call(command, shell=True)
         

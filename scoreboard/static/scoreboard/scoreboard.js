@@ -259,6 +259,43 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 });
 
+$('#sb-toggle').change(function() {
+	if ($(this).prop('checked')) {
+		var command = "sb_start";
+	} else {
+		var command = "sb_stop";
+	};
+
+	const url = document.getElementById('sb-toggle').dataset.url;
+	const csrftoken = Cookies.get('csrftoken');
+
+	fetch(`${url}`, {
+		headers: {'X-CSRFToken': csrftoken},
+		method: 'PUT',
+		body: JSON.stringify({
+			"sb_command": command
+		})
+	})
+	.then(response => response.json())
+	.then(result => {
+		console.log(result);
+		if (result.sb_status != true) {
+			console.log(result);
+			$('#sb-toggle').bootstrapToggle('off', true);
+			document.querySelector('#message').innerHTML = `
+				<div class="alert alert-danger alert-dismissible fade show">
+					<strong>Error!</strong> <small>Unable to change scoreboard process.</small> (ERROR: ${result.error})
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>  
+			`;
+		} else {
+			location.reload();
+		};			
+	});
+});
+
 function sysinfo() {
 	function handleErrors(response) {
 		if (!response.ok) {
@@ -290,10 +327,12 @@ function sysinfo() {
 			$('div#scoreboard-status').html(`
 				<p class="m-0 status">Scoreboard Status: Supervisor Process Not Running <img src="/static/scoreboard/x-square-fill.svg" class="x-square-fill" width="24" height="24"></p>
 			`);
+			$('#sb-toggle').bootstrapToggle('off', true);
 		} else {
 			$('div#scoreboard-status').html(`
 				<p class="m-0 status">Scoreboard Status: Running <img src="/static/scoreboard/check-square-fill.svg" class="x-square-fill" width="24" height="24"></p>
 			`);
+			$('#sb-toggle').bootstrapToggle('on', true);
 		};
 	})
 	.catch(error => {

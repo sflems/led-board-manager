@@ -62,6 +62,15 @@ h1, h2, h3, h4, h5, th {
     height: 2.5em!important;
 }
 
+/* On/Off Toggle */
+.toggle.btn {
+    min-width: 4rem;
+}
+
+.toggle-off.btn {
+    padding-left: 1rem;
+}
+
 /* Footer */
 p.resource {
     white-space: break-spaces;
