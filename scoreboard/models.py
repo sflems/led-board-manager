@@ -100,8 +100,9 @@ def post_save(sender, instance, **kwargs):
 
         # Command attemps to restart scoreboard via supervisorctl
         try:
-            command = "sudo supervisorctl update " + config.SUPERVISOR_PROGRAM_NAME
-            subprocess.check_call(command, shell=True)
+            if services.proc_status():
+                command = "sudo supervisorctl restart " + config.SUPERVISOR_PROGRAM_NAME
+                subprocess.check_call(command, shell=True)
             
         except subprocess.CalledProcessError as error:
             return error
