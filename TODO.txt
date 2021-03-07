@@ -10,6 +10,7 @@
  Backend
 ---------
 TODO: DRF.
+TODO: UNITTESTS!
 
  HTML/CSS/JS
 ---------
@@ -19,3 +20,6 @@ TODO: DRF.
 
  Misc.
 -------
+TODO: List GUI & Scoreboard Versions in Footer + Update Check
+TODO: Check if Active Config matches saved config.json
+TODO: NHL => MLB Scoreboard Toggler
