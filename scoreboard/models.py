@@ -75,10 +75,15 @@ class Settings(models.Model):
 #            super(Settings, self).save(*args, **kwargs)
 
     def save_to_file(self):
-        path = services.conf_path()
-        with open(path, "w") as outfile:
-            json.dump(self.config, outfile, indent=4)
-            return path
+        keepcharacters = (' ','.','_')
+        filename =  "".join(c for c in self.name if c.isalnum() or c in keepcharacters).rstrip().replace(" ", "-")
+        if os.path.isfile(filename):
+            raise ValueError("File already exists. Rename profile before saving to file.")
+        else:
+            path = services.conf_path() + filename.lower() + ".config.json"
+            with open(path, "w") as outfile:
+                json.dump(self.config, outfile, indent=4)
+                return path
 
 @receiver(pre_save, sender=Settings)
 def pre_save(sender, instance, **kwargs):
