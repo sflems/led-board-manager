@@ -16,9 +16,9 @@ class Tests(unittest.TestCase):
         path = conf_path()
         self.assertIsNotNone(path)
 
+    # Expand schema validation tests here
     def test_schema_exists(self):
-        path = schema()
-        self.assertIsNotNone(path)
+        self.assertIsNotNone(schema())
 
 """
 class SettingsTestCase(TestCase):
