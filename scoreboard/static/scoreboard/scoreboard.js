@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#sb-toggle').ready(function(){
 		$('div.toggle-group').click(function(){
 			clearInterval(toggleTimer);
-			console.log("CLICKED")
+			console.log("On/Off Toggled");
 		});
 	});
 
