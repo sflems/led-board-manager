@@ -76,11 +76,11 @@ class Settings(models.Model):
 
     def save_to_file(self):
         keepcharacters = (' ','.','_')
-        filename =  "".join(c for c in self.name if c.isalnum() or c in keepcharacters).rstrip().replace(" ", "-")
+        filename =  "".join(c for c in self.name if c.isalnum() or c in keepcharacters).rstrip().replace(" ", "-") + ".config.json"
         if os.path.isfile(filename):
             raise ValueError("File already exists. Rename profile before saving to file.")
         else:
-            path = services.conf_path() + filename.lower() + ".config.json"
+            path = os.path.join(services.conf_path(), filename.lower())
             with open(path, "w") as outfile:
                 json.dump(self.config, outfile, indent=4)
                 return path
