@@ -5,9 +5,9 @@ name: Python application
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, sflems-testingci-1 ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, sflems-testingci-1 ]
 
 jobs:
   build:
