@@ -9,9 +9,23 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-import os
+import os, subprocess
 from secret_key_generator import secret_key_generator
 from django.core.validators import MaxValueValidator, MinValueValidator, MaxLengthValidator,  MinLengthValidator
+
+# Get Pi's Configured Timezone - Can see this breaking with a timedatectl update. Fallbacks are in place... but not bulletproof. Maybe add to constance?
+def pi_tz():
+    try:
+        output = subprocess.Popen("timedatectl", shell=True, stdout=subprocess.PIPE)
+        for line in output.stdout:
+            strline = line.decode('utf-8')
+            if strline.find("Time zone") != -1 and len(strline.lstrip("Time zone: ").split()[0]) > 2 :
+                return strline.lstrip("Time zone: ").split()[0]
+            else:
+                return "America/Toronto"
+    except:
+        return "America/Toronto"
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -92,7 +106,9 @@ CONSTANCE_ADDITIONAL_FIELDS = {
 
     'good_slug': ['django.forms.SlugField', {}],
 
-    'disabled': ['django.forms.SlugField', {
+    'good_url': ['django.forms.URLField', {}],
+
+    'disabled': ['django.forms.CharField', {
         "disabled": True
     }],
     
@@ -100,7 +116,7 @@ CONSTANCE_ADDITIONAL_FIELDS = {
 }
 
 CONSTANCE_CONFIG = {
-    'GUI_DIR': (gui_path, 'Path to GUI Directory', 'good_slug'),
+    'GUI_DIR': (gui_path, 'Path to GUI Directory', str),
     'MONITOR_INTERVAL': (10, 'Resource monitor system ping interval in seconds.', 'monitor_min'),
     'SCOREBOARD_DIR': (scoreboard_path, 'Path to NHL LED Scoreboard Directory. Change in Capstone/settings.py', 'disabled'),
     'SUPERVISOR_PROGRAM_NAME': ('scoreboard', 'ie. [program:scoreboard] from /etc/supervisor/conf.d/scoreboard.conf', 'good_slug'),
@@ -131,7 +147,7 @@ CONSTANCE_CONFIG = {
     'TEST_GOAL_ANIMATION': (False, "A flag to test the goal animation.", bool),
     'GHTOKEN': ("", 'Github API token for doing update checks.', str),
     'UPDATECHECK': (True, 'Enable update check.', bool),
-    'UPDATE_REPO': ('https://github.com/riffnshred/nhl-led-scoreboard', 'Enable update check.', 'good_slug'),
+    'UPDATE_REPO': ('https://github.com/riffnshred/nhl-led-scoreboard', 'Enable update check.', 'good_url'),
 }
 
 CONSTANCE_CONFIG_FIELDSETS = {
@@ -250,7 +266,8 @@ LOGIN_URL = 'login'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'America/Vancouver'
+# TO DO: Need a function here to automagically pull TZ from timedatectl shell command
+TIME_ZONE = pi_tz()
 
 USE_I18N = True
 
