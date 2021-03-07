@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from secret_key_generator import secret_key_generator
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -60,9 +61,16 @@ INSTALLED_APPS = [
 scoreboard_path = os.path.dirname(BASE_DIR) + "/nhl-led-scoreboard"
 gui_path = os.path.dirname(BASE_DIR) + "/nhl-led-scoreboard-webgui"
 
+# Admin Field Modifcations go here.
+CONSTANCE_ADDITIONAL_FIELDS = {
+    'monitor_min': ['django.forms.IntegerField', {
+        "validators": [MinValueValidator(5)]
+    }]
+}
+
 CONSTANCE_CONFIG = {
     'GUI_DIR': (gui_path, 'Path to GUI Directory'),
-    'MONITOR_INTERVAL': (10, 'Resource monitor system ping interval in seconds.', int),
+    'MONITOR_INTERVAL': (10, 'Resource monitor system ping interval in seconds.', 'monitor_min'),
     'SCOREBOARD_DIR': (scoreboard_path, 'Path to NHL LED Scoreboard Directory'),
     'SUPERVISOR_PROGRAM_NAME': ('scoreboard', 'ie. [program:scoreboard] from /etc/supervisor/conf.d/scoreboard.conf'),
     'SUPERVISOR_GUI_NAME': ('scoreboard-webgui', 'ie. [program:scoreboard-webgui] from /etc/supervisor/conf.d/scoreboard-webgui.conf'),
@@ -93,19 +101,9 @@ CONSTANCE_CONFIG = {
     'GHTOKEN': ("", 'Github API token for doing update checks.', str),
     'UPDATECHECK': (True, 'Enable update check.', bool),
     'UPDATE_REPO': ('https://github.com/riffnshred/nhl-led-scoreboard', 'Enable update check.', str),
-
-
-
 }
 
 CONSTANCE_CONFIG_FIELDSETS = {
-    'WebGUI Configuration': (
-        'GUI_DIR',
-        'MONITOR_INTERVAL',
-        'SCOREBOARD_DIR',
-        'SUPERVISOR_PROGRAM_NAME',
-        'SUPERVISOR_GUI_NAME',
-    ),
     'Scoreboard Flags': {
         'fields': (
             'LED_ROWS',
@@ -136,6 +134,13 @@ CONSTANCE_CONFIG_FIELDSETS = {
         ),
         'collapse': False
     },
+     'WebGUI Configuration': (
+        'GUI_DIR',
+        'MONITOR_INTERVAL',
+        'SCOREBOARD_DIR',
+        'SUPERVISOR_PROGRAM_NAME',
+        'SUPERVISOR_GUI_NAME',
+    ),
 }
 
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'

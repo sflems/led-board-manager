@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
+	var interval = document.getElementById('monitor-card').dataset.interval*1000;
+	var toggleTimer = setInterval(sysinfo, interval)
 
 	// Use buttons to toggle between views
 	$('#index').click(function () {
@@ -44,13 +46,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			`);
 		});
 	});
-
-	var interval = document.getElementById('monitor-card').dataset.interval*1000;
-	let toggleTimer = setInterval(sysinfo, interval);
 	
-	$('div#monitor-card').ready(function () {
+	$('div#monitor-card').ready(function(){
 		sysinfo();
-		toggleTimer
+		toggleTimer;
 	});
 
 	// Auto-collapses json forms for easier viewing on load. The "collapsed" option does not work!
@@ -261,10 +260,16 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
-	$('#sb-toggle').change(function() {
-		// Clears the Scoreboard Toggle On/Off check. So button doesnt temporarily flip back after turning board on/off.
-		clearInterval(toggleTimer);
-		
+	// Clears the Scoreboard Toggle On/Off check. So button doesnt temporarily flip back after turning board on/off.	
+	$('#sb-toggle').ready(function(){
+		$('div.toggle-group').click(function(){
+			clearInterval(toggleTimer);
+			console.log("CLICKED")
+		});
+	});
+
+	$('#sb-toggle').change(function(){
+			
 		if ($(this).prop('checked')) {
 			var command = "sb_start";
 		} else {
@@ -302,6 +307,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					$('#sb-toggle').bootstrapToggle('off', true);
 				}
 				toggleTimer = setInterval(sysinfo, interval)
+				setTimeout(toggleTimer, 3000)
 			};			
 		});
 	});
