@@ -13,19 +13,14 @@ import os, subprocess
 from secret_key_generator import secret_key_generator
 from django.core.validators import MaxValueValidator, MinValueValidator, MaxLengthValidator,  MinLengthValidator
 
-# Get Pi's Configured Timezone - Can see this breaking with a timedatectl update. Fallbacks are in place... but not bulletproof. Maybe add to constance?
+# Get Pi's Configured Timezone. Fallback to 'America/Toronto'.
 def pi_tz():
-    try:
-        output = subprocess.Popen("timedatectl", shell=True, stdout=subprocess.PIPE)
-        for line in output.stdout:
-            strline = line.decode('utf-8')
-            if strline.find("Time zone") != -1 and len(strline.lstrip("Time zone: ").split()[0]) > 2 :
-                return strline.lstrip("Time zone: ").split()[0]
-            else:
-                return "America/Toronto"
-    except:
-        return "America/Toronto"
-
+    if os.path.isfile("/etc/timezone"):
+        with open("/etc/timezone", "r") as f:
+            line = f.read().rstrip()
+            while line:
+                return line
+    return 'America/Toronto'        
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
