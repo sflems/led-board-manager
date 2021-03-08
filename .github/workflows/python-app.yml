@@ -25,6 +25,11 @@ jobs:
         python3 -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        echo cwd
+        mkdir ../nhl-led-scoreboard/config
+        cp scoreboard/static/schema/config.schema.json ../nhl-led-scoreboard/config
+        cp coreboard/static/schema/config.json.sample ../nhl-led-scoreboard/config
+        
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
