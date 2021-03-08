@@ -33,7 +33,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with Django unittests
       run: |
-        mkdir ../nhl-led-scoreboard/config
+        mkdir -p ../nhl-led-scoreboard/config
         cp scoreboard/static/schema/config.schema.json ../nhl-led-scoreboard/config
         cp coreboard/static/schema/config.json.sample ../nhl-led-scoreboard/config
         python3 manage.py test
