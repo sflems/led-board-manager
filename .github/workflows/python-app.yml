@@ -35,5 +35,5 @@ jobs:
       run: |
         mkdir -p ../nhl-led-scoreboard/config
         cp scoreboard/static/schema/config.schema.json ../nhl-led-scoreboard/config
-        cp coreboard/static/schema/config.json.sample ../nhl-led-scoreboard/config
+        cp scoreboard/static/schema/config.json.sample ../nhl-led-scoreboard/config
         python3 manage.py test
