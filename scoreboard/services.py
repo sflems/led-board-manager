@@ -33,7 +33,7 @@ def gui_status():
 
 # defines the users home/user/nhl-led-scoreboard/config folder path.
 def conf_path():
-    path = os.path.join(config.SCOREBOARD_DIR, 'configssss/')
+    path = os.path.join(config.SCOREBOARD_DIR, 'config/')
     if not os.path.isdir(path):
         raise ValueError("Scoreboard config directory not found. Check SCOREBOARD_DIR (path) configuration in Admin Panel. Configured path: \"" + conf_path() + "\"")
     else:

@@ -20,11 +20,15 @@ class Tests(unittest.TestCase):
     def test_schema_exists(self):
         self.assertIsNotNone(schema())
 
-"""
 class SettingsTestCase(TestCase):
-
     # Sample Data
-    def SetUp(self):
+    def setUp(self):
         Settings.objects.create(name="Test Profile", config=conf_default(), isActive=True)
         Settings.objects.create(name="Test Profile2", config=conf_default(), isActive=False)
-"""
+
+'''
+    def test_valid_config(self):
+        # For properties in config, validated against properties from schema.j
+        # ...Or use fastjsonschema
+'''
+
