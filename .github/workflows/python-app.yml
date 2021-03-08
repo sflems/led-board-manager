@@ -5,9 +5,11 @@ name: Django Tests
 
 on:
   push:
-    branches: [ main, sflems-testingci-1 ]
+    branches: [ main ]
+    tags:
+    - 'v*'
   pull_request:
-    branches: [ main, sflems-testingci-1 ]
+    branches: [ main, dev ]
 
 jobs:
   build:
