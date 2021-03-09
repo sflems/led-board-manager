@@ -18,9 +18,9 @@ def pi_tz():
     if os.path.isfile("/etc/timezone"):
         with open("/etc/timezone", "r") as f:
             line = f.read().rstrip()
-            while line:
+            while "America" in line:
                 return line
-    return 'America/Toronto'        
+    return 'America/Toronto'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
