@@ -1,6 +1,6 @@
 # NHL LED Scoreboard Web GUI & Configurator
 #### A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
-
+ 
 #### Latest Releases
 ##### Web GUI
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/sflems/nhl-led-scoreboard-webgui?label=version)](https://github.com/sflems/nhl-led-scoreboard-webgui/releases) [![Django Tests](https://github.com/sflems/nhl-led-scoreboard-webgui/actions/workflows/python-app.yml/badge.svg)](https://github.com/sflems/nhl-led-scoreboard-webgui/actions/workflows/python-app.yml)

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-import os, subprocess
+import os, pytz, subprocess
 from secret_key_generator import secret_key_generator
 from django.core.validators import MaxValueValidator, MinValueValidator, MaxLengthValidator,  MinLengthValidator
 
@@ -17,8 +17,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator, MaxLeng
 def pi_tz():
     if os.path.isfile("/etc/timezone"):
         with open("/etc/timezone", "r") as f:
-            line = f.read().rstrip()
-            while "America" in line:
+            line = f.read().strip()
+            while line in pytz.common_timezones:
                 return line
     return 'America/Toronto'
 
