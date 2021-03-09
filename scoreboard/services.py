@@ -6,6 +6,7 @@ from gpiozero import CPUTemperature
 from .models import *
 from constance import config, settings
 from constance.signals import admin_form_save
+from Capstone.settings import TEST_MODE
 
 # Supervisor Commands for NHL Led Scoreboard
 def proc_status():
