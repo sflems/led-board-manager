@@ -12,7 +12,7 @@ class Tests(unittest.TestCase):
 
     
     def test_valid_pi_tz(self):
-        tz = pi_tz()
+        tz = settings.TIME_ZONE
         valid_tzs = pytz.all_timezones
         self.assertIn(tz, valid_tzs)
 
