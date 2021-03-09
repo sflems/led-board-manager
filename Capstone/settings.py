@@ -36,8 +36,8 @@ SECRET_KEY = secret_key_generator.generate()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# Activates demo mode: Uses static configs/schmea for CS50 demo purposes.
-DEMO_CS50 = False
+# Activates testing mode: Uses static configs/schmea for unittest purposes. Uses `testing/` directory.
+TEST_MODE = False
 
 # Allows server to be hosted on local subnet with unrestricted IPs. Make sure your firewall is accepting local network traffic only!!!
 # This can be modified for your local subnet. See below.
@@ -274,7 +274,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
+STATIC_ROOT = os.path.join(BASE_DIR, 'scoreboard/static') 
 STATIC_URL = '/static/'
 STATIC_FILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 

@@ -6,6 +6,7 @@ from django.db.models.signals import pre_save, post_save, pre_delete
 from django.dispatch import receiver
 from django.core.exceptions import *
 from constance import config
+from django.conf import settings
 import json, os, subprocess
 from . import services
 
@@ -68,12 +69,6 @@ class Settings(models.Model):
             "isActive": self.isActive,
         }
 
-#    def save(self, *args, **kwargs):
-#        if not os.path.isdir(services.conf_path()):
-#            raise ValueError("Config directory not found.")
-#        else:
-#            super(Settings, self).save(*args, **kwargs)
-
     def save_to_file(self):
         keepcharacters = (' ','.','_')
         filename =  "".join(c for c in self.name if c.isalnum() or c in keepcharacters).rstrip().replace(" ", "-") + ".config.json"
@@ -105,7 +100,7 @@ def post_save(sender, instance, **kwargs):
 
         # Command attemps to restart scoreboard via supervisorctl
         try:
-            if services.proc_status():
+            if services.proc_status() and not settings.TEST_MODE:
                 command = "sudo supervisorctl restart " + config.SUPERVISOR_PROGRAM_NAME
                 subprocess.check_call(command, shell=True)
             
