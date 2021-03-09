@@ -22,6 +22,7 @@ class Tests(unittest.TestCase):
         self.assertIsNotNone(path)
 
     # Expand schema validation tests here
+    @override_config(SCOREBOARD_DIR=os.path.join(config.GUI_DIR, "testing"))
     def test_get_schema(self):
         self.assertIsNotNone(schema())
 
