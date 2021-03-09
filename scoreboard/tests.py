@@ -28,14 +28,19 @@ class Tests(unittest.TestCase):
 
 # Test Server Responses
 class SimpleTest(TestCase):
-    def test_index(self):
+    def test_index_redirect(self):
         client = Client()
         response = client.get('/')
         self.assertRedirects(response, '/login?next=/')
 
-    def test_default_login(self):
+    def test_login_page(self):
         client = Client()
         response = client.get('/login?next=/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_default_login(self):
+        client = Client()
+        response = client.post('/login?next=/', {'username':'admin', 'password':'scoreboard'})
         self.assertEqual(response.status_code, 200)
 
 # Settings Model / Config Tests
