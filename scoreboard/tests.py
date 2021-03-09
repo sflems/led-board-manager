@@ -53,11 +53,12 @@ class SettingsTestCase(TestCase):
             self.assertTrue(os.path.isfile(p1))
 
     def tearDown(self):
-        if os.path.exists(os.path.join(config.SCOREBOARD_DIR, "testing/config/test-profile.config.json")):
+        if os.path.isfile(os.path.join(config.GUI_DIR, "testing/config/test-profile.config.json")):
             os.remove("testing/config/config.json")
 
-        if os.path.exists(os.path.join(config.SCOREBOARD_DIR, "testing/config/test-profile.config.json")):
+        if os.path.isfile(os.path.join(config.GUI_DIR, "testing/config/test-profile.config.json")):
             os.remove("testing/config/test-profile.config.json")
+            
 '''
     def test_valid_config(self):
         # For properties in config, validated against properties from schema.j
