@@ -58,6 +58,8 @@ autorun2.sh
 *.out
 *.log
 local_settings.py
+testing/
+!testing/config/config.schema.json
 
 # Flask stuff:
 instance/
