@@ -78,33 +78,26 @@ class Settings(models.Model):
             path = os.path.join(services.conf_path(), filename.lower())
             with open(path, "w") as outfile:
                 json.dump(self.config, outfile, indent=4)
-                return path
+                return path      
 
-    def is_valid_config(self):
-
-        valid = False
-
-        if self.config == "":
-            raise ValidationError("Config empty. Cannot have an empty config!")
-
-        if self.config == None:
-            raise ValidationError("Config cannot be None type.")
-
-        return valid
-
+# Checks before model/config save, ie custom validation
 @receiver(pre_save, sender=Settings)
 def pre_save(sender, instance, **kwargs):
+    
+    # Validate entered config against scoreboard schema
+    fastjsonschema.validate(services.schema(), instance.config)
+
+    # Raise exception if config directory not found.
     if not os.path.isdir(services.conf_path()):
         raise ValueError("Config directory not found.")
-    try:
-        instance.is_valid_config()
-        active_profiles = Settings.objects.filter(isActive=True).exclude(name=instance.name)
-        if instance.isActive and active_profiles:
-                for profile in active_profiles:
-                    profile.isActive = False
-                    profile.save()
-    except:
-        return instance.full_clean()
+
+    # If config is marked as active, deactivate any other active configs.
+    active_profiles = Settings.objects.filter(isActive=True).exclude(name=instance.name)
+    if instance.isActive and active_profiles:
+            for profile in active_profiles:
+                profile.isActive = False
+                profile.save()
+
 
 # Saves config file to nhl-led-scoreboard directory if set as active
 @receiver(post_save, sender=Settings)

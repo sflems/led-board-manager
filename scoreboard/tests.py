@@ -1,4 +1,4 @@
-import json, os, pytz, unittest
+import fastjsonschema, json, os, pytz, unittest
 from django.test import Client, TestCase, override_settings
 from constance import config
 from constance.test import override_config
@@ -72,13 +72,14 @@ class SettingsTestCase(TestCase):
         Settings.objects.create(name="Test Profile4", config=self.conf3, isActive=True)
         
         # These Configs should fail (TO DO: Expand me.)
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(fastjsonschema.exceptions.JsonSchemaValueException):
             Settings.objects.create(name="Test Profile5", config=None, isActive=True)
-            self.fail("Config with None type FAILED")
+            self.fail()
 
             Settings.objects.create(name="Test Profile6", config="", isActive=True)
-            self.fail("Config with empty string FAILED")
+            self.fail()
     
+    # Confirm the following actions based on test setup. Checks custom GUI model logic.
     def test_count_settings(self):
         self.assertEqual(Settings.objects.all().count(), 4)
 
