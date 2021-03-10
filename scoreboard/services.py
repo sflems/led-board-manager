@@ -3,7 +3,7 @@ from django.utils.formats import localize
 from django.http import Http404
 import json, os, psutil, requests, subprocess
 from gpiozero import CPUTemperature
-from .models import *
+from django.dispatch import receiver
 from constance import config, settings
 from constance.signals import admin_form_save
 
