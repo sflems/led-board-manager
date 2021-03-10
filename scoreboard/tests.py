@@ -3,7 +3,6 @@ from django.test import Client, TestCase, override_settings
 from constance import config
 from constance.test import override_config
 from django.conf import settings
-from django.core.exceptions import *
 from scoreboard.services import conf_path, conf_default, schema
 from scoreboard.models import Settings
 
@@ -15,8 +14,8 @@ class Tests(unittest.TestCase):
         valid_tzs = pytz.common_timezones
         self.assertIn(tz, valid_tzs)
 
-   # Checks conf_path() base on constance path configuration.
-    @override_config(SCOREBOARD_DIR=os.path.join(config.GUI_DIR, "testing"))    
+    # Checks conf_path() base on constance path configuration.
+    @override_config(SCOREBOARD_DIR=os.path.join(config.GUI_DIR, "testing"))
     def test_conf_path_exists(self):
         path = conf_path()
         self.assertIsNotNone(path)
@@ -43,14 +42,13 @@ class SimpleTest(TestCase):
 
     def test_default_login(self):
         client = Client()
-        response = client.post('/login?next=/', {'username':'admin', 'password':'scoreboard'})
+        response = client.post('/login?next=/', {'username': 'admin', 'password': 'scoreboard'})
         self.assertEqual(response.status_code, 200)
 
 # Settings Model / Config Tests
 @override_settings(TEST_MODE=True)
 @override_config(SCOREBOARD_DIR=os.path.join(config.GUI_DIR, "testing"))
 class SettingsTestCase(TestCase):
-    
     # Dummy Confs used in setUp().
     def conf1(self):
         with open(os.path.join(config.GUI_DIR, "scoreboard/static/schema/config.json.sample"), "r") as f:
@@ -66,14 +64,11 @@ class SettingsTestCase(TestCase):
 
         # Default Config Provided with services.conf_default() function.
         Settings.objects.create(name="Test Profile1", config=conf_default(), isActive=True)
-        
-        #Sample Config Provided with GUI 
+        # Sample Config Provided with GUI
         Settings.objects.create(name="Test Profile2", config=self.conf1(), isActive=True)
-
         # Dummy confs)
         Settings.objects.create(name="Test Profile3", config=self.conf2, isActive=False)
         Settings.objects.create(name="Test Profile4", config=self.conf3, isActive=True)
-        
         # These Configs should fail (TO DO: Expand me.)
         with self.assertRaises(fastjsonschema.exceptions.JsonSchemaValueException):
             Settings.objects.create(name="Test Profile5", config=None, isActive=True)
@@ -88,16 +83,15 @@ class SettingsTestCase(TestCase):
 
     def test_count_active(self):
         self.assertEqual(Settings.objects.filter(isActive=1).count(), 1)
-        
+    
     def test_backup_save(self):
         p1 = Settings.objects.get(name="Test Profile1").save_to_file()
         self.assertTrue(os.path.isfile(p1))
  
-   # Removes created test files.
+    # Removes created test files.
     def tearDown(self):
         if os.path.isfile(os.path.join(config.GUI_DIR, "testing/config/config.json")):
             os.remove("testing/config/config.json")
 
         if os.path.isfile(os.path.join(config.GUI_DIR, "testing/config/test-profile1.config.json")):
             os.remove("testing/config/test-profile1.config.json")
-            

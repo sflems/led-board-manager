@@ -9,9 +9,9 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-import os, pytz, subprocess
+import os, pytz
 from secret_key_generator import secret_key_generator
-from django.core.validators import MaxValueValidator, MinValueValidator, MaxLengthValidator,  MinLengthValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, MaxLengthValidator, MinLengthValidator
 
 # Get Pi's Configured Timezone. Fallback to 'America/Toronto'.
 def pi_tz():
@@ -21,6 +21,7 @@ def pi_tz():
             while line in pytz.common_timezones:
                 return line
     return 'America/Toronto'
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -34,21 +35,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = secret_key_generator.generate()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # Activates testing mode: Uses static configs/schmea for unittest purposes. Uses `testing/` directory.
 TEST_MODE = False
 
 # Allows server to be hosted on local subnet with unrestricted IPs. Make sure your firewall is accepting local network traffic only!!!
-# This can be modified for your local subnet. See below.
+# This can be modified for your local subnet i.e. for subnet 192.168.0.0/16:
+# ALLOWED_HOSTS = ['192.168.{}.{}'.format(i,j) for i in range(256) for j in range(256)]
 ALLOWED_HOSTS = ['*']
 
-# i.e. for subnet 192.168.0.0/16
-# ALLOWED_HOSTS = ['192.168.{}.{}'.format(i,j) for i in range(256) for j in range(256)]
-
-
 # Application definition
-
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.admin',
@@ -92,7 +89,7 @@ CONSTANCE_ADDITIONAL_FIELDS = {
     }],
     'hat_choices': ['django.forms.fields.ChoiceField', {
         'widget': 'django.forms.Select',
-        'choices': (("regular","regular"), ("adafruit-hat","adafruit-hat"), ("adafruit-hat-pwm","adafruit-hat-pwm"))
+        'choices': (("regular", "regular"), ("adafruit-hat", "adafruit-hat"), ("adafruit-hat-pwm", "adafruit-hat-pwm"))
     }],
     'multiplexing': ['django.forms.fields.ChoiceField', {
         'widget': 'django.forms.Select',
@@ -106,8 +103,6 @@ CONSTANCE_ADDITIONAL_FIELDS = {
     'disabled': ['django.forms.CharField', {
         "disabled": True
     }],
-    
-
 }
 
 CONSTANCE_CONFIG = {
@@ -176,7 +171,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
         ),
         'collapse': False
     },
-     'WebGUI Configuration': (
+    'WebGUI Configuration': (
         'GUI_DIR',
         'MONITOR_INTERVAL',
         'SCOREBOARD_DIR',
