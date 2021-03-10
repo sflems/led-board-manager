@@ -11,6 +11,7 @@ django-crispy-forms==1.10.0
 django-jsonforms==1.1.2
 django-picklefield==3.0.1
 django-prettyjson==0.4.1
+fastjsonschema==2.15.0asgiref==3.3.1
 gpiozero==1.5.1
 gunicorn==20.0.4
 idna==2.10
