@@ -6,7 +6,6 @@ from gpiozero import CPUTemperature
 from .models import *
 from constance import config, settings
 from constance.signals import admin_form_save
-from Capstone.settings import TEST_MODE
 
 # Supervisor Commands for NHL Led Scoreboard
 def proc_status():
@@ -41,7 +40,7 @@ def conf_path():
         return path
 
 # Opens default config from current config in the nhl-led-scoreboard folder if found, otherwise from static config, and then loads into Settings Profile
-## TRY TO GET DEFAULT FROM SCOREBOARD .default DIR, then fallback.
+# TRY TO GET DEFAULT FROM SCOREBOARD .default DIR, then fallback.
 def conf_default():
     config_file = os.path.join(conf_path(), ".default", "config.json.sample")
     if not os.path.exists(config_file):
@@ -64,36 +63,36 @@ def schema():
 # startval takes in current settings (NOT VALIDATED AGAINST SCHEMA). Others modify which JSON editing options are visible to users, themes, etc.
 def form_options(startval):
     options = {
-            "startval": startval,
-            "theme": "bootstrap4",
-            "object_layout": "default",
-            "template": "default",
-            "show_errors": "interaction",
-            "required_by_default": 0,
-            "no_additional_properties": 1,
-            "display_required_only": 0,
-            "remove_empty_properties": 0,
-            "keep_oneof_values": 0,
-            "ajax": 1,
-            "ajaxCredentials": 0,
-            "show_opt_in": 0,
-            "disable_edit_json": 1,
-            "disable_collapse": 0,
-            "disable_properties": 1,
-            "disable_array_add": 0,
-            "disable_array_reorder": 0,
-            "disable_array_delete": 0,
-            "enable_array_copy": 0,
-            "array_controls_top": 1,
-            "disable_array_delete_all_rows": 1,
-            "disable_array_delete_last_row": 1,
-            "prompt_before_delete": 1,
-        }
+        "startval": startval,
+        "theme": "bootstrap4",
+        "object_layout": "default",
+        "template": "default",
+        "show_errors": "interaction",
+        "required_by_default": 0,
+        "no_additional_properties": 1,
+        "display_required_only": 0,
+        "remove_empty_properties": 0,
+        "keep_oneof_values": 0,
+        "ajax": 1,
+        "ajaxCredentials": 0,
+        "show_opt_in": 0,
+        "disable_edit_json": 1,
+        "disable_collapse": 0,
+        "disable_properties": 1,
+        "disable_array_add": 0,
+        "disable_array_reorder": 0,
+        "disable_array_delete": 0,
+        "enable_array_copy": 0,
+        "array_controls_top": 1,
+        "disable_array_delete_all_rows": 1,
+        "disable_array_delete_last_row": 1,
+        "prompt_before_delete": 1,
+    }
     return options
 
 # The below functions render the supervisor config file with django template logic to allow constance variables.
 # Taken from  deprecated django-supervisor pypi module. See https://github.com/rfk/django-supervisor for reference.
-def render_sv_config(data,ctx):
+def render_sv_config(data, ctx):
     """Render the given config data using Django's template system.
     This function takes a config data string and a dict of context variables,
     renders the data through Django's template system, and returns the result.
@@ -119,8 +118,8 @@ def sv_template():
         key = flag.lower().replace('_', '-')
         default = settings.CONFIG[str(flag)][0]
         value = str(getattr(config, flag))
-        default_args = ["led-brightness", "led-gpio-mapping", "led-slowdown-gpio",  "led-rows", "led-cols", "updatecheck",]
-        basic_args = ["led-show-refresh", "updatecheck",]
+        default_args = ["led-brightness", "led-gpio-mapping", "led-slowdown-gpio", "led-rows", "led-cols", "updatecheck", ]
+        basic_args = ["led-show-refresh", "updatecheck", ]
 
         def is_modified():
             return localize(value) != localize(default)
@@ -144,7 +143,7 @@ def sv_template():
 
     # Renders from daemon template with config and flags passed in as context.
     with open(path, "r") as f:
-        templated = render_sv_config(f.read(), { 'config': config, 'flags': flags, })
+        templated = render_sv_config(f.read(), {'config': config, 'flags': flags, })
 
     # Write it out to the corresponding .conf file.
     with open(templated_path, "w") as f:
@@ -168,14 +167,13 @@ def team_abbrev(id):
     team = response.json()
     return team
 
-# Gets todays games from the NHL API.        
+# Gets todays games from the NHL API.
 def todays_games():
     url = 'https://statsapi.web.nhl.com/api/v1/schedule?expand=schedule.linescore'
     response = requests.get(url)
     games = response.json()
     games = games['dates'][0]['games']
     return games
-
 
 # Pi System Stats Functions
 # Imported from https://learn.pimoroni.com/tutorial/networked-pi/raspberry-pi-system-stats-python and modified for this use case.
@@ -188,13 +186,13 @@ def cputemp():
 def memory():
     memory = psutil.virtual_memory()
     # Divide from Bytes -> KB -> MB
-    available = round(memory.available/1024.0/1024.0,1)
-    total = round(memory.total/1024.0/1024.0,1)
+    available = round(memory.available/1024.0/1024.0, 1)
+    total = round(memory.total/1024.0/1024.0, 1)
     return str(available) + 'MB free / ' + str(total) + 'MB total (' + str(memory.percent) + '%)'
 
 def disk():
     disk = psutil.disk_usage('/')
     # Divide from Bytes -> KB -> MB -> GB
-    free = round(disk.free/1024.0/1024.0/1024.0,1)
-    total = round(disk.total/1024.0/1024.0/1024.0,1)
+    free = round(disk.free/1024.0/1024.0/1024.0, 1)
+    total = round(disk.total/1024.0/1024.0/1024.0, 1)
     return str(free) + 'GB free / ' + str(total) + 'GB total (' + str(disk.percent) + '%)'
