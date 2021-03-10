@@ -48,12 +48,17 @@ def conf_default():
     with open(config_file, "r") as f:
         conf = json.load(f)
         return conf
-            
+
 
 # Defines config schema used by the current led-scoreboard version. File is opened, converted from binary to a python/django object and then used as a callable object.
 def schema():
     try:
-        with open(conf_path() + "config.schema.json", "r") as f:
+        path = os.path.join(conf_path(), "config.schema.json")
+
+        if not os.path.isfile(path):
+            path = os.path.join(config.GUI_DIR, "scoreboard/static/schema/config.schema.json")
+
+        with open(path, "r") as f:
             conf = json.load(f)
             return conf
     except:
