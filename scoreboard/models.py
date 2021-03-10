@@ -1,3 +1,4 @@
+import fastjsonschema, json, os, subprocess
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 from django.utils import timezone
@@ -7,7 +8,6 @@ from django.dispatch import receiver
 from django.core.exceptions import *
 from constance import config
 from django.conf import settings
-import json, os, subprocess
 from . import services
 
 # Default User Class
@@ -49,7 +49,7 @@ class Team(models.Model):
 
 class Settings(models.Model):
     name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32, blank=True, unique=True)
-    config = models.JSONField(default=services.conf_default)
+    config = models.JSONField(default=services.conf_default, blank=False)
     isActive = models.BooleanField(_("Active"),default=1)
   
     class Meta:
@@ -80,16 +80,31 @@ class Settings(models.Model):
                 json.dump(self.config, outfile, indent=4)
                 return path
 
+    def is_valid_config(self):
+
+        valid = False
+
+        if self.config == "":
+            raise ValidationError("Config empty. Cannot have an empty config!")
+
+        if self.config == None:
+            raise ValidationError("Config cannot be None type.")
+
+        return valid
+
 @receiver(pre_save, sender=Settings)
 def pre_save(sender, instance, **kwargs):
     if not os.path.isdir(services.conf_path()):
         raise ValueError("Config directory not found.")
-    else:
+    try:
+        instance.is_valid_config()
         active_profiles = Settings.objects.filter(isActive=True).exclude(name=instance.name)
         if instance.isActive and active_profiles:
                 for profile in active_profiles:
                     profile.isActive = False
-                    profile.save()    
+                    profile.save()
+    except:
+        return instance.full_clean()
 
 # Saves config file to nhl-led-scoreboard directory if set as active
 @receiver(post_save, sender=Settings)
