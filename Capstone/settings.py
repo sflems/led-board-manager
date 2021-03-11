@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os, pytz
 from secret_key_generator import secret_key_generator
-from django.core.validators import MaxValueValidator, MinValueValidator, MaxLengthValidator, MinLengthValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, MaxLengthValidator
 
 # Get Pi's Configured Timezone. Fallback to 'America/Toronto'.
 def pi_tz():
@@ -93,7 +93,17 @@ CONSTANCE_ADDITIONAL_FIELDS = {
     }],
     'multiplexing': ['django.forms.fields.ChoiceField', {
         'widget': 'django.forms.Select',
-        'choices': ((0, "regular"), (1, "strip"), (2, "checker"), (3, "spiral"), (4, "Z-strip"), (5, "ZnMirrorZStripe"), (6, "coreman"), (7, "Kaler2Scan"), (8, "ZStripeUneven"))
+        'choices': (
+            (0, "regular"),
+            (1, "strip"),
+            (2, "checker"),
+            (3, "spiral"),
+            (4, "Z-strip"),
+            (5, "ZnMirrorZStripe"),
+            (6, "coreman"),
+            (7, "Kaler2Scan"),
+            (8, "ZStripeUneven")
+        )
     }],
 
     'good_slug': ['django.forms.SlugField', {}],
@@ -130,7 +140,11 @@ CONSTANCE_CONFIG = {
     'LED_RGB_SEQUENCE': ('RGB', ' Switch if your matrix has led colors swapped.', 'rgb'),
     'LED_PIXEL_MAPPER': ('', 'Apply pixel mappers. Optional params after a colon e.g. "U-mapper;Rotate:90"', str),
     'LED_ROW_ADDR_TYPE': (0, '0 = default; 1 = AB-addressed panels.', 'row_addr'),
-    'LED_MULTIPLEXING': (0, 'Multiplexing type: 0 = direct; 1 = strip; 2 = checker; 3 = spiral; 4 = Z-strip; 5 = ZnMirrorZStripe; 6 = coreman; 7 = Kaler2Scan; 8 = ZStripeUneven.', 'multiplexing'),
+    'LED_MULTIPLEXING': (
+        0,
+        'Multiplexing type: 0 = direct; 1 = strip; 2 = checker; 3 = spiral; 4 = Z-strip; 5 = ZnMirrorZStripe; 6 = coreman; 7 = Kaler2Scan; 8 = ZStripeUneven.',
+        'multiplexing'
+    ),
     'TERMINAL_MODE': (False, 'Enable terminal mode for testing.', bool),
     'TESTING_MODE': (False, "Allow to put use a loop in the renderer to do testing. For Development only", bool),
     'TESTSCCHAMPIONS': (False, "A flag to test the stanley cup champions board. Put your team's ID.", bool),

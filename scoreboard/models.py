@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from constance import config
 from django.conf import settings
 from . import services
@@ -67,6 +67,15 @@ class Settings(models.Model):
             "config": self.config,
             "isActive": self.isActive,
         }
+    
+    def clean(self):
+        super().clean()
+        
+        try:
+            # Validate entered config against scoreboard schema
+            fastjsonschema.validate(services.schema(), self.config)
+        except fastjsonschema.JsonSchemaException as e:
+            raise ValidationError(e)
 
     def save_to_file(self):
         keepcharacters = (' ', '.', '_')
@@ -82,9 +91,6 @@ class Settings(models.Model):
 # Checks before model/config save, ie custom validation
 @receiver(pre_save, sender=Settings)
 def pre_save(sender, instance, **kwargs):
-    
-    # Validate entered config against scoreboard schema
-    fastjsonschema.validate(services.schema(), instance.config)
 
     # Raise exception if config directory not found.
     if not os.path.isdir(services.conf_path()):

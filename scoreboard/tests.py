@@ -47,7 +47,7 @@ class SimpleTest(TestCase):
 
 # Settings Model / Config Tests
 @override_settings(TEST_MODE=True)
-@override_config(SCOREBOARD_DIR=os.path.join(config.GUI_DIR, "testing")) 
+@override_config(SCOREBOARD_DIR=os.path.join(config.GUI_DIR, "testing"))
 class SettingsTestCase(TestCase):
 
     # Dummy Confs used in setUp().

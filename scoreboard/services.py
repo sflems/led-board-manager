@@ -35,7 +35,8 @@ def gui_status():
 def conf_path():
     path = os.path.join(config.SCOREBOARD_DIR, 'config/')
     if not os.path.isdir(path):
-        raise ValueError("Scoreboard config directory not found. Check SCOREBOARD_DIR (path) configuration in Admin Panel. Configured path: \"" + conf_path() + "\"")
+        error = "Scoreboard config directory not found. Check SCOREBOARD_DIR (path) configuration in Admin Panel. Configured path: \"" + conf_path() + "\""
+        raise ValueError(error)
     else:
         return path
 
@@ -50,7 +51,8 @@ def conf_default():
         return conf
 
 
-# Defines config schema used by the current led-scoreboard version. File is opened, converted from binary to a python/django object and then used as a callable object.
+# Defines config schema used by the current led-scoreboard version.
+# File is opened, converted from binary to a python/django object and then used as a callable object.
 def schema():
     try:
         path = os.path.join(conf_path(), "config.schema.json")
@@ -61,7 +63,7 @@ def schema():
         with open(path, "r") as f:
             conf = json.load(f)
             return conf
-    except:
+    except FileNotFoundError:
         raise Http404("\"config.schema.json\" not found. Check SCOREBOARD_DIR (path) configuration in Admin Panel. Configured path: \"" + conf_path() + "\"")
 
 # Options for JSON created settings form.
