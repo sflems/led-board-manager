@@ -1,4 +1,4 @@
-import fastjsonschema, json, os, pytz, unittest
+import fastjsonschema, json, os, pytest, pytz, unittest
 from django.test import Client, TestCase, override_settings
 from constance import config
 from constance.test import override_config
@@ -6,9 +6,9 @@ from django.conf import settings
 from scoreboard.services import conf_path, conf_default, schema
 from scoreboard.models import Settings
 
+
 # Test Various GUI Functions
 class Tests(unittest.TestCase):
-
     def test_valid_pi_tz(self):
         tz = settings.TIME_ZONE
         valid_tzs = pytz.common_timezones
@@ -47,8 +47,9 @@ class SimpleTest(TestCase):
 
 # Settings Model / Config Tests
 @override_settings(TEST_MODE=True)
-@override_config(SCOREBOARD_DIR=os.path.join(config.GUI_DIR, "testing"))
+@override_config(SCOREBOARD_DIR=os.path.join(config.GUI_DIR, "testing")) 
 class SettingsTestCase(TestCase):
+
     # Dummy Confs used in setUp().
     def conf1(self):
         with open(os.path.join(config.GUI_DIR, "scoreboard/static/schema/config.json.sample"), "r") as f:
