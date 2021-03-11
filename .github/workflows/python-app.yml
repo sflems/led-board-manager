@@ -36,3 +36,19 @@ jobs:
     - name: Test with Django unittests
       run: |
         python3 manage.py test
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+    - name: Update VERSION file with tag.
+      run: |
+        echo ${{ steps.get_version.outputs.VERSION }} > VERSION
+    - name: Commit files
+      run: |
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git commit -m "Auto-update VERSION" -a
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
