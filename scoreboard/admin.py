@@ -58,13 +58,14 @@ class SettingsAdmin(admin.ModelAdmin):
             return HttpResponseRedirect(request)
 
 
+'''
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('id', 'teamName', 'abbreviation',)
     ordering = ('teamName',)
     readonly_fields = ('name', 'abbreviation', 'teamName', 'locationName', 'jsonLink', 'officialSiteUrl')
-
+'''
 
 # Register your models here.
 admin.site.register(User)
-admin.site.register(Settings, SettingsAdmin, Team, TeamAdmin)
+admin.site.register(Settings, SettingsAdmin)
 # admin.site.register(Team, TeamAdmin)

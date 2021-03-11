@@ -48,7 +48,7 @@ class Team(models.Model):
 
 class Settings(models.Model):
     name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32, blank=True, unique=True)
-    config = models.JSONField(default=services.conf_default, blank=False)
+    config = models.JSONField(default=services.conf_default, blank=False, null=False)
     isActive = models.BooleanField(_("Active"), default=1)
   
     class Meta:
@@ -72,7 +72,8 @@ class Settings(models.Model):
         super().clean()
         
         try:
-            # Validate entered config against scoreboard schema
+            # THIS LINE ONLY CLEANS FORM SAVE DATA ie NOT Settings.object.save()
+            # Validate entered config against scoreboard schema from forms.
             fastjsonschema.validate(services.schema(), self.config)
         except fastjsonschema.JsonSchemaException as e:
             raise ValidationError(e)
@@ -90,7 +91,10 @@ class Settings(models.Model):
 
 # Checks before model/config save, ie custom validation
 @receiver(pre_save, sender=Settings)
-def pre_save(sender, instance, **kwargs):
+def pre_save(sender, instance, *args, **kwargs):
+
+    # Validate config
+    instance.full_clean()
 
     # Raise exception if config directory not found.
     if not os.path.isdir(services.conf_path()):
