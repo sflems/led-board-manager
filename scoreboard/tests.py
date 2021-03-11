@@ -64,18 +64,26 @@ class SettingsTestCase(TestCase):
     def setUp(self):
 
         # Default Config Provided with services.conf_default() function.
-        Settings.objects.create(name="Test Profile1", config=conf_default(), isActive=True)
+        Settings.objects.create(name="Test Profile1", config=conf_default, isActive=True)
         # Sample Config Provided with GUI
-        Settings.objects.create(name="Test Profile2", config=self.conf1(), isActive=True)
+        Settings.objects.create(name="Test Profile2", config=self.conf1, isActive=True)
         # Dummy confs)
         Settings.objects.create(name="Test Profile3", config=self.conf2, isActive=False)
         Settings.objects.create(name="Test Profile4", config=self.conf3, isActive=True)
         # These Configs should fail (TO DO: Expand me.)
-        with self.assertRaises(fastjsonschema.exceptions.JsonSchemaValueException):
+        try:
             Settings.objects.create(name="Test Profile5", config=None, isActive=True)
+            self.fail('Config cannot be null')
+            Settings.objects.create(name="Test Profile6", config="", isActive=True)
+            self.fail('Config cannot be emptry string.')
+        except IntegrityError or fastjsonschema.JsonSchemaValueException:
+            pass
+        
+        with self.assertRaises(fastjsonschema.exceptions.JsonSchemaValueException):
+            
             self.fail()
 
-            Settings.objects.create(name="Test Profile6", config="", isActive=True)
+            
             self.fail()
 
     # Confirm the following actions based on test setup. Checks custom GUI model logic.
