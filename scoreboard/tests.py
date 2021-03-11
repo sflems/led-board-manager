@@ -64,9 +64,9 @@ class SettingsTestCase(TestCase):
     def setUp(self):
 
         # Default Config Provided with services.conf_default() function.
-        Settings.objects.create(name="Test Profile1", config=conf_default, isActive=True)
+        Settings.objects.create(name="Test Profile1", config=conf_default(), isActive=True)
         # Sample Config Provided with GUI
-        Settings.objects.create(name="Test Profile2", config=self.conf1, isActive=True)
+        Settings.objects.create(name="Test Profile2", config=self.conf1(), isActive=True)
         # Dummy confs)
         Settings.objects.create(name="Test Profile3", config=self.conf2, isActive=False)
         Settings.objects.create(name="Test Profile4", config=self.conf3, isActive=True)
@@ -80,7 +80,6 @@ class SettingsTestCase(TestCase):
     def test_config_cannot_be_empty(self):
         Settings.objects.create(name="Test Profile6", config="", isActive=True)
         self.fail('Settings.config cannot be empty string')
-        
 
     # Confirm the following actions based on test setup. Checks custom GUI model logic.
     def test_count_settings(self):
