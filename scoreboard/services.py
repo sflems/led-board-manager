@@ -35,7 +35,7 @@ def gui_status():
 
 # Update Check for use in context processor
 def gui_update_check():
-    git.pull("--tags")
+    git.fetch("--tags")
     latest = git.describe("--tags", "--abbrev=0").replace('v', '').rstrip().split('.')
     current = settings.settings.VERSION.replace('v', '').rstrip().split('.')
     update = False
