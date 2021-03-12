@@ -9,9 +9,14 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-import os, pytz
+import re, os, pytz
 from secret_key_generator import secret_key_generator
 from django.core.validators import MaxValueValidator, MinValueValidator, MaxLengthValidator
+
+# SECURITY WARNING: keep the secret key used in production secret!
+# secret_key_generator: https://pypi.org/project/secret-key-generator/
+# This checks if a secret key is present in a .secret.txt file, and if not it generates one. Should be a good solution for local installs/dev use.
+SECRET_KEY = secret_key_generator.generate()
 
 # Get Pi's Configured Timezone. Fallback to 'America/Toronto'.
 def pi_tz():
@@ -26,19 +31,21 @@ def pi_tz():
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-# secret_key_generator: https://pypi.org/project/secret-key-generator/
-# This checks if a secret key is present in a .secret.txt file, and if not it generates one. Should be a good solution for local installs/dev use.
-SECRET_KEY = secret_key_generator.generate()
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 # Activates testing mode: Uses static configs/schmea for unittest purposes. Uses `testing/` directory.
 TEST_MODE = False
+
+# Get current version from file
+def sb_version():
+    with open(os.path.join(BASE_DIR, "VERSION"), "r") as v:
+        txt = v.read()
+        while re.search(r'[v][0-9][\.][0-9]{1,2}[\.][0-9]{1,2}', txt) is not None:
+            return txt.rstrip()
+
+
+VERSION = sb_version()
 
 # Allows server to be hosted on local subnet with unrestricted IPs. Make sure your firewall is accepting local network traffic only!!!
 # This can be modified for your local subnet i.e. for subnet 192.168.0.0/16:
@@ -223,6 +230,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'scoreboard.context_processors.version',
             ],
         },
     },
