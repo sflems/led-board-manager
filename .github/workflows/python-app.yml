@@ -1,13 +1,15 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Dev and PR Tests
+name: Django Tests
 
 on:
   push:
-    branches: [ main, testing1 ]
+    branches: [ main ]
+    tags:
+      - 'v*'
   pull_request:
-    branches: [ main, dev, testing1 ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -41,6 +43,7 @@ jobs:
       run: |
         echo ${{ steps.previoustag.outputs.tag }} > VERSION
     - name: Commit files
+      continue-on-error: true
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
