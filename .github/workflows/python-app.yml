@@ -33,13 +33,12 @@ jobs:
     - name: Test with Django unittests
       run: |
         python3 manage.py test
-    - name: Get the version
-      id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+    - name: 'Get Previous tag'
+      id: previoustag
+      uses: "WyriHaximus/github-action-get-previous-tag@v1"
     - name: Update VERSION file with tag.
       run: |
-        echo ${{ steps.get_version.outputs.VERSION }} > VERSION
-        git push -f origin testing1 ${{ steps.get_version.outputs.VERSION }}
+        echo ${{ steps.previoustag.outputs.tag }} > VERSION
     - name: Commit files
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
