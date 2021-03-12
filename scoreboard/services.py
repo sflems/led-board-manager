@@ -7,6 +7,7 @@ from django.http import Http404
 from django.dispatch import receiver
 from constance import config, settings
 from constance.signals import admin_form_save
+
 from sh import git
 
 # Supervisor Commands for NHL Led Scoreboard
@@ -32,17 +33,6 @@ def gui_status():
         proc_status = True
 
     return proc_status
-
-# Update Check for use in context processor
-def gui_update_check():
-    git.fetch("--tags")
-    latest = git.describe("--tags", "--abbrev=0").replace('v', '').rstrip().split('.')
-    current = settings.settings.VERSION.replace('v', '').rstrip().split('.')
-    update = False
-    for i in range(len(current)):
-        if current[i] < latest[i]:
-            update = True
-    return update
 
 # defines the users home/user/nhl-led-scoreboard/config folder path.
 def conf_path():
