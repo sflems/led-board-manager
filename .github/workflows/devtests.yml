@@ -34,10 +34,10 @@ jobs:
         python3 manage.py test
     - name: Get the version
       id: get_version
-      uses: battila7/get-version-action@v2
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
     - name: Update VERSION file with tag.
       run: |
-        echo ${{ steps.get_version.outputs.version }} > VERSION
+        echo ${{ steps.get_version.outputs.VERSION }} > VERSION
     - name: Commit files
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
