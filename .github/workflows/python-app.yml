@@ -1,22 +1,21 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Django Tests
+name: Dev and PR Tests
 
 on:
   push:
-    tags:
-    - 'v*'
+    branches: [ main, testing1 ]
   pull_request:
-    branches: [ main ]
-    tags:
-    - 'v*'
+    branches: [ main, dev, testing1 ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - name: Set up Python 3.7
       uses: actions/setup-python@v2
       with:
@@ -31,20 +30,21 @@ jobs:
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --ignore=E226,E302,E41,E401,W293
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with Django unittests
       run: |
         python3 manage.py test
-    - name: Get the version
-      id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+    - name: 'Get Previous tag'
+      id: previoustag
+      uses: "WyriHaximus/github-action-get-previous-tag@v1"
     - name: Update VERSION file with tag.
       run: |
-        echo ${{ steps.get_version.outputs.VERSION }} > VERSION
+        echo ${{ steps.previoustag.outputs.tag }} > VERSION
     - name: Commit files
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
+        git add VERSION
         git commit -m "Auto-update VERSION" -a
     - name: Push changes
       uses: ad-m/github-push-action@master
