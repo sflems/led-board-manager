@@ -1,5 +1,5 @@
 from django import forms
-from .models import *
+from .models import Settings
 
 # This Settings mo# This Settings model form gets the name and isActive attributes from the user.
 class SettingsDetailForm(forms.ModelForm):
@@ -10,4 +10,3 @@ class SettingsDetailForm(forms.ModelForm):
             "name": "Name:",
             "isActive": "Make this the active profile?"
         }
-        

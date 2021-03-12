@@ -9,9 +9,14 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-import os, pytz, subprocess
+import re, os, pytz
 from secret_key_generator import secret_key_generator
-from django.core.validators import MaxValueValidator, MinValueValidator, MaxLengthValidator,  MinLengthValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, MaxLengthValidator
+
+# SECURITY WARNING: keep the secret key used in production secret!
+# secret_key_generator: https://pypi.org/project/secret-key-generator/
+# This checks if a secret key is present in a .secret.txt file, and if not it generates one. Should be a good solution for local installs/dev use.
+SECRET_KEY = secret_key_generator.generate()
 
 # Get Pi's Configured Timezone. Fallback to 'America/Toronto'.
 def pi_tz():
@@ -22,16 +27,9 @@ def pi_tz():
                 return line
     return 'America/Toronto'
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-# secret_key_generator: https://pypi.org/project/secret-key-generator/
-# This checks if a secret key is present in a .secret.txt file, and if not it generates one. Should be a good solution for local installs/dev use.
-SECRET_KEY = secret_key_generator.generate()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,16 +37,22 @@ DEBUG = True
 # Activates testing mode: Uses static configs/schmea for unittest purposes. Uses `testing/` directory.
 TEST_MODE = False
 
+# Get current version from file
+def sb_version():
+    with open(os.path.join(BASE_DIR, "VERSION"), "r") as v:
+        txt = v.read()
+        while re.search(r'[v][0-9][\.][0-9]{1,2}[\.][0-9]{1,2}', txt) is not None:
+            return txt.rstrip()
+
+
+VERSION = sb_version()
+
 # Allows server to be hosted on local subnet with unrestricted IPs. Make sure your firewall is accepting local network traffic only!!!
-# This can be modified for your local subnet. See below.
+# This can be modified for your local subnet i.e. for subnet 192.168.0.0/16:
+# ALLOWED_HOSTS = ['192.168.{}.{}'.format(i,j) for i in range(256) for j in range(256)]
 ALLOWED_HOSTS = ['*']
 
-# i.e. for subnet 192.168.0.0/16
-# ALLOWED_HOSTS = ['192.168.{}.{}'.format(i,j) for i in range(256) for j in range(256)]
-
-
 # Application definition
-
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.admin',
@@ -92,11 +96,21 @@ CONSTANCE_ADDITIONAL_FIELDS = {
     }],
     'hat_choices': ['django.forms.fields.ChoiceField', {
         'widget': 'django.forms.Select',
-        'choices': (("regular","regular"), ("adafruit-hat","adafruit-hat"), ("adafruit-hat-pwm","adafruit-hat-pwm"))
+        'choices': (("regular", "regular"), ("adafruit-hat", "adafruit-hat"), ("adafruit-hat-pwm", "adafruit-hat-pwm"))
     }],
     'multiplexing': ['django.forms.fields.ChoiceField', {
         'widget': 'django.forms.Select',
-        'choices': ((0, "regular"), (1, "strip"), (2, "checker"), (3, "spiral"), (4, "Z-strip"), (5, "ZnMirrorZStripe"), (6, "coreman"), (7, "Kaler2Scan"), (8, "ZStripeUneven"))
+        'choices': (
+            (0, "regular"),
+            (1, "strip"),
+            (2, "checker"),
+            (3, "spiral"),
+            (4, "Z-strip"),
+            (5, "ZnMirrorZStripe"),
+            (6, "coreman"),
+            (7, "Kaler2Scan"),
+            (8, "ZStripeUneven")
+        )
     }],
 
     'good_slug': ['django.forms.SlugField', {}],
@@ -106,8 +120,6 @@ CONSTANCE_ADDITIONAL_FIELDS = {
     'disabled': ['django.forms.CharField', {
         "disabled": True
     }],
-    
-
 }
 
 CONSTANCE_CONFIG = {
@@ -135,7 +147,11 @@ CONSTANCE_CONFIG = {
     'LED_RGB_SEQUENCE': ('RGB', ' Switch if your matrix has led colors swapped.', 'rgb'),
     'LED_PIXEL_MAPPER': ('', 'Apply pixel mappers. Optional params after a colon e.g. "U-mapper;Rotate:90"', str),
     'LED_ROW_ADDR_TYPE': (0, '0 = default; 1 = AB-addressed panels.', 'row_addr'),
-    'LED_MULTIPLEXING': (0, 'Multiplexing type: 0 = direct; 1 = strip; 2 = checker; 3 = spiral; 4 = Z-strip; 5 = ZnMirrorZStripe; 6 = coreman; 7 = Kaler2Scan; 8 = ZStripeUneven.', 'multiplexing'),
+    'LED_MULTIPLEXING': (
+        0,
+        'Multiplexing type: 0 = direct; 1 = strip; 2 = checker; 3 = spiral; 4 = Z-strip; 5 = ZnMirrorZStripe; 6 = coreman; 7 = Kaler2Scan; 8 = ZStripeUneven.',
+        'multiplexing'
+    ),
     'TERMINAL_MODE': (False, 'Enable terminal mode for testing.', bool),
     'TESTING_MODE': (False, "Allow to put use a loop in the renderer to do testing. For Development only", bool),
     'TESTSCCHAMPIONS': (False, "A flag to test the stanley cup champions board. Put your team's ID.", bool),
@@ -176,7 +192,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
         ),
         'collapse': False
     },
-     'WebGUI Configuration': (
+    'WebGUI Configuration': (
         'GUI_DIR',
         'MONITOR_INTERVAL',
         'SCOREBOARD_DIR',
@@ -214,6 +230,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'scoreboard.context_processors.version',
             ],
         },
     },
@@ -274,7 +291,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'scoreboard/static') 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATIC_FILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
