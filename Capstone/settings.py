@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'constance',
     'constance.backends.database',
     'scoreboard',
+    'rest_framework',
     'bootstrap4',
     'crispy_forms',
     'django_jsonforms',
