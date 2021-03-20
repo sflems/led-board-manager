@@ -6,9 +6,10 @@ beautifulsoup4==4.9.3
 certifi==2020.12.5
 chardet==4.0.0
 colorzero==1.1
+coverage==5.5
 Django==3.1.3
 django-bootstrap4==2.3.1
-django-constance @ git+https://github.com/sflems/django-constance.git@6ac7e1b742f419f452bfa7940f3491b6f25d35b8
+-e git+https://github.com/sflems/nhl-led-scoreboard-webgui.git@5b745ec1082b01ec4574724071c95b1a316c7601#egg=django_constance
 django-crispy-forms==1.10.0
 django-jsonforms==1.1.2
 django-picklefield==3.0.1
@@ -23,6 +24,7 @@ iniconfig==1.1.1
 jsonschema==3.2.0
 multidict==5.1.0
 packaging==20.9
+pkg-resources==0.0.0
 pluggy==0.13.1
 psutil==5.8.0
 py==1.10.0
