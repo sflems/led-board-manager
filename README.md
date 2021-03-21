@@ -31,7 +31,7 @@ _____________
 
 ## Description
 ### TEST_MODE = True _(in `settings.py`)_
-_Configurations are saved in the `testing/config` folder during `TEST_MODE`. You may minor errors due to the lack of `supervisor` running as well as missing system info if run on an OS other than a Raspberry Pi. You can still test the app for its basic usage._
+_Configurations are saved in the `testing/config` folder during `TEST_MODE`. You may minor errors due to the lack of `supervisor` running as well as missing system info if run on a device other than a Raspberry Pi. You can still test the app for its basic usage._
 
 Designed as a solution to manage the NHL LED Scoreboard project by [Joel Joannisse](https://github.com/riffnshred). 
 
