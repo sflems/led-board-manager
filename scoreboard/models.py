@@ -45,9 +45,15 @@ class Team(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        return
+
+    def delete(self, *args, **kwargs):
+        return
 
 class Settings(models.Model):
-    name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32, blank=True, unique=True)
+    name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32,)
     config = models.JSONField(default=services.conf_default, blank=False, null=False)
     isActive = models.BooleanField(_("Active"), default=1)
   
@@ -115,7 +121,7 @@ def post_save(sender, instance, **kwargs):
         with open(services.conf_path() + "config.json", "w") as outfile:
             json.dump(instance.config, outfile, indent=4)
 
-        # Command attemps to restart scoreboard via supervisorctl
+        # Command attempts to restart scoreboard via supervisorctl
         try:
             if services.proc_status() and not settings.TEST_MODE:
                 command = "sudo supervisorctl restart " + config.SUPERVISOR_PROGRAM_NAME

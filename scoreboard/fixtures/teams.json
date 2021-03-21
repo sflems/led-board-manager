@@ -404,36 +404,40 @@
             "config": {
                 "debug": false,
                 "loglevel": "INFO",
-                "live_mode": false,
+                "live_mode": true,
                 "preferences": {
                     "time_format": "12h",
                     "end_of_day": "8:00",
                     "location": "",
                     "live_game_refresh_rate": 10,
                     "teams": [
-                        "Maple Leafs"
+                        "Canadiens"
                     ],
                     "sog_display_frequency": 4,
                     "goal_animations": {
                         "pref_team_only": true
                     }
                 },
-                "states": {
+                "states":{
                     "off_day": [
                         "scoreticker",
                         "standings",
+                        "team_summary",
                         "clock"
                     ],
                     "scheduled": [
                         "standings",
+                        "team_summary",
                         "scoreticker",
                         "clock"
                     ],
                     "intermission": [
-                        "scoreticker"
+                        "scoreticker",
+                        "team_summary"
                     ],
                     "post_game": [
                         "standings",
+                        "team_summary",
                         "scoreticker",
                         "clock"
                     ]
@@ -443,10 +447,10 @@
                         "preferred_teams_only": false,
                         "rotation_rate": 5
                     },
-                    "seriesticker": {
-                        "preferred_teams_only": true,
-                        "rotation_rate": 5
-                    },
+                            "seriesticker": {
+                                    "preferred_teams_only": true,
+                                    "rotation_rate": 5
+                            },
                     "standings": {
                         "preferred_standings_only": true,
                         "standing_type": "wild_card",
@@ -485,15 +489,15 @@
                         "owm_apikey": "",
                         "update_freq": 5,
                         "show_on_clock": true,
-                        "forecast_enabled": true,
+                        "forecast_enabled": false,
                         "forecast_days": 3,
                         "forecast_update": 1
                     },
                     "wxalert": {
                         "alert_feed": "EC",
                         "update_freq": 5,
+                        "show_alerts": false,
                         "nws_show_expire": false,
-                        "show_alerts": true,
                         "alert_title": true,
                         "scroll_alert": true,
                         "alert_duration": 5,
@@ -502,24 +506,24 @@
                 },
                 "sbio": {
                     "screensaver": {
-                        "enabled": true,
+                        "enabled": false,
                         "animations": true,
                         "start": "22:00",
-                        "stop": "22:05",
+                        "stop": "08:00",
                         "data_updates": false,
-                        "motionsensor": true,
-                        "pin": 24,
+                        "motionsensor": false,
+                        "pin": 7,
                         "delay": 30
                     },
                     "dimmer": {
                         "enabled": false,
                         "source": "software",
+                        "daytime": "",
+                        "nighttime": "",
+                        "offset": 0,
                         "frequency": 5,
                         "light_level_lux": 400,
                         "mode": "always",
-                        "daytime": "",
-                        "nighttime": "",
-                        "offset": 90,
                         "sunset_brightness": 5,
                         "sunrise_brightness": 40
                     },
@@ -537,7 +541,7 @@
                         "state_triggered1_process": ""
                     }
                 }
-            },
+            },      
             "isActive": false
         }
     },
