@@ -5,7 +5,8 @@ from django import template
 from django.utils.formats import localize
 from django.http import Http404
 from django.dispatch import receiver
-from constance import config, settings
+from django.conf import settings
+from constance import config
 from constance.signals import admin_form_save
 
 from sh import git
@@ -37,8 +38,10 @@ def gui_status():
 # defines the users home/user/nhl-led-scoreboard/config folder path.
 def conf_path():
     path = os.path.join(config.SCOREBOARD_DIR, 'config/')
-    if not os.path.isdir(path):
-        error = "Scoreboard config directory not found. Check SCOREBOARD_DIR (path) configuration in Admin Panel. Configured path: \"" + conf_path() + "\""
+    if settings.TEST_MODE == True:
+        return os.path.join(config.GUI_DIR, 'testing', 'config/')
+    elif not os.path.isdir(path):
+        error = "Scoreboard config directory not found. Check SCOREBOARD_DIR (path) configuration in Admin Panel. Configured path: \"" + path + "\""
         raise ValueError(error)
     else:
         return path

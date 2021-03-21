@@ -35,7 +35,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEBUG = True
 
 # Activates testing mode: Uses static configs/schmea for unittest purposes. Uses `testing/` directory.
-TEST_MODE = False
+TEST_MODE = True
 
 # Get current version from file
 def sb_version():
@@ -61,7 +61,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'constance',
+    #'constance',
+    'scoreboard.apps.CustomConstance',
     'constance.backends.database',
     'scoreboard',
     'rest_framework',
@@ -124,7 +125,7 @@ CONSTANCE_ADDITIONAL_FIELDS = {
 }
 
 CONSTANCE_CONFIG = {
-    'GUI_DIR': (gui_path, 'Path to GUI Directory', str),
+    'GUI_DIR': (gui_path, 'Path to GUI Directory', 'disabled'),
     'MONITOR_INTERVAL': (10, 'Resource monitor system ping interval in seconds.', 'monitor_min'),
     'SCOREBOARD_DIR': (scoreboard_path, 'Path to NHL LED Scoreboard Directory. Change in Capstone/settings.py', 'disabled'),
     'SUPERVISOR_PROGRAM_NAME': ('scoreboard', 'ie. [program:scoreboard] from /etc/supervisor/conf.d/scoreboard.conf', 'good_slug'),

@@ -52,8 +52,8 @@ class Settings(models.Model):
     isActive = models.BooleanField(_("Active"), default=1)
   
     class Meta:
-        verbose_name = _("Settings")
-        verbose_name_plural = _("Settings")
+        verbose_name = _("Profile")
+        verbose_name_plural = _("Profiles")
         db_table = 'settings'
         ordering = ["-id"]
 
