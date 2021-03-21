@@ -30,9 +30,6 @@
 _____________
 
 ## Description
-### TEST_MODE = True _(in `settings.py`)_
-_Configurations are saved in the `testing/config` folder during `TEST_MODE`. You may minor errors due to the lack of `supervisor` running as well as missing system info if run on a device other than a Raspberry Pi. You can still test the app for its basic usage._
-
 Designed as a solution to manage the NHL LED Scoreboard project by [Joel Joannisse](https://github.com/riffnshred). 
 
 The app uses a Django webserver to manage profiles in a simple SQLite database. Users can access the web interface which can be hosted on their local machine or network. The current `config.schema.json` found in the `nhl-led-scoreboard/config` directory generates an easy to use form to create a `config.json` file. It saves a new `config.json` in the `nhl-led-scoreboard/config` directory and restarts your board process to implement any changes on the fly! 
