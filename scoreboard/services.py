@@ -7,6 +7,7 @@ from django.http import Http404
 from django.dispatch import receiver
 from django.conf import settings
 from constance import config
+from constance import settings as configsettings
 from constance.signals import admin_form_save
 
 from sh import git
@@ -126,10 +127,10 @@ def sv_template():
 
     # Read and process the source file. Import flags from constance and save to supervisor config.
     flags = []
-    flag_fields = settings.CONFIG_FIELDSETS['Scoreboard Flags']['fields']
+    flag_fields = configsettings.CONFIG_FIELDSETS['Scoreboard Flags']['fields']
     for flag in flag_fields:
         key = flag.lower().replace('_', '-')
-        default = settings.CONFIG[str(flag)][0]
+        default = configsettings.CONFIG[str(flag)][0]
         value = str(getattr(config, flag))
         default_args = ["led-brightness", "led-gpio-mapping", "led-slowdown-gpio", "led-rows", "led-cols", "updatecheck", ]
         basic_args = ["led-show-refresh", "updatecheck", ]
