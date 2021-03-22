@@ -11,7 +11,7 @@ from .models import Settings, Team, User
 def delete_selected(SettingsAdmin, request, queryset):
     try:
         for obj in queryset:
-            if obj.name.lower() != "default" and obj.isActive is not True:
+            if obj.isActive is not True:
                 obj.delete()
     except EmptyResultSet:
         pass
@@ -23,13 +23,6 @@ class SettingsAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'isActive')
     list_display_links = ('id', 'name',)
     actions = [delete_selected]
-
-    # Defines default settings model profile as read-only
-    def get_readonly_fields(self, request, obj):
-        if obj and obj.id == 1:
-            return self.readonly_fields + ('name', 'config',)
-        else:
-            return self.readonly_fields
 
     # Defines delete permissions. Returns a delete button for Settings models as long as there are models present AND they aren't the default profile.
     def has_delete_permission(self, request, obj=None):
