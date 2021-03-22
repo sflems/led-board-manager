@@ -33,7 +33,7 @@ class SettingsAdmin(admin.ModelAdmin):
 
     # Defines delete permissions. Returns a delete button for Settings models as long as there are models present AND they aren't the default profile.
     def has_delete_permission(self, request, obj=None):
-        return super().has_delete_permission(request, obj) and (not obj or obj.id() != 1)
+        return super().has_delete_permission(request, obj) and (not obj or obj.iActive is not True)
             
     # Checks to see if active profile status changed, and then makes it the only active profile if so.
     def save_model(self, request, obj, form, change):
@@ -47,7 +47,6 @@ class SettingsAdmin(admin.ModelAdmin):
                         profile.isActive = False
                         profile.save()
 
-                obj.save()
                 super().save_model(request, obj, form, change)
             else:
                 super().save_model(request, obj, form, change)
