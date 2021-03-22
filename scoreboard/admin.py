@@ -26,8 +26,8 @@ class SettingsAdmin(admin.ModelAdmin):
 
     # Defines default settings model profile as read-only
     def get_readonly_fields(self, request, obj):
-        if obj.id == 1:
-            return self.readonly_fields + ('name', 'config')
+        if obj and obj.id == 1:
+            return self.readonly_fields + ('name', 'config',)
         else:
             return self.readonly_fields
 
