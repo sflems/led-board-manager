@@ -35,7 +35,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEBUG = True
 
 # Activates testing mode: Uses static configs/schmea for unittest purposes. Uses `testing/` directory.
-TEST_MODE = False
+TEST_MODE = True
 
 # Get current version from file
 def sb_version():
