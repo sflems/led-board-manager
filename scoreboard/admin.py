@@ -26,16 +26,14 @@ class SettingsAdmin(admin.ModelAdmin):
 
     # Defines default settings model profile as read-only
     def get_readonly_fields(self, request, obj):
-        try:
-            if obj.name.lower() != "default":
-                return self.readonly_fields
+        if obj.id == 1:
             return self.readonly_fields + ('name', 'config')
-        except ObjectDoesNotExist:
+        else:
             return self.readonly_fields
 
     # Defines delete permissions. Returns a delete button for Settings models as long as there are models present AND they aren't the default profile.
     def has_delete_permission(self, request, obj=None):
-        return super().has_delete_permission(request, obj) and (not obj or obj.name.lower() != 'default')
+        return super().has_delete_permission(request, obj) and (not obj or obj.id() != 1)
             
     # Checks to see if active profile status changed, and then makes it the only active profile if so.
     def save_model(self, request, obj, form, change):
