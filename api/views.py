@@ -12,4 +12,4 @@ class SettingsView(viewsets.ModelViewSet):
 class TeamView(viewsets.ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
-    permission_classes = (permissions.DjangoModelPermissions,)
+    permission_classes = (permissions.AllowAny,)
