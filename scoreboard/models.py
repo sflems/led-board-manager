@@ -1,3 +1,6 @@
+from enum import unique
+from django.db.models.deletion import CASCADE
+from django.db.models.fields.related import ForeignKey
 import fastjsonschema, json, os, subprocess
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -14,21 +17,21 @@ class User(AbstractUser):
     pass
 
 # User Profile
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_profile")
 
 # @receivers create or update Profile model on User model create/update
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        UserProfile.objects.create(user=instance)
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     try:
-        instance.profile.save()
+        instance.user_profile.save()
     except ObjectDoesNotExist:
-        Profile.objects.create(user=instance)
+        UserProfile.objects.create(user=instance)
 
 # Fixtures - import from JSON with manage.py loaddata
 class Team(models.Model):
@@ -52,10 +55,42 @@ class Team(models.Model):
     def delete(self, *args, **kwargs):
         return
 
+class BoardType(models.Model):
+    # Board Choices - NHL/NFL/MLB/custom
+    MLB = "mlb"
+    NFL = 'nfl'
+    NHL = "nhl"
+    BOARD_CHOICES = [
+        ('Scoreboards', (
+                ( MLB, 'MLB'),
+                ( NFL, 'NFL'),
+                ( NHL, 'NHL'),
+            )
+        ),
+        ('Custom', (
+            )
+        )
+    ]
+    board = models.CharField(
+        max_length=16,
+        choices=BOARD_CHOICES,
+        default=NHL,
+        primary_key=True,
+    )
+
+    class Meta:
+        verbose_name = _("Board Type")
+        verbose_name_plural = _("Boards")
+        db_table = 'boardTypes'
+
+    def __str__(self):
+        return self.get_board_display()
+
 class Settings(models.Model):
     name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32,)
-    config = models.JSONField(default=services.conf_default, blank=False, null=False)
+    config = models.JSONField(default=services.conf_default, blank=True, null=True)
     isActive = models.BooleanField(_("Active"), default=1)
+    boardType = models.ForeignKey(BoardType, on_delete=models.CASCADE, default=BoardType.NHL)
   
     class Meta:
         verbose_name = _("Profile")

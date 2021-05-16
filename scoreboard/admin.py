@@ -4,7 +4,7 @@ from django.contrib import admin, messages
 from django.core.exceptions import EmptyResultSet, ObjectDoesNotExist
 from django.db import models
 from django.http import HttpResponseRedirect
-from .models import Settings, Team, User
+from .models import Settings, Team, User, BoardType
 
 
 # Tests if a profile is selected as active. Otherwise sets to default profile.
@@ -58,4 +58,5 @@ class TeamAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(User)
 admin.site.register(Settings, SettingsAdmin)
+admin.site.register(BoardType)
 # admin.site.register(Team, TeamAdmin)

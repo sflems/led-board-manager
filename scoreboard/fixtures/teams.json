@@ -18,11 +18,26 @@
         }
     },
     {
-        "model": "scoreboard.profile",
+        "model": "scoreboard.userProfile",
         "pk": 1,
         "fields": {
             "user": 1
         }
+    },
+    {
+        "model": "scoreboard.boardtype",
+        "pk": "mlb",
+        "fields": {}
+    },
+    {
+        "model": "scoreboard.boardtype",
+        "pk": "nfl",
+        "fields": {}
+    },
+    {
+        "model": "scoreboard.boardtype",
+        "pk": "nhl",
+        "fields": {}
     },
     {
         "model": "scoreboard.team",
