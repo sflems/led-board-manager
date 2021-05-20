@@ -31,11 +31,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		.then(result => {
 			console.log(result);
 			$('div#profile-card h5.card-title').text(result.profile.name);
-			$('div#profile-card div.card-text').html(`
-				<p class="m-0">Favourite Team(s): ${JSON.stringify(result.profile.config.preferences.teams,null," ").replace("[","").replace("]","").replace(/["]+/g,"")}</p>
-				<p class="m-0">Live Mode: ${result.profile.config.live_mode}</p>
-				<p class="m-0">Debug: ${result.profile.config.debug}</p>
-				<p class="m-0">Log Level: ${result.profile.config.loglevel}</p>
+			$('div#profile-card div#board-type').html(`
+				<p class="m-0">Scoreboard Type: ${result.profile.boardType.board}</p>
 			`);
 		})
 		.catch(error => {

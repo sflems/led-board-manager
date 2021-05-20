@@ -106,7 +106,10 @@
 					<div class=""><h4 class="card-header text-smaller">Active Profile</h4></div>
 					<div class="card-body" style="display: grid;">
 						<h5 class="card-title">Loading . . .</h5>
-						<div class="card-text" style="display: contents;">
+						<div id="board-type" class="card-text" style="display: contents;">
+						</div>
+						<div id="scoreboard-status" class="card-text row" style="display: contents;">
+							<p class="m-0 status"></p>
 						</div>
 					</div>
 				</div>
@@ -114,12 +117,7 @@
 				<div id="monitor-card" class="card text-white bg-secondary mt-3 mb-3" data-url="{% url 'resources' %}" data-interval="{{ config.MONITOR_INTERVAL }}">
 					<div class=""><h4 class="card-header text-smaller">Resource Monitor</h4></div>
 					<div class="card-body">
-						
 						<div id="pi-stats" class="card-text row">
-						</div>
-						<div id="scoreboard-status" class="card-text row" style="display: contents;">
-							<h5 class="card-title">Loading . . .</h5>
-							<p class="m-0 status"></p>
 						</div>
 					</div>
 				</div>
