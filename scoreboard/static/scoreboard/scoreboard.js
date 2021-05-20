@@ -108,10 +108,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		.then(response => response.json())
 		.then(result => {
 			console.log(result);
-			if (result.backup != true) {
+			if (result.backup != true || result.error != undefined) {
 				document.querySelector('#message').innerHTML = `
 					<div class="alert alert-danger alert-dismissible fade show">
-						<strong>Error!</strong> <small>File save unsuccessful! Attempted to save file as ${result.path}</small>
+						<strong>Error!</strong> <small>${result.error}</small>
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>

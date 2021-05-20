@@ -217,15 +217,14 @@ def profiles(request, id):
         if data.get("backup"):
             try:
                 path = profile.save_to_file().strip()
-                message = "Profile saved to " + path
                 return JsonResponse({
                     "backup": True,
                     "path": path
                 }, status=202)
-            except Exception:
+            except ValueError as error:
                 return JsonResponse({
                     "backup": False,
-                    "path": path
+                    "error": str(error)
                 }, status=400)
 
         if data.get("delete"):

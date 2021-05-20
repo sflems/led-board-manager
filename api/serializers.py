@@ -4,7 +4,7 @@ from scoreboard.models import Settings, Team
 class SettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Settings
-        fields = ['id', 'url', 'name', 'config', 'isActive']
+        fields = ['id', 'url', 'name', 'boardType', 'isActive', 'config']
 
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:

@@ -101,6 +101,7 @@ class Settings(models.Model):
             "name": self.name,
             "config": self.config,
             "isActive": self.isActive,
+            "boardType": self.boardType,
         }
     
     def clean(self):
@@ -116,13 +117,18 @@ class Settings(models.Model):
     def save_to_file(self):
         keepcharacters = (' ', '.', '_')
         filename = "".join(c for c in self.name if c.isalnum() or c in keepcharacters).rstrip().replace(" ", "-") + ".config.json"
-        if os.path.isfile(filename):
-            raise ValueError("File already exists. Rename profile before saving to file.")
+        
+        if os.path.isdir(self.boardType.path + "/config"):
+            filepath = os.path.join(self.boardType.path, "config", filename)
         else:
-            path = os.path.join(services.conf_path(), filename.lower())
-            with open(path, "w") as outfile:
-                json.dump(self.config, outfile, indent=4)
-                return path
+            filepath = os.path.join(self.boardType.path, filename)
+
+        if os.path.isfile(filepath):
+            raise ValueError("File with this name already exists. Attempted to save to " + filepath)
+
+        with open(filepath, "w") as outfile:
+            json.dump(self.config, outfile, indent=4)
+            return filepath
 
 # Checks before model/config save, ie custom validation
 @receiver(pre_save, sender=Settings)
