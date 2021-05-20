@@ -84,7 +84,7 @@ class Settings(models.Model):
     name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32,)
     config = models.JSONField(default=services.conf_default, blank=True, null=True)
     isActive = models.BooleanField(_("Active"), default=1)
-    boardType = models.ForeignKey(BoardType, on_delete=models.CASCADE, default=1)
+    boardType = models.ForeignKey(BoardType, on_delete=models.CASCADE, default="NHL")
   
     class Meta:
         verbose_name = _("Profile")
@@ -104,6 +104,12 @@ class Settings(models.Model):
             "boardType": self.boardType,
         }
     
+    def conf_dir(self):
+        if os.path.isdir(self.boardType.path + "/config"):
+            return os.path.join(self.boardType.path, "config")
+        else:
+            return self.boardType.path
+
     def clean(self):
         super().clean()
         
@@ -117,14 +123,10 @@ class Settings(models.Model):
     def save_to_file(self):
         keepcharacters = (' ', '.', '_')
         filename = "".join(c for c in self.name if c.isalnum() or c in keepcharacters).rstrip().replace(" ", "-") + ".config.json"
-        
-        if os.path.isdir(self.boardType.path + "/config"):
-            filepath = os.path.join(self.boardType.path, "config", filename)
-        else:
-            filepath = os.path.join(self.boardType.path, filename)
+        filepath = os.path.join(self.conf_dir(), filename)
 
         if os.path.isfile(filepath):
-            raise ValueError("File with this name already exists. Attempted to save to " + filepath)
+            raise ValueError("File with this name already exists. (" + filepath + ")")
 
         with open(filepath, "w") as outfile:
             json.dump(self.config, outfile, indent=4)
