@@ -9,7 +9,7 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from constance import config
-from django.conf import settings
+from django.conf import settings as appSettings
 from . import services
 
 # Default User Class
@@ -57,25 +57,19 @@ class Team(models.Model):
 
 class BoardType(models.Model):
     # Board Choices - NHL/NFL/MLB/custom
-    MLB = "mlb"
-    NFL = 'nfl'
-    NHL = "nhl"
-    BOARD_CHOICES = [
-        ('Scoreboards', (
-                ( MLB, 'MLB'),
-                ( NFL, 'NFL'),
-                ( NHL, 'NHL'),
-            )
-        ),
-        ('Custom', (
-            )
-        )
-    ]
+    MLB = "MLB"
+    NFL = 'NFL'
+    NHL = "NHL"
+    
     board = models.CharField(
         max_length=16,
-        choices=BOARD_CHOICES,
         default=NHL,
         primary_key=True,
+    )
+
+    path = models.CharField(
+        max_length=64,
+        default="/home/pi/",
     )
 
     class Meta:
@@ -84,13 +78,13 @@ class BoardType(models.Model):
         db_table = 'boardTypes'
 
     def __str__(self):
-        return self.get_board_display()
+        return self.board
 
 class Settings(models.Model):
     name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32,)
     config = models.JSONField(default=services.conf_default, blank=True, null=True)
     isActive = models.BooleanField(_("Active"), default=1)
-    boardType = models.ForeignKey(BoardType, on_delete=models.CASCADE, default=BoardType.NHL)
+    boardType = models.ForeignKey(BoardType, on_delete=models.CASCADE, default=1)
   
     class Meta:
         verbose_name = _("Profile")
@@ -158,7 +152,7 @@ def post_save(sender, instance, **kwargs):
 
         # Command attempts to restart scoreboard via supervisorctl
         try:
-            if services.proc_status() and not settings.TEST_MODE:
+            if services.proc_status() and not appSettings.TEST_MODE:
                 command = "sudo supervisorctl restart " + config.SUPERVISOR_PROGRAM_NAME
                 subprocess.check_call(command, shell=True)
             

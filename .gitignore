@@ -120,3 +120,4 @@ media/
 !**/migrations/__init__.py
 *.pyc
 webgui-log.out
+RPiB2.code-workspace
