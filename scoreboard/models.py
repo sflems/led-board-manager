@@ -92,6 +92,13 @@ class Settings(models.Model):
         db_table = 'settings'
         ordering = ["-id"]
 
+        
+    def conf_dir(self):
+        if os.path.isdir(self.boardType.path + "/config"):
+            return os.path.join(self.boardType.path, "config")
+        else:
+            return self.boardType.path
+
     def __str__(self):
         return self.name + " Profile"
 
@@ -103,22 +110,17 @@ class Settings(models.Model):
             "isActive": self.isActive,
             "boardType": self.boardType,
         }
-    
-    def conf_dir(self):
-        if os.path.isdir(self.boardType.path + "/config"):
-            return os.path.join(self.boardType.path, "config")
-        else:
-            return self.boardType.path
 
     def clean(self):
         super().clean()
         
-        try:
-            # THIS LINE ONLY CLEANS FORM SAVE DATA ie NOT Settings.object.save()
-            # Validate entered config against scoreboard schema from forms.
-            fastjsonschema.validate(services.schema(), self.config)
-        except fastjsonschema.JsonSchemaException as e:
-            raise ValidationError(e)
+        if self.boardType.board == "NHL":
+            try:
+                # THIS LINE ONLY CLEANS FORM SAVE DATA ie NOT Settings.object.save()
+                # Validate entered config against scoreboard schema from forms.
+                fastjsonschema.validate(services.schema(), self.config)
+            except fastjsonschema.JsonSchemaException as e:
+                raise ValidationError(e)
 
     def save_to_file(self):
         keepcharacters = (' ', '.', '_')
@@ -140,7 +142,7 @@ def pre_save(sender, instance, *args, **kwargs):
     instance.full_clean()
 
     # Raise exception if config directory not found.
-    if not os.path.isdir(services.conf_path()):
+    if not os.path.isdir(instance.conf_dir()):
         raise ValueError("Config directory not found.")
 
     # If config is marked as active, deactivate any other active configs.
@@ -155,7 +157,7 @@ def pre_save(sender, instance, *args, **kwargs):
 @receiver(post_save, sender=Settings)
 def post_save(sender, instance, **kwargs):
     if instance.isActive:
-        with open(services.conf_path() + "config.json", "w") as outfile:
+        with open(instance.conf_dir() + "/config.json", "w") as outfile:
             json.dump(instance.config, outfile, indent=4)
 
         # Command attempts to restart scoreboard via supervisorctl

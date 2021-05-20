@@ -64,7 +64,7 @@ class SettingsTestCase(TestCase):
     def setUp(self):
 
         # Creates initial NHL board for testing
-        BoardType.objects.create(pk='nhl')
+        BoardType.objects.create(pk='NHL')
 
         # Default Config Provided with services.conf_default() function.
         Settings.objects.create(name="Test Profile1", config=conf_default(), isActive=True)
