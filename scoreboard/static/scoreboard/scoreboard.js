@@ -2,11 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	var interval = document.getElementById('monitor-card').dataset.interval*1000;
 	var toggleTimer = setInterval(sysinfo, interval)
 
-	$('p#version').ready(function(){
-		update_check()
-		setInterval(update_check, 1800000);
-	});
-
 	// Use buttons to toggle between views
 	$('#index').click(function () {
 		location.href = '/';
