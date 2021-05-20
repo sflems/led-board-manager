@@ -80,6 +80,12 @@ class BoardType(models.Model):
     def __str__(self):
         return self.board
 
+    def serialize(self):
+        return {
+            "board": self.board,
+            "path": self.path
+        }
+
 class Settings(models.Model):
     name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32,)
     config = models.JSONField(default=services.conf_default, blank=True, null=True)
@@ -108,7 +114,7 @@ class Settings(models.Model):
             "name": self.name,
             "config": self.config,
             "isActive": self.isActive,
-            "boardType": self.boardType,
+            "boardType": self.boardType.serialize(),
         }
 
     def clean(self):

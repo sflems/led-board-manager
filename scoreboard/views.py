@@ -150,10 +150,11 @@ def active_profile(request):
                 "scoreboard_status": scoreboard_status
             }, status=200)
 
-        except Exception:
+        except Exception as e:
             return JsonResponse({
                 "profile": "NO PROFILE FOUND",
-                "scoreboard_status": scoreboard_status
+                "scoreboard_status": scoreboard_status,
+                "error": str(e)
             }, status=200)
 
 @login_required
