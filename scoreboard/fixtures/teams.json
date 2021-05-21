@@ -26,18 +26,27 @@
   },
   {
     "model": "scoreboard.boardtype",
-    "pk": "NHL",
-    "fields": { "path": "/home/pi/nhl-led-scoreboard" }
-  },
-  {
-    "model": "scoreboard.boardtype",
     "pk": "MLB",
-    "fields": { "path": "/home/pi/mlb-led-scoreboard" }
+    "fields": {
+      "path": "/home/pi/mlb-led-scoreboard",
+      "supervisorName": "MLBscoreboard"
+    }
   },
   {
     "model": "scoreboard.boardtype",
     "pk": "NFL",
-    "fields": { "path": "/home/pi/nfl-led-scoreboard" }
+    "fields": {
+      "path": "/home/pi/nfl-led-scoreboard",
+      "supervisorName": "NFLscoreboard"
+    }
+  },
+  {
+    "model": "scoreboard.boardtype",
+    "pk": "NHL",
+    "fields": {
+      "path": "/home/pi/nhl-led-scoreboard",
+      "supervisorName": "scoreboard"
+    }
   },
   {
     "model": "scoreboard.team",

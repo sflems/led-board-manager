@@ -4,6 +4,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register('profiles', views.SettingsView)
+router.register('boardTypes', views.BoardTypeView)
 router.register('teams', views.TeamView)
 
 urlpatterns = [

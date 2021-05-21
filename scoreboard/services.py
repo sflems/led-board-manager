@@ -90,7 +90,7 @@ def form_options(startval):
         "ajax": 1,
         "ajaxCredentials": 0,
         "show_opt_in": 0,
-        "disable_edit_json": 1,
+        "disable_edit_json": 0,
         "disable_collapse": 0,
         "disable_properties": 1,
         "disable_array_add": 0,

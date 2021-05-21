@@ -72,6 +72,13 @@ class BoardType(models.Model):
         default="/home/pi/",
     )
 
+    supervisorName = models.CharField(
+        max_length=32,
+        unique=True,
+        blank=True,
+        null=True,
+    )
+
     class Meta:
         verbose_name = _("Board Type")
         verbose_name_plural = _("Boards")
@@ -83,8 +90,31 @@ class BoardType(models.Model):
     def serialize(self):
         return {
             "board": self.board,
-            "path": self.path
+            "path": self.path,
+            "supervisorName": self.supervisorName
         }
+
+    def conf_dir(self):
+        if os.path.isdir(self.path + "/config"):
+            return os.path.join(self.path, "config")
+        else:
+            return self.path
+
+    def schema(self):
+        schemaPath = os.path.join(self.conf_dir(), 'config.schema.json')
+        if os.path.isfile(schemaPath):
+            with open(schemaPath, "r") as f:
+                        schema = json.load(f)
+                        return schema
+        return {}
+
+    def configJSON(self):
+        schemaPath = os.path.join(self.conf_dir(), 'config.json')
+        if os.path.isfile(schemaPath):
+            with open(schemaPath, "r") as f:
+                        config = json.load(f)
+                        return config
+        return {}
 
 class Settings(models.Model):
     name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32,)
@@ -97,13 +127,6 @@ class Settings(models.Model):
         verbose_name_plural = _("Profiles")
         db_table = 'settings'
         ordering = ["-id"]
-
-        
-    def conf_dir(self):
-        if os.path.isdir(self.boardType.path + "/config"):
-            return os.path.join(self.boardType.path, "config")
-        else:
-            return self.boardType.path
 
     def __str__(self):
         return self.name + " Profile"
@@ -131,7 +154,7 @@ class Settings(models.Model):
     def save_to_file(self):
         keepcharacters = (' ', '.', '_')
         filename = "".join(c for c in self.name if c.isalnum() or c in keepcharacters).rstrip().replace(" ", "-") + ".config.json"
-        filepath = os.path.join(self.conf_dir(), filename)
+        filepath = os.path.join(self.boardType.conf_dir(), filename)
 
         if os.path.isfile(filepath):
             raise ValueError("File with this name already exists. (" + filepath + ")")
@@ -148,7 +171,7 @@ def pre_save(sender, instance, *args, **kwargs):
     instance.full_clean()
 
     # Raise exception if config directory not found.
-    if not os.path.isdir(instance.conf_dir()):
+    if not os.path.isdir(instance.boardType.conf_dir()):
         raise ValueError("Config directory not found.")
 
     # If config is marked as active, deactivate any other active configs.
@@ -163,7 +186,7 @@ def pre_save(sender, instance, *args, **kwargs):
 @receiver(post_save, sender=Settings)
 def post_save(sender, instance, **kwargs):
     if instance.isActive:
-        with open(instance.conf_dir() + "/config.json", "w") as outfile:
+        with open(instance.boardType.conf_dir() + "/config.json", "w") as outfile:
             json.dump(instance.config, outfile, indent=4)
 
         # Command attempts to restart scoreboard via supervisorctl
