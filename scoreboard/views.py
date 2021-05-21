@@ -294,19 +294,22 @@ def profiles_create(request):
             startval = json.loads(request.POST['json'])
             options = services.form_options(startval)
 
-            # JSONResponse to refill form? This isnt working.
             return render(request, "scoreboard/settings_create.html", {
                 "error": "Profile with this name exists.",
                 "detailform": SettingsDetailForm(request.POST),
                 "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True)
             })
         else:
+            schema = services.schema()
+            startval = json.loads(request.POST['json'])
+            options = services.form_options(startval)
+
             return render(request, "scoreboard/settings_create.html", {
                 "error": "Invalid data. Please check your submission.",
                 "detailform": SettingsDetailForm(request.POST),
                 "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True)
             })
-            
+
 
 def login_view(request):
     if request.method == "POST":

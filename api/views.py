@@ -17,4 +17,4 @@ class BoardTypeView(viewsets.ModelViewSet):
 class TeamView(viewsets.ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)

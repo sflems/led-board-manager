@@ -79,7 +79,7 @@ def form_options(startval):
     options = {
         "startval": startval,
         "theme": "bootstrap4",
-        "object_layout": "default",
+        "object_layout": "grid",
         "template": "default",
         "show_errors": "interaction",
         "required_by_default": 0,
@@ -96,7 +96,7 @@ def form_options(startval):
         "disable_array_add": 0,
         "disable_array_reorder": 0,
         "disable_array_delete": 0,
-        "enable_array_copy": 0,
+        "enable_array_copy": 1,
         "array_controls_top": 1,
         "disable_array_delete_all_rows": 1,
         "disable_array_delete_last_row": 1,

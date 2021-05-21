@@ -7,9 +7,13 @@ class SettingsSerializer(serializers.ModelSerializer):
         fields = ['id', 'url', 'name', 'boardType', 'isActive', 'config']
 
 class BoardTypeSerializer(serializers.ModelSerializer):
+
+    activeConfig = serializers.JSONField(source='configJSON', read_only=True)
+    
     class Meta:
         model = BoardType
-        fields = ['board', 'path', 'supervisorName',]
+        fields = ['board', 'path', 'supervisorName', 'activeConfig', 'schema']
+
 
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:

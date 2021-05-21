@@ -84,16 +84,6 @@ class BoardType(models.Model):
         verbose_name_plural = _("Boards")
         db_table = 'boardTypes'
 
-    def __str__(self):
-        return self.board
-
-    def serialize(self):
-        return {
-            "board": self.board,
-            "path": self.path,
-            "supervisorName": self.supervisorName
-        }
-
     def conf_dir(self):
         if os.path.isdir(self.path + "/config"):
             return os.path.join(self.path, "config")
@@ -109,12 +99,24 @@ class BoardType(models.Model):
         return {}
 
     def configJSON(self):
-        schemaPath = os.path.join(self.conf_dir(), 'config.json')
-        if os.path.isfile(schemaPath):
-            with open(schemaPath, "r") as f:
+        confPath = os.path.join(self.conf_dir(), 'config.json')
+        if os.path.isfile(confPath):
+            with open(confPath, "r") as f:
                         config = json.load(f)
                         return config
         return {}
+
+    def __str__(self):
+        return self.board
+
+    def serialize(self):
+        return {
+            "board": self.board,
+            "path": self.path,
+            "supervisorName": self.supervisorName,
+            "activeConfig": self.configJSON(),
+            "schema": self.schema(),
+        }
 
 class Settings(models.Model):
     name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32,)

@@ -133,7 +133,7 @@ div#configModal div.modal-body {
     font-size:75%!important;
 }
 
-.je-object__controls, label[for=id_json] {
+label[for=id_json] {
     display: none;
 }
 
@@ -152,6 +152,14 @@ div#configModal div.modal-body {
 .json-editor-btntype-editjson {
     margin-top:-0.25rem;
     border-radius: .2rem!important;
+}
+
+.json-editor-btn-save, .json-editor-btn-copy, .json-editor-btn-delete {
+    margin: 0 0.25em;
+}
+
+.je-object__container .col-md-6 {
+    flex: 0 0 100%;
 }
 
 input[type="submit"]{
