@@ -75,7 +75,7 @@ INSTALLED_APPS = [
 
 # These paths can be hard coded for specific usage or as fix if server breaks on change.
 scoreboard_path = os.path.dirname(BASE_DIR) + "/nhl-led-scoreboard"
-gui_path = os.path.dirname(BASE_DIR) + "/nhl-led-scoreboard-webgui"
+gui_path = os.path.dirname(BASE_DIR) + "/led-board-manager"
 
 # Admin Field Modifcations go here.
 CONSTANCE_ADDITIONAL_FIELDS = {
