@@ -61,6 +61,10 @@ h1, h2, h3, h4, h5, th {
 .navbar-toggler-icon {
     height: 2.5em!important;
 }
+.dropdown-toggle::after {
+    margin-left: -0.3em;
+    vertical-align: .155em;
+}
 
 /* On/Off Toggle */
 .toggle.btn {

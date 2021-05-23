@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		location.href = `${this.dataset.url}`
 	});
 
-	$('#settings_create').click(function () {
+	$('.board-btns').click(function () {
 		location.href = `${this.dataset.url}`
 	});
 
@@ -33,7 +33,19 @@ document.addEventListener('DOMContentLoaded', function () {
 			$('div#profile-card h5.card-title').text(result.profile.name);
 			$('div#profile-card div#board-type').html(`
 				<p class="m-0">Scoreboard Type: ${result.profile.boardType.board}</p>
+				
 			`);
+			if (result.scoreboard_status != true) {
+				$('div#scoreboard-status').html(`
+					<p class="m-0 status">Scoreboard Status: Supervisor Process Not Running <img src="/static/scoreboard/x-square-fill.svg" class="x-square-fill" width="24" height="24"></p>
+				`);
+				$('#sb-toggle').bootstrapToggle('off', true);
+			} else {
+				$('div#scoreboard-status').html(`
+					<p class="m-0 status">Scoreboard Status: Running <img src="/static/scoreboard/check-square-fill.svg" class="x-square-fill" width="24" height="24"></p>
+				`);
+				$('#sb-toggle').bootstrapToggle('on', true);
+			};
 		})
 		.catch(error => {
 			console.log(error);
@@ -337,17 +349,6 @@ function sysinfo() {
 			<p class="resource mt-n1 mb-0">${result.disk}</p>
 		</div>
 		`);
-		if (result.scoreboard_status != true) {
-			$('div#scoreboard-status').html(`
-				<p class="m-0 status">Scoreboard Status: Supervisor Process Not Running <img src="/static/scoreboard/x-square-fill.svg" class="x-square-fill" width="24" height="24"></p>
-			`);
-			$('#sb-toggle').bootstrapToggle('off', true);
-		} else {
-			$('div#scoreboard-status').html(`
-				<p class="m-0 status">Scoreboard Status: Running <img src="/static/scoreboard/check-square-fill.svg" class="x-square-fill" width="24" height="24"></p>
-			`);
-			$('#sb-toggle').bootstrapToggle('on', true);
-		};
 	})
 	.catch(error => {
 		console.log(error);
