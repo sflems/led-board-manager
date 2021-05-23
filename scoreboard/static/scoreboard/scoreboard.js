@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		location.href = `${this.dataset.url}`
 	});
 
-	$('#settings_create').click(function () {
+	$('.board-btns').click(function () {
 		location.href = `${this.dataset.url}`
 	});
 

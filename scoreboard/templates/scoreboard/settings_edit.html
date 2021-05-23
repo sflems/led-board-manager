@@ -9,7 +9,9 @@
 			<h3 class="form-title text-center">{{ profile_name }}</h3>
 			<form id="settingsform" class="m-n1" action="{% url 'profiles' profile_id %}" method="post">
 				{% csrf_token %}
-				{{ detailform|crispy }}
+				{{ detailform.name|as_crispy_field }}
+				{{ detailform.isActive|as_crispy_field }}
+				{{ detailform.boardType.as_hidden }}
 				{{ JSONform.media }}
 				{{ JSONform }}
 				<input type="submit" value="Submit">

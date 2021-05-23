@@ -11,7 +11,7 @@ from time import sleep
 
 from .forms import SettingsDetailForm
 from django_jsonforms.forms import JSONSchemaForm
-from .models import Settings
+from .models import Settings, BoardType
 from . import services
 import json, os, subprocess
 
@@ -111,21 +111,21 @@ def command(request):
         try:
             command = ["sleep 5 ; sudo reboot"]
             subprocess.check_call(command, shell=True)
-            
+            return JsonResponse({
+                "reboot": True
+            }, status=202)
+
         except subprocess.CalledProcessError:
             return JsonResponse({
                 "reboot": False,
             }, status=400)
-        else:
-            return JsonResponse({
-                "reboot": True
-            }, status=202)
+            
 
     if request.method == "PUT" and data.get("shutdown"):
         try:
             command = "sleep 5 ; sudo shutdown -h now"
             subprocess.check_call(command, shell=True)
-            
+
         except subprocess.CalledProcessError:
             return JsonResponse({
                 "shutdown": False
@@ -134,7 +134,8 @@ def command(request):
             return JsonResponse({
                 "shutdown": True
             }, status=202)
-                    
+
+
 class SettingsList(ListView):
     model = Settings
 
@@ -179,22 +180,16 @@ def profiles(request, id):
     if request.method == "GET":
         profile = get_object_or_404(Settings, pk=id)
         if profile.id != 1 or profile.name.lower() != "default":
-            # Settings Forms are instantiated with form_options and schema functions from services.py
-            schema = services.schema()
-            startval = profile.config
-            options = services.form_options(startval)
-
             return render(request, "scoreboard/settings_edit.html", {
                 "detailform": SettingsDetailForm(instance=profile),
-                "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True),
+                "JSONform": JSONSchemaForm(schema=profile.boardType.schema(), options=services.form_options(profile.config), ajax=True),
                 "profile_id": profile.pk,
                 "profile_name": profile.name
             })
         else:
             messages.error(request, "Cannot edit the default profile!")
             return HttpResponseRedirect(reverse('profiles_list'))
-        
-    # Add checks to see if fille actions have taken place, not just Django DB actions. (JS AJAX calls need changed as well.)
+
     elif request.method == "PUT":
         profile = get_object_or_404(Settings, pk=id)
         data = json.loads(request.body)
@@ -257,19 +252,36 @@ def profiles(request, id):
             return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
 
 @login_required
-def profiles_create(request):
+def profiles_create(request, board):
     if request.method == "GET":
-        schema = services.schema()
-        startval = services.conf_default()
-        options = services.form_options(startval)
-
-        # Settings Forms are instantiated in forms.py
-        detailform = SettingsDetailForm()
-        return render(request, "scoreboard/settings_create.html", {
-            "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True),
-            "detailform": detailform,
-        })
+        board_type = get_object_or_404(BoardType, pk=board)
         
+        return render(request, "scoreboard/settings_create.html", {
+            "detailform": SettingsDetailForm(initial={'name':"", 'boardType': board_type}),
+            "JSONform": JSONSchemaForm(schema=board_type.schema(), options=services.form_options(board_type.configJSON()), ajax=True),
+            "board_type": board_type.board
+        })
+
+    '''
+    if request.method == "GET":
+        detailform = SettingsDetailForm()
+        ctx = {
+            "detailform": detailform,
+        }
+        boards = []
+        for board in BoardType.objects.all():
+            startval = board.configJSON()
+            options = services.form_options(startval)
+            newboard = {'ajax=True', 'schema={}'.format(board.schema()), 'options={}'.format(options)}
+            boards.append(newboard)
+
+        JSONSchemaFormSet = formset_factory(JSONSchemaForm)
+        formset = JSONSchemaFormSet(form_kwargs=boards)
+        ctx['formset'] = formset
+        return render(request, "scoreboard/settings_create.html", ctx)
+'''
+
+
     if request.method == "POST":
         detailform = SettingsDetailForm(request.POST)
         # The request data for the config json must be encoded and then decoded again as below due to a BOM error.
@@ -277,7 +289,6 @@ def profiles_create(request):
         new_config = json.loads(request.POST['json'].encode().decode('utf-8-sig'))
 
         if detailform.is_valid():
-            
             name = detailform.cleaned_data['name']
             isActive = detailform.cleaned_data['isActive']
 

@@ -10,19 +10,8 @@ from constance import config
 from constance import settings as configsettings
 from constance.signals import admin_form_save
 
+from scoreboard.models import BoardType
 from sh import git
-
-# Supervisor Commands for NHL Led Scoreboard
-def proc_status():
-    proc_status = False
-    command = "sudo supervisorctl status " + config.SUPERVISOR_PROGRAM_NAME
-    process = subprocess.run(command, shell=True, capture_output=True)
-
-    # Checks if bytes type string RUNNING is found in output(bytes type).
-    if b'RUNNING' in process.stdout:
-        proc_status = True
-
-    return proc_status
 
 # Supervisor Commands for NHL Led Scoreboard
 def gui_status():
@@ -87,7 +76,7 @@ def form_options(startval):
         "display_required_only": 0,
         "remove_empty_properties": 0,
         "keep_oneof_values": 0,
-        "ajax": 1,
+        "ajax": 0,
         "ajaxCredentials": 0,
         "show_opt_in": 0,
         "disable_edit_json": 0,
@@ -118,7 +107,10 @@ def render_sv_config(data, ctx):
 # Listens for Constance settings update. If signal rcv'd, the below functions run to update supervisor-daemon.conf and reload.
 @receiver(admin_form_save)
 def constance_updated(sender, **kwargs):
-    return sv_template()
+    # Update supervisor confs
+    command = "sudo supervisorctl update all"
+    process = subprocess.run(command, shell=True)
+    return sv_template(), process
 
 def sv_template():
     # Interpret paths relative to the project directory.
@@ -155,20 +147,16 @@ def sv_template():
         elif is_modified():
             render_flag()
 
+    # Add optional board args here to convert to flags.
+    boards = BoardType.objects.all()
+
     # Renders from daemon template with config and flags passed in as context.
     with open(path, "r") as f:
-        templated = render_sv_config(f.read(), {'config': config, 'flags': flags, })
+        templated = render_sv_config(f.read(), {'config': config, 'flags': flags, 'boards': boards })
 
     # Write it out to the corresponding .conf file.
     with open(templated_path, "w") as f:
         f.write(str(templated, 'utf-8'))
-
-    # Resart supervisor if supervisor process found. Checks if keys belong to GUI or scoreboard to restart respective process.
-    command = "sudo supervisorctl update " + config.SUPERVISOR_PROGRAM_NAME
-    subprocess.call(command, shell=True,)
-   
-    command = "sudo supervisorctl update " + config.SUPERVISOR_GUI_NAME
-    subprocess.call(command, shell=True,)
 
     # Copy metadata if necessary.
     return templated_path
