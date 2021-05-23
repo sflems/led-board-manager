@@ -37,9 +37,9 @@ def command(request):
     if request.method == "PUT" and data.get("sb_command"):
         try:
             if data.get("sb_command") == "sb_start":
-                command = ["sudo supervisorctl restart " + profile.boardType.supervisorName]
+                command = ["sudo supervisorctl restart boards:" + profile.boardType.supervisorName]
             else:
-                command = ["sudo supervisorctl stop " + profile.boardType.supervisorName]
+                command = ["sudo supervisorctl stop boards:" + profile.boardType.supervisorName]
             
             subprocess.check_call(command, shell=True)
             sleep(3)
