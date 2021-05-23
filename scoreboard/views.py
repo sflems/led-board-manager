@@ -237,7 +237,7 @@ def profiles(request, id):
     elif request.method == "POST":
         profile = get_object_or_404(Settings, pk=id)
         detailform = SettingsDetailForm(request.POST, instance=profile)
-        new_config = json.loads(request.POST['json'].encode().decode('utf-8-sig'))
+        new_config = json.loads(request.POST['json'])
 
         if detailform.is_valid():
             profile.config = new_config
