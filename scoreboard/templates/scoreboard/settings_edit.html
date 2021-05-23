@@ -11,7 +11,6 @@
 				{% csrf_token %}
 				{{ detailform.name|as_crispy_field }}
 				{{ detailform.isActive|as_crispy_field }}
-				{{ detailform.boardType.as_hidden }}
 				{{ JSONform.media }}
 				{{ JSONform }}
 				<input type="submit" value="Submit">

@@ -115,6 +115,17 @@ class BoardType(models.Model):
                         return config
         return {}
 
+    def proc_status(self):
+        proc_status = False
+        command = "sudo supervisorctl status boards:" + self.supervisorName
+        process = subprocess.run(command, shell=True, capture_output=True)
+
+        # Checks if bytes type string RUNNING is found in output(bytes type).
+        if b'RUNNING' in process.stdout:
+            proc_status = True
+
+        return proc_status
+
     def __str__(self):
         return self.board
 
@@ -128,10 +139,10 @@ class BoardType(models.Model):
         }
 
 class Settings(models.Model):
-    name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32,)
+    name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32)
     config = models.JSONField(default=dict, blank=True, null=True)
     isActive = models.BooleanField(_("Active"), default=1)
-    boardType = models.ForeignKey(BoardType, on_delete=models.CASCADE, default="NHL")
+    boardType = models.ForeignKey(BoardType, on_delete=models.CASCADE, to_field="board", default="NHL")
   
     class Meta:
         verbose_name = _("Profile")
@@ -154,8 +165,6 @@ class Settings(models.Model):
     def clean(self):
         super().clean()
         try:
-            # THIS LINE ONLY CLEANS FORM SAVE DATA ie NOT Settings.object.save()
-            # Validate entered config against scoreboard schema from forms.
             fastjsonschema.validate(self.boardType.schema(), self.config)
         except fastjsonschema.JsonSchemaException as e:
             raise ValidationError(e)
@@ -195,20 +204,6 @@ def pre_save(sender, instance, *args, **kwargs):
 # Saves config file to nhl-led-scoreboard directory if set as active
 @receiver(post_save, sender=Settings)
 def post_save(sender, instance, **kwargs):
-    # Supervisor Commands for NHL Led Scoreboard
-    def proc_status():
-        proc_status = False
-        command = "sudo supervisorctl status " + instance.boardType.supervisorName
-        process = subprocess.run(command, shell=True, capture_output=True)
-        command2 = "sudo supervisorctl stop" + instance.boardType.supervisorName
-        process2 = subprocess.run(command2, shell=True, capture_output=True)
-
-        # Checks if bytes type string RUNNING is found in output(bytes type).
-        if b'RUNNING' in process.stdout:
-            proc_status = True
-
-        return proc_status
-
     if instance.isActive:
         with open(instance.boardType.conf_dir() + "/config.json", "w") as outfile:
             json.dump(instance.config, outfile, indent=4)
@@ -216,10 +211,10 @@ def post_save(sender, instance, **kwargs):
         # Command attempts to restart scoreboard via supervisorctl
         try:
             if not appSettings.TEST_MODE:
-                command = "sudo supervisorctl stop boards"
+                command = "sudo supervisorctl stop boards:*"
                 subprocess.check_call(command, shell=True)
 
-                command2 = "sudo supervisorctl start " + instance.boardType.supervisorName
+                command2 = "sudo supervisorctl start boards:" + instance.boardType.supervisorName
                 subprocess.check_call(command2, shell=True)
             
         except subprocess.CalledProcessError as error:

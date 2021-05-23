@@ -32,17 +32,18 @@ def index(request):
 def command(request):
     data = json.loads(request.body)
 
-    # Command to start/stop the scoreboard
+    # Command to start/stop the active scoreboard
+    profile = Settings.objects.get(isActive=1)
     if request.method == "PUT" and data.get("sb_command"):
         try:
             if data.get("sb_command") == "sb_start":
-                command = ["sudo supervisorctl restart " + config.SUPERVISOR_PROGRAM_NAME]
+                command = ["sudo supervisorctl restart " + profile.boardType.supervisorName]
             else:
-                command = ["sudo supervisorctl stop " + config.SUPERVISOR_PROGRAM_NAME]
+                command = ["sudo supervisorctl stop " + profile.boardType.supervisorName]
             
             subprocess.check_call(command, shell=True)
             sleep(3)
-            status = services.proc_status()
+            status = profile.boardType.proc_status()
 
             if data.get("sb_command") == "sb_start" and status:
                 return JsonResponse({
@@ -145,16 +146,13 @@ def active_profile(request):
     if request.method == "GET":
         try:
             profile = Settings.objects.get(isActive=1)
-            scoreboard_status = services.proc_status()
             return JsonResponse({
                 "profile": profile.serialize(),
-                "scoreboard_status": scoreboard_status
+                "scoreboard_status": profile.boardType.proc_status()
             }, status=200)
 
         except Exception as e:
             return JsonResponse({
-                "profile": "NO PROFILE FOUND",
-                "scoreboard_status": scoreboard_status,
                 "error": str(e)
             }, status=200)
 
@@ -165,14 +163,12 @@ def resource_monitor(request):
         cputemp = services.cputemp()
         disk = services.disk()
         memory = services.memory()
-        scoreboard_status = services.proc_status()
 
         return JsonResponse({
             "cpu": cpu,
             "cputemp": cputemp,
             "disk": disk,
-            "memory": memory,
-            "scoreboard_status": scoreboard_status
+            "memory": memory
         }, status=200)
 
 @login_required
@@ -253,46 +249,24 @@ def profiles(request, id):
 
 @login_required
 def profiles_create(request, board):
+    board_type = get_object_or_404(BoardType, pk=board)
     if request.method == "GET":
-        board_type = get_object_or_404(BoardType, pk=board)
-        
         return render(request, "scoreboard/settings_create.html", {
             "detailform": SettingsDetailForm(initial={'name':"", 'boardType': board_type}),
             "JSONform": JSONSchemaForm(schema=board_type.schema(), options=services.form_options(board_type.configJSON()), ajax=True),
-            "board_type": board_type.board
+            "boardtype": board,
         })
-
-    '''
-    if request.method == "GET":
-        detailform = SettingsDetailForm()
-        ctx = {
-            "detailform": detailform,
-        }
-        boards = []
-        for board in BoardType.objects.all():
-            startval = board.configJSON()
-            options = services.form_options(startval)
-            newboard = {'ajax=True', 'schema={}'.format(board.schema()), 'options={}'.format(options)}
-            boards.append(newboard)
-
-        JSONSchemaFormSet = formset_factory(JSONSchemaForm)
-        formset = JSONSchemaFormSet(form_kwargs=boards)
-        ctx['formset'] = formset
-        return render(request, "scoreboard/settings_create.html", ctx)
-'''
-
 
     if request.method == "POST":
         detailform = SettingsDetailForm(request.POST)
-        # The request data for the config json must be encoded and then decoded again as below due to a BOM error.
-        # Without this the form submissions are saved as slash escaped strings... but why? Possibly due to jsonforms encoding methods.
-        new_config = json.loads(request.POST['json'].encode().decode('utf-8-sig'))
-
-        if detailform.is_valid():
+        detailform.is_valid()
+        try:
+            # The request data for the config json must be encoded and then decoded again as below due to a BOM error.
+            # Without this the form submissions are saved as slash escaped strings... but why? Possibly due to jsonforms encoding methods.
+            new_config = json.loads(request.POST['json'].encode().decode('utf-8-sig'))
             name = detailform.cleaned_data['name']
             isActive = detailform.cleaned_data['isActive']
-
-            new_settings = Settings.objects.create(name=name, isActive=isActive, config=new_config)
+            new_settings = Settings.objects.create(name=name, isActive=isActive, config=new_config, boardType=board_type)
             new_settings.save()
 
             message = "Your profile has been saved." + notes[isActive]
@@ -300,27 +274,11 @@ def profiles_create(request, board):
 
             return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
 
-        elif FieldError:
-            schema = services.schema()
-            startval = json.loads(request.POST['json'])
-            options = services.form_options(startval)
-
-            return render(request, "scoreboard/settings_create.html", {
-                "error": "Profile with this name exists.",
-                "detailform": SettingsDetailForm(request.POST),
-                "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True)
-            })
-        else:
-            schema = services.schema()
-            startval = json.loads(request.POST['json'])
-            options = services.form_options(startval)
-
-            return render(request, "scoreboard/settings_create.html", {
-                "error": "Invalid data. Please check your submission.",
-                "detailform": SettingsDetailForm(request.POST),
-                "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True)
-            })
-
+        except Exception as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+        
 
 def login_view(request):
     if request.method == "POST":

@@ -5,9 +5,9 @@ from .models import Settings
 class SettingsDetailForm(forms.ModelForm):
     class Meta:
         model = Settings
-        fields = ('name', 'isActive', 'boardType')
+        fields = ('name', 'isActive')
         labels = {
             "name": "Profile Name:",
-            "isActive": "Make this the active profile?",
-            "boardType": "Select scoreboard type:"
+            "isActive": "Make this the active profile?"
         }
+    
