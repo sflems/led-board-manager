@@ -4,13 +4,14 @@ from gpiozero import CPUTemperature
 from django import template
 from django.utils.formats import localize
 from django.http import Http404
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
 from constance import config
 from constance import settings as configsettings
 from constance.signals import admin_form_save
 
-from scoreboard.models import BoardType
+from .models import BoardType
 from sh import git
 
 # Supervisor Commands for NHL Led Scoreboard
@@ -106,6 +107,7 @@ def render_sv_config(data, ctx):
 
 # Listens for Constance settings update. If signal rcv'd, the below functions run to update supervisor-daemon.conf and reload.
 @receiver(admin_form_save)
+@receiver(post_save, sender=BoardType)
 def constance_updated(sender, **kwargs):
     # Update supervisor confs
     command = "sudo supervisorctl update"
