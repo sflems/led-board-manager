@@ -13,7 +13,7 @@ def version(request):
     # Checks local version file against current release version
     update = not isUpToDate(
         path,
-        'https://raw.githubusercontent.com/sflems/nhl-led-scoreboard-webgui/main/VERSION'
+        'https://raw.githubusercontent.com/sflems/led-board-manager/main/VERSION'
     )
 
     # Sets version for context.

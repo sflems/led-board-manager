@@ -130,7 +130,7 @@ CONSTANCE_CONFIG = {
     'MONITOR_INTERVAL': (10, 'Resource monitor system ping interval in seconds.', 'monitor_min'),
     'SCOREBOARD_DIR': (scoreboard_path, 'Path to NHL LED Scoreboard Directory. Change in Capstone/settings.py', 'disabled'),
     'SUPERVISOR_PROGRAM_NAME': ('scoreboard', 'ie. [program:scoreboard] from /etc/supervisor/conf.d/scoreboard.conf', 'good_slug'),
-    'SUPERVISOR_GUI_NAME': ('scoreboard-webgui', 'ie. [program:scoreboard-webgui] from /etc/supervisor/conf.d/scoreboard-webgui.conf', 'good_slug'),
+    'SUPERVISOR_GUI_NAME': ('led-board-manager', 'ie. [program:scoreboard-webgui] from /etc/supervisor/conf.d/scoreboard-webgui.conf', 'good_slug'),
 
     # Flags for the Scoreboard Process
     'LED_ROWS': (32, '16 for 16x32, 32 for 32x32 and 64x32.', int),

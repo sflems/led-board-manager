@@ -3,7 +3,7 @@
  
 #### Latest Releases
 ##### Web GUI
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/sflems/nhl-led-scoreboard-webgui?label=version)](https://github.com/sflems/nhl-led-scoreboard-webgui/releases) [![Django Tests](https://github.com/sflems/nhl-led-scoreboard-webgui/actions/workflows/python-app.yml/badge.svg)](https://github.com/sflems/nhl-led-scoreboard-webgui/actions/workflows/python-app.yml)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/sflems/led-board-manager?label=version)](https://github.com/sflems/led-board-manager/releases) [![Django Tests](https://github.com/sflems/led-board-manager/actions/workflows/python-app.yml/badge.svg)](https://github.com/sflems/led-board-manager/actions/workflows/python-app.yml)
 
 ##### NHL LED Scoreboard:
 [![GitHub release (latest by date)](https://badgen.net/github/release/riffnshred/nhl-led-scoreboard?label=Version)](https://github.com/riffnshred/nhl-led-scoreboard/releases/latest) [![Create Release - Image](https://github.com/falkyre/nhl-led-scoreboard-img/actions/workflows/main.yml/badge.svg)](https://github.com/falkyre/nhl-led-scoreboard-img/actions/workflows/main.yml)
@@ -85,8 +85,8 @@ __Be sure to back up any previous configurations before use!!!__
 ###### (or the same location as your `nhl-led-scoreboard` directory)
 
 ```
-git clone --recursive https://github.com/sflems/nhl-led-scoreboard-webgui.git
-cd nhl-led-scoreboard-webgui
+git clone --recursive https://github.com/sflems/led-board-manager.git
+cd led-board-manager
 ```
 #### First Steps
 
@@ -94,13 +94,13 @@ cd nhl-led-scoreboard-webgui
 ###### You can skip to [Auto-Starting the Server](#auto-starting-the-server--boot) if you have an active `supervisor' installation. Then return here for the _easy_ install method.
 ```
 su
-mkdir /etc/supervisor && cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
+mkdir /etc/supervisor && cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 chmod 644 /etc/supervisor/supervisord.conf
 
-mkdir /etc/supervisor/conf.d && cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/scoreboard.conf /etc/supervisor/conf.d/scoreboard.conf
+mkdir /etc/supervisor/conf.d && cp /home/pi/led-board-manager/scoreboard/static/supervisor/scoreboard.conf /etc/supervisor/conf.d/scoreboard.conf
 chmod 644 /etc/supervisor/conf.d/scoreboard.conf
 
-cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
+cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
 chmod 644
 
 python3 -m pip install supervisor
@@ -148,13 +148,13 @@ chmod g+w .secret.txt
 ###### Skip to [Auto-Starting the Server](#auto-starting-the-server--boot) if you have an active `supervisor' installation.
 ```
 su
-mkdir /etc/supervisor && cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
+mkdir /etc/supervisor && cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 chmod 644 /etc/supervisor/supervisord.conf
 
-mkdir /etc/supervisor/conf.d && cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/scoreboard.conf /etc/supervisor/conf.d/scoreboard.conf
+mkdir /etc/supervisor/conf.d && cp /home/pi/led-board-manager/scoreboard/static/supervisor/scoreboard.conf /etc/supervisor/conf.d/scoreboard.conf
 chmod 644 /etc/supervisor/conf.d/scoreboard.conf
 
-cp /home/pi/nhl-led-scoreboard-webgui/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
+cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
 chmod 644
 
 python3 -m pip install supervisor
@@ -177,7 +177,7 @@ source env/bin/activate
 
 Your shell should have the `(env)` prepended if active:
 ```
-(env) pi@raspberrypi:~/nhl-led-scoreboard-webgui $ 
+(env) pi@raspberrypi:~/led-board-manager $ 
 ```
 
 _To exit the `(env)` at any time __after__ installing and running the `loaddata` step, enter the command `deactivate` in the terminal._
@@ -206,25 +206,25 @@ Either follow the next step to setup server autostart, or see [usage instruction
 
 Add...
 ```
-/home/pi/nhl-led-scoreboard-webgui/supervisor-daemon.conf
+/home/pi/led-board-manager/supervisor-daemon.conf
 ```
 ...__to the end of the `files =` line__, under the`[Include]` section of your `supervisord.conf` with just a space between the two paths. This will tell supervisor to use the updated program configurations that the webgui generates. To disable this feature, simply remove this line.
 
 ###### Example:
 ```
 [include]
-files = /etc/supervisor/conf.d/*.conf /home/pi/nhl-led-scoreboard-webgui/supervisor-daemon.conf
+files = /etc/supervisor/conf.d/*.conf /home/pi/led-board-manager/supervisor-daemon.conf
 ```
 
 _To finish the easy GUI install method, [return to the steps above.](#install-and-start-python3-venv)_
 
 #### OPTION 2: Create a script and use `rc.local` to autostart the devserver on startup:
-We're going to use the Raspberry Pi's `/etc/rc.local` file to start our script on boot. In the `/nhl-led-scoreboard-webgui` folder, create a new file using:
+We're going to use the Raspberry Pi's `/etc/rc.local` file to start our script on boot. In the `/led-board-manager` folder, create a new file using:
 
 Enter `sudo nano /etc/rc.local` to add the following line before `exit 0`:
 
 ```
-su pi -c '/home/pi/nhl-led-scoreboard-webgui/autorun.sh >> /tmp/scoreboard-gui.log 2>&1'
+su pi -c '/home/pi/led-board-manager/autorun.sh >> /tmp/scoreboard-gui.log 2>&1'
 ```
 ...substituting your own username for `pi`, if changed. This method will also create a log file for the server: `/tmp/scoreboard-gui.log`. You can tail the log with the following command:
 
@@ -233,17 +233,17 @@ su pi -c '/home/pi/nhl-led-scoreboard-webgui/autorun.sh >> /tmp/scoreboard-gui.l
 Alternatively, you can setup a [crontab](https://www.raspberrypi.org/documentation/linux/usage/cron.md), [systemd](https://www.raspberrypi.org/documentation/linux/usage/systemd.md), or another method of your choice to autostart the app.
 
 ## Updates
-The latest update notes can be found under the [project releases](https://github.com/sflems/nhl-led-scoreboard-webgui/releases). 
+The latest update notes can be found under the [project releases](https://github.com/sflems/led-board-manager/releases). 
 
 [Stop the server](#to-stop-the-server), then:
 ```
-cd nhl-led-scoreboard-webgui/
+cd led-board-manager/
 git reset --hard
 git checkout main
 git pull
 ```
 
-_When updating, or if stated in the release notes, it may be necessary to run the update script from the `nhl-led-scoreboard-webgui` directory._
+_When updating, or if stated in the release notes, it may be necessary to run the update script from the `led-board-manager` directory._
 ```
 ./update.sh
 ``` 
@@ -266,14 +266,14 @@ Then, restart the web server. You can `deactivate` the `(env)` if you are using 
 
 ```
 cd
-sudo rm -rfv nhl-led-scoreboard-webgui
+sudo rm -rfv led-board-manager
 ```
 Any profiles backed up from the GUI and the config file will remain in the `config/` directory.
 
 ##### Remove the Supervisor Configuration if present. Change the following:
 ```
 [include]
-files = /etc/supervisor/conf.d/*.conf /home/pi/nhl-led-scoreboard-webgui/supervisor-daemon.conf
+files = /etc/supervisor/conf.d/*.conf /home/pi/led-board-manager/supervisor-daemon.conf
 ```
 Back to:
 ```
@@ -291,7 +291,7 @@ sudo nano /etc/rc.local
 __Be sure to back up any previous configurations before use!!!__
 ### To start the webserver:
 
-To start the server manually, and from the `nhl-led-scoreboard-webgui` directory, enter:
+To start the server manually, and from the `led-board-manager` directory, enter:
 ```
 source env/bin/activate
 gunicorn Capstone.wsgi -b 0:9002
@@ -369,7 +369,7 @@ _____________
 
 - File Structure
   ```
-  nhl-led-scoreboard-webgui/      <-- Project Base Folder
+  led-board-manager/      <-- Project Base Folder
   |
   ├── assets/                     <-- Assets used in README.md.
   |   |
@@ -380,7 +380,7 @@ _____________
   │   ├── asgi.py
   │   ├── settings.py             <-- Django server config / settings.
   │   ├── urls.py                 <-- Django server base URLs.
-  │   └── wsgi.py                 <-- Used to launch nhl-led-scoreboard-webgui.
+  │   └── wsgi.py                 <-- Used to launch led-board-manager.
   |
   ├── env/                        <-- Virtual environent folder (if installed).
   |
@@ -411,7 +411,7 @@ _____________
   |
   ├── .secret.txt                   <-- Created by secret-key-generator for key randomization.
   ├── autorun.sh                    <-- Server start script.
-  ├── db.sqlite3                    <-- Nhl-led-scoreboard-webgui database.
+  ├── db.sqlite3                    <-- led-board-manager database.
   ├── install.sh                    <-- App install script. Automates django installation / installs requirements, and sets up database.
   ├── LICENSE
   ├── manage.py                     <-- Django manage.py file used to operate project.
