@@ -328,7 +328,7 @@
                     "$id": "#/properties/weather/properties/apikey",
                     "type": "string",
                     "title": "location",
-                    "description": "Your location in City, State, Country format.",
+                    "description": "Your location in City, State, country format ie. Toronto,on,ca",
                     "default": "Chicago,il,us",
                     "examples": ["Chicago,il,us"]
                 },
