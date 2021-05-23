@@ -108,9 +108,8 @@ def render_sv_config(data, ctx):
 @receiver(admin_form_save)
 def constance_updated(sender, **kwargs):
     # Update supervisor confs
-    command = "sudo supervisorctl update all"
-    process = subprocess.run(command, shell=True)
-    return sv_template(), process
+    command = "sudo supervisorctl update"
+    return sv_template(), subprocess.run(command, shell=True)
 
 def sv_template():
     # Interpret paths relative to the project directory.
@@ -149,10 +148,13 @@ def sv_template():
 
     # Add optional board args here to convert to flags.
     boards = BoardType.objects.all()
+    boardsList = []
+    for board in BoardType.objects.all():
+        boardsList.append(board.supervisorName)
 
     # Renders from daemon template with config and flags passed in as context.
     with open(path, "r") as f:
-        templated = render_sv_config(f.read(), {'config': config, 'flags': flags, 'boards': boards })
+        templated = render_sv_config(f.read(), {'config': config, 'flags': flags, 'boards': boards, 'boardslist': boardsList })
 
     # Write it out to the corresponding .conf file.
     with open(templated_path, "w") as f:
