@@ -41,6 +41,13 @@
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
 				<span class="navbar-toggler-icon"></span>
 			</button>
+			<div class="collapse navbar-collapse" id="collapsibleNavbar">		
+				<ul class="navbar-nav m-1">
+					{% if user.is_authenticated %}
+						<button class="btn btn-sm btn-dark m-1" id="profiles_list" data-url="{% url 'profiles_list' %}">Profiles</button>
+					{% endif %}
+				</ul>
+			</div>
 			<div class="collapse navbar-collapse justify-content-end mr-md-2 " id="collapsibleNavbar">
 				<ul class="navbar-nav">
 					<li class="nav-item dropdown">		
