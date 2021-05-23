@@ -10,7 +10,7 @@ from django.dispatch import receiver
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from constance import config
 from django.conf import settings as appSettings
-from . import services
+
 
 # Default User Class
 class User(AbstractUser):
@@ -75,12 +75,15 @@ class BoardType(models.Model):
     supervisorName = models.CharField(
         max_length=32,
         unique=True,
-        blank=True,
-        null=True,
     )
 
+    class PythonVersion(models.TextChoices):
+        TWO = ''
+        THREE = 3
+    pythonVersion = models.CharField(default=3, max_length=1, blank=True, choices=PythonVersion.choices)
+
     class Meta:
-        verbose_name = _("Board Type")
+        verbose_name = _("Board")
         verbose_name_plural = _("Boards")
         db_table = 'boardTypes'
 
@@ -89,6 +92,12 @@ class BoardType(models.Model):
             return os.path.join(self.path, "config")
         else:
             return self.path
+
+    def main(self):
+        if os.path.isdir(self.path + "/src"):
+            return os.path.join(".", "src", "main.py")
+        else:
+            return os.path.join(".", "main.py")
 
     def schema(self):
         schemaPath = os.path.join(self.conf_dir(), 'config.schema.json')
@@ -120,7 +129,7 @@ class BoardType(models.Model):
 
 class Settings(models.Model):
     name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32,)
-    config = models.JSONField(default=services.conf_default, blank=True, null=True)
+    config = models.JSONField(default=dict, blank=True, null=True)
     isActive = models.BooleanField(_("Active"), default=1)
     boardType = models.ForeignKey(BoardType, on_delete=models.CASCADE, default="NHL")
   
@@ -144,14 +153,12 @@ class Settings(models.Model):
 
     def clean(self):
         super().clean()
-        
-        if self.boardType.board == "NHL":
-            try:
-                # THIS LINE ONLY CLEANS FORM SAVE DATA ie NOT Settings.object.save()
-                # Validate entered config against scoreboard schema from forms.
-                fastjsonschema.validate(services.schema(), self.config)
-            except fastjsonschema.JsonSchemaException as e:
-                raise ValidationError(e)
+        try:
+            # THIS LINE ONLY CLEANS FORM SAVE DATA ie NOT Settings.object.save()
+            # Validate entered config against scoreboard schema from forms.
+            fastjsonschema.validate(self.boardType.schema(), self.config)
+        except fastjsonschema.JsonSchemaException as e:
+            raise ValidationError(e)
 
     def save_to_file(self):
         keepcharacters = (' ', '.', '_')
@@ -159,7 +166,7 @@ class Settings(models.Model):
         filepath = os.path.join(self.boardType.conf_dir(), filename)
 
         if os.path.isfile(filepath):
-            raise ValueError("File with this name already exists. (" + filepath + ")")
+            raise ValueError("File with this name already exists. (' {} ')".format(filename))
 
         with open(filepath, "w") as outfile:
             json.dump(self.config, outfile, indent=4)
@@ -184,18 +191,36 @@ def pre_save(sender, instance, *args, **kwargs):
             profile.save()
 
 
+    
 # Saves config file to nhl-led-scoreboard directory if set as active
 @receiver(post_save, sender=Settings)
 def post_save(sender, instance, **kwargs):
+    # Supervisor Commands for NHL Led Scoreboard
+    def proc_status():
+        proc_status = False
+        command = "sudo supervisorctl status " + instance.boardType.supervisorName
+        process = subprocess.run(command, shell=True, capture_output=True)
+        command2 = "sudo supervisorctl stop" + instance.boardType.supervisorName
+        process2 = subprocess.run(command2, shell=True, capture_output=True)
+
+        # Checks if bytes type string RUNNING is found in output(bytes type).
+        if b'RUNNING' in process.stdout:
+            proc_status = True
+
+        return proc_status
+
     if instance.isActive:
         with open(instance.boardType.conf_dir() + "/config.json", "w") as outfile:
             json.dump(instance.config, outfile, indent=4)
 
         # Command attempts to restart scoreboard via supervisorctl
         try:
-            if services.proc_status() and not appSettings.TEST_MODE:
-                command = "sudo supervisorctl restart " + config.SUPERVISOR_PROGRAM_NAME
+            if not appSettings.TEST_MODE:
+                command = "sudo supervisorctl stop boards"
                 subprocess.check_call(command, shell=True)
+
+                command2 = "sudo supervisorctl start " + instance.boardType.supervisorName
+                subprocess.check_call(command2, shell=True)
             
         except subprocess.CalledProcessError as error:
             return error

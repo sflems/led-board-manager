@@ -29,7 +29,8 @@
     "pk": "MLB",
     "fields": {
       "path": "/home/pi/mlb-led-scoreboard",
-      "supervisorName": "MLBscoreboard"
+      "supervisorName": "MLBscoreboard",
+      "pythonVersion": 2
     }
   },
   {
@@ -37,7 +38,8 @@
     "pk": "NFL",
     "fields": {
       "path": "/home/pi/nfl-led-scoreboard",
-      "supervisorName": "NFLscoreboard"
+      "supervisorName": "NFLscoreboard",
+      "pythonVersion": 2
     }
   },
   {
@@ -45,7 +47,8 @@
     "pk": "NHL",
     "fields": {
       "path": "/home/pi/nhl-led-scoreboard",
-      "supervisorName": "scoreboard"
+      "supervisorName": "scoreboard",
+      "pythonVersion": 3
     }
   },
   {
