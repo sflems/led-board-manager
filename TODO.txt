@@ -9,17 +9,15 @@
 
  Backend
 ---------
-TODO: DRF.
 TODO: UNITTESTS!
 
  HTML/CSS/JS
 ---------
+ TODO: Add a loading spinner to board activation/profile saving.
  TODO: Add to and expand box scores / NHL API
  TODO: Add rgb picker instead of text box for settings forms. (Schema)
  TODO: Add time selection instead of user text box for settings forms. (Schema)
 
  Misc.
 -------
-TODO: List GUI & Scoreboard Versions in Footer + Update Check
 TODO: Check if Active Config matches saved config.json
-TODO: NHL => MLB Scoreboard Toggler
