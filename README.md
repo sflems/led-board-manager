@@ -1,5 +1,5 @@
-# NHL LED Scoreboard Web GUI & Configurator
-#### A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a> running on a Raspberry Pi.
+# LED Scoreboard Web GUI & Configurator
+#### A Django based web app to configure an <a href="https://github.com/riffnshred/nhl-led-scoreboard">NHL LED Scoreboard</a>, and others, running on a Raspberry Pi.
  
 #### Latest Releases
 ##### Web GUI
@@ -30,7 +30,7 @@
 _____________
 
 ## Description
-Designed as a solution to manage the NHL LED Scoreboard project by [Joel Joannisse](https://github.com/riffnshred). 
+Designed as a solution to manage the NHL LED Scoreboard project by [Joel Joannisse](https://github.com/riffnshred), as well as custom board integration. 
 
 The app uses a Django webserver to manage profiles in a simple SQLite database. Users can access the web interface which can be hosted on their local machine or network. The current `config.schema.json` found in the `nhl-led-scoreboard/config` directory generates an easy to use form to create a `config.json` file. It saves a new `config.json` in the `nhl-led-scoreboard/config` directory and restarts your board process to implement any changes on the fly! 
 
@@ -44,9 +44,9 @@ _____________
   - Profile Status & Resource Monitor
 - Profiles Dashboard
   - Manage Configurations on the Fly
-  - Create Configurations with a Simple Form (based on the current NHL LED Scoreboard schema)
+  - Create Configurations with a Simple Form (based on the current board schema)
   - Configuration/Profile Backup
-- Supervisor Integration ([Optional](#option-1-create-a-supervisor-config-to-start-the-gui-with-gunicorn-preferred))
+- Supervisor Integration
   - Activating A Profile Updates the Scoreboard Live
   - Scoreboard Status Monitor
 - Pi Commands
@@ -55,6 +55,7 @@ _____________
   - Reboot
   - Shutdown
 - Admin Dashboard
+  - Boards Management
   - Profiles Management
   - User Management
   - Scoreboard Flags (ie. `--led-brightness`, `--led-gpio-mapping`, `--update-check`, etc.)
