@@ -1,4 +1,3 @@
-
 import json, os, psutil, requests, subprocess
 from gpiozero import CPUTemperature
 from django import template
