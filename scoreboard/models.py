@@ -186,14 +186,17 @@ class Settings(models.Model):
 def pre_save(sender, instance, *args, **kwargs):
 
     # Validate config
-    instance.full_clean()
+    try: 
+        instance.full_clean()
+    except Exception as e:
+        raise ValueError(e)
 
     # Raise exception if config directory not found.
     if not os.path.isdir(instance.boardType.conf_dir()):
         raise ValueError("Config directory not found.")
 
     # If config is marked as active, deactivate any other active configs.
-    active_profiles = Settings.objects.filter(isActive=True).exclude(name=instance.name)
+    active_profiles = Settings.objects.filter(isActive=True).exclude(pk=instance.id)
     if instance.isActive and active_profiles:
         for profile in active_profiles:
             profile.isActive = False
@@ -218,4 +221,4 @@ def post_save(sender, instance, **kwargs):
                 subprocess.check_call(command2, shell=True)
             
         except subprocess.CalledProcessError as error:
-            return error
+            raise Exception(error)

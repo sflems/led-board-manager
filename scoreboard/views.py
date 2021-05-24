@@ -5,7 +5,7 @@ from django.views.generic import ListView
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponseRedirect, JsonResponse
-from django.core.exceptions import FieldError
+from django.core.exceptions import FieldError, ValidationError
 from constance import config
 from time import sleep
 
@@ -235,16 +235,34 @@ def profiles(request, id):
                 }, status=400)
 
     elif request.method == "POST":
-        profile = get_object_or_404(Settings, pk=id)
-        detailform = SettingsDetailForm(request.POST, instance=profile)
-        new_config = json.loads(request.POST['json'])
+        try:
+            profile = get_object_or_404(Settings, pk=id)
+            detailform = SettingsDetailForm(request.POST, instance=profile)
+            new_config = json.loads(request.POST['json'].encode().decode('utf-8-sig'))
+            print(profile, detailform, new_config)
 
-        if detailform.is_valid():
-            profile.config = new_config
-            profile.save(update_fields=['config'])
-            detailform.save()
-            message = "Your profile has been updated." + notes[profile.isActive]
-            messages.success(request, message)
+            if detailform.is_valid():
+                profile.config = new_config
+                profile.save(update_fields=['config'])
+                message = "Your profile has been updated." + notes[profile.isActive]
+                messages.success(request, message)
+                return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+
+        except Exception as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+        except ValidationError as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+        except ValueError as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+        except FieldError as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
             return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
 
 @login_required
@@ -275,6 +293,18 @@ def profiles_create(request, board):
             return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
 
         except Exception as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+        except ValidationError as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+        except ValueError as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+        except FieldError as e:
             message = "Warning. ({})".format(e)
             messages.info(request, message)
             return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })

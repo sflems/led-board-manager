@@ -391,12 +391,22 @@
         },
         "demo_date": {
             "$id": "#/properties/demo_date",
-            "type": "string",
             "title": "demo_date",
             "description": "YYYY-MM-DD from which to pull data to demonstrate the scoreboard. An empty string will disable demo mode.",
-            "default": "",
-            "examples": [ "", "1993-10-23", "2002-04-20" ],
-            "maxLength": 10
+            "anyOf": [
+                {
+                    "type": "string",
+                    "title": "Date",
+                    "format": "date"
+                },
+                {
+                    "type": "string",
+                    "title": "Disabled",
+                    "maxLength": 0,
+                    "default": "",
+                    "enum": [""]
+                }
+            ] 
         }
     },
     "required": [
