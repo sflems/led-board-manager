@@ -331,9 +331,11 @@
             "additionalProperties": true,
             "required": [
                 "scoreticker",
+                "seriesticker",
                 "standings",
                 "clock",
-                "weather"
+                "weather",
+                "wxalert"
             ],
             "properties": {
                 "scoreticker": {
