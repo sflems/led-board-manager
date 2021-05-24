@@ -177,7 +177,7 @@ def profiles(request, id):
         profile = get_object_or_404(Settings, pk=id)
         if profile.id != 1 or profile.name.lower() != "default":
             return render(request, "scoreboard/settings_edit.html", {
-                "detailform": SettingsDetailForm(instance=profile),
+                "detailform": SettingsDetailForm(initial={"name":profile.name, "isActive": profile.isActive}),
                 "JSONform": JSONSchemaForm(schema=profile.boardType.schema(), options=services.form_options(profile.config), ajax=True),
                 "profile_id": profile.pk,
                 "profile_name": profile.name
@@ -237,16 +237,20 @@ def profiles(request, id):
     elif request.method == "POST":
         try:
             profile = get_object_or_404(Settings, pk=id)
-            detailform = SettingsDetailForm(request.POST, instance=profile)
-            new_config = json.loads(request.POST['json'].encode().decode('utf-8-sig'))
-            print(profile, detailform, new_config)
+            detailform = SettingsDetailForm(request.POST)
+            new_config = json.loads(request.POST['json'])
 
             if detailform.is_valid():
+                profile.name = detailform.cleaned_data['name']
+                profile.isActive = detailform.cleaned_data['isActive']
                 profile.config = new_config
-                profile.save(update_fields=['config'])
+                profile.save(update_fields=['config', 'name', 'isActive'])
                 message = "Your profile has been updated." + notes[profile.isActive]
                 messages.success(request, message)
                 return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+
+            messages.error(request, detailform.non_field_errors)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": detailform.non_field_errors, })
 
         except Exception as e:
             message = "Warning. ({})".format(e)
@@ -270,7 +274,7 @@ def profiles_create(request, board):
     board_type = get_object_or_404(BoardType, pk=board)
     if request.method == "GET":
         return render(request, "scoreboard/settings_create.html", {
-            "detailform": SettingsDetailForm(initial={'name':"", 'boardType': board_type}),
+            "detailform": SettingsDetailForm(initial={'isActive': 1}),
             "JSONform": JSONSchemaForm(schema=board_type.schema(), options=services.form_options({}), ajax=True),
             "boardtype": board,
         })
