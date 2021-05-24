@@ -271,7 +271,7 @@ def profiles_create(request, board):
     if request.method == "GET":
         return render(request, "scoreboard/settings_create.html", {
             "detailform": SettingsDetailForm(initial={'name':"", 'boardType': board_type}),
-            "JSONform": JSONSchemaForm(schema=board_type.schema(), options=services.form_options(board_type.configJSON()), ajax=True),
+            "JSONform": JSONSchemaForm(schema=board_type.schema(), options=services.form_options({}), ajax=True),
             "boardtype": board,
         })
 

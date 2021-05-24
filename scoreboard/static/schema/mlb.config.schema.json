@@ -403,8 +403,7 @@
                     "type": "string",
                     "title": "Disabled",
                     "maxLength": 0,
-                    "default": "",
-                    "enum": [""]
+                    "default": ""
                 }
             ] 
         }
