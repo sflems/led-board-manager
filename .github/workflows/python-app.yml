@@ -34,6 +34,8 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with Django unittests
       run: |
+        python3 manage.py makemigrations
+        python3 manage.py migrate
         python3 manage.py test
     - name: 'Get Previous tag'
       id: previoustag
