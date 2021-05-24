@@ -172,7 +172,11 @@ class Settings(models.Model):
     def save_to_file(self):
         keepcharacters = (' ', '.', '_')
         filename = "".join(c for c in self.name if c.isalnum() or c in keepcharacters).rstrip().replace(" ", "-") + ".config.json"
-        filepath = os.path.join(self.boardType.conf_dir(), filename)
+
+        if not appSettings.TEST_MODE:
+            filepath = os.path.join(self.boardType.conf_dir(), filename)
+        else:
+            filepath = os.path.join(config.GUI_DIR, "testing", filename)
 
         if os.path.isfile(filepath):
             raise ValueError("File with this name already exists. (' {} ')".format(filename))

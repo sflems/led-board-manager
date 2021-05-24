@@ -73,5 +73,5 @@ class SettingsTestCase(TestCase):
         if os.path.isfile(os.path.join(config.GUI_DIR, "testing/config/config.json")):
             os.remove("testing/config/config.json")
 
-        if os.path.isfile(os.path.join(config.GUI_DIR, "testing/config/test-profile1.config.json")):
-            os.remove("testing/config/test-profile1.config.json")
+        if os.path.isfile(os.path.join(config.GUI_DIR, "testing/Test-Profile2.config.json")):
+            os.remove("testing/Test-Profile2.config.json")
