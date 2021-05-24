@@ -11,6 +11,8 @@
 ## Table of Contents
   - [Description](#description)
   - [Features](#features)
+    - Config Generator
+    - Boards/Profile Manager (NEW!)
   - [Disclaimer](#disclaimer)
   - [Requirements](#requirements)
   - [Installation](#installation)
@@ -40,14 +42,15 @@ _____________
 
 ## Features
 - GUI / Today's NHL Games Dashboard
+  - Swap between various board projects ie. NHL, NFL, MLB, etc.
   - Easily Toggle your scoreboard On and Off
   - Profile Status & Resource Monitor
 - Profiles Dashboard
   - Manage Configurations on the Fly
-  - Create Configurations with a Simple Form (based on the current board schema)
+  - Create Configurations with a Simple Form (schema dependant)
   - Configuration/Profile Backup
 - Supervisor Integration
-  - Activating A Profile Updates the Scoreboard Live
+  - Activating A Profile Updates the Board in Real Time
   - Scoreboard Status Monitor
 - Pi Commands
   - Scoreboard On/Off Toggle
@@ -78,6 +81,15 @@ _____________
 - [Hockey](https//www.nhl.com)
 
 - [App Dependancies](requirements.txt)
+
+#### Compatible Boards:
+- [NFL LED Scoreboard](https://github.com/mikemountain/nfl-led-scoreboard)
+
+- [MLB LED Scoreboard](https://github.com/MLB-LED-Scoreboard/mlb-led-scoreboard)
+
+- [Stonks](https://github.com/rdefeo/stonks)
+
+- ...and similar forks.
 
 ## Installation
 __Be sure to back up any previous configurations before use!!!__
