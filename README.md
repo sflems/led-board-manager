@@ -221,7 +221,7 @@ Add...
 ```
 /home/pi/led-board-manager/supervisor-daemon.conf
 ```
-...__to the end of the `files =` line__, under the`[Include]` section of your `supervisord.conf` with just a space between the two paths. This will tell supervisor to use the updated program configurations that the webgui generates. To disable this feature, simply remove this line.
+...__to the end of the `files =` line__, under the`[Include]` section of your `/etc/supervisor/supervisord.conf` with just a space between the two paths. This will tell supervisor to use the updated program configurations that the webgui generates. To disable this feature, simply remove this line.
 
 ###### Example:
 ```
