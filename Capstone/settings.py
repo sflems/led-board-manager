@@ -58,12 +58,15 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'corsheaders',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'constance',
+    #'constance',
+    'scoreboard.apps.CustomConstance',
     'constance.backends.database',
     'scoreboard',
+    'rest_framework',
     'bootstrap4',
     'crispy_forms',
     'django_jsonforms',
@@ -72,7 +75,7 @@ INSTALLED_APPS = [
 
 # These paths can be hard coded for specific usage or as fix if server breaks on change.
 scoreboard_path = os.path.dirname(BASE_DIR) + "/nhl-led-scoreboard"
-gui_path = os.path.dirname(BASE_DIR) + "/nhl-led-scoreboard-webgui"
+gui_path = os.path.dirname(BASE_DIR) + "/led-board-manager"
 
 # Admin Field Modifcations go here.
 CONSTANCE_ADDITIONAL_FIELDS = {
@@ -123,11 +126,11 @@ CONSTANCE_ADDITIONAL_FIELDS = {
 }
 
 CONSTANCE_CONFIG = {
-    'GUI_DIR': (gui_path, 'Path to GUI Directory', str),
+    'GUI_DIR': (gui_path, 'Path to GUI Directory', 'disabled'),
     'MONITOR_INTERVAL': (10, 'Resource monitor system ping interval in seconds.', 'monitor_min'),
     'SCOREBOARD_DIR': (scoreboard_path, 'Path to NHL LED Scoreboard Directory. Change in Capstone/settings.py', 'disabled'),
     'SUPERVISOR_PROGRAM_NAME': ('scoreboard', 'ie. [program:scoreboard] from /etc/supervisor/conf.d/scoreboard.conf', 'good_slug'),
-    'SUPERVISOR_GUI_NAME': ('scoreboard-webgui', 'ie. [program:scoreboard-webgui] from /etc/supervisor/conf.d/scoreboard-webgui.conf', 'good_slug'),
+    'SUPERVISOR_GUI_NAME': ('led-board-manager', 'ie. [program:scoreboard-webgui] from /etc/supervisor/conf.d/scoreboard-webgui.conf', 'good_slug'),
 
     # Flags for the Scoreboard Process
     'LED_ROWS': (32, '16 for 16x32, 32 for 32x32 and 64x32.', int),
@@ -207,6 +210,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -301,3 +305,17 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
+}
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]

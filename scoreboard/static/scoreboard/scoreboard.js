@@ -2,11 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	var interval = document.getElementById('monitor-card').dataset.interval*1000;
 	var toggleTimer = setInterval(sysinfo, interval)
 
-	$('p#version').ready(function(){
-		update_check()
-		setInterval(update_check, 1800000);
-	});
-
 	// Use buttons to toggle between views
 	$('#index').click(function () {
 		location.href = '/';
@@ -16,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		location.href = `${this.dataset.url}`
 	});
 
-	$('#settings_create').click(function () {
+	$('.board-btns').click(function () {
 		location.href = `${this.dataset.url}`
 	});
 
@@ -36,12 +31,21 @@ document.addEventListener('DOMContentLoaded', function () {
 		.then(result => {
 			console.log(result);
 			$('div#profile-card h5.card-title').text(result.profile.name);
-			$('div#profile-card div.card-text').html(`
-				<p class="m-0">Favourite Team(s): ${JSON.stringify(result.profile.config.preferences.teams,null," ").replace("[","").replace("]","").replace(/["]+/g,"")}</p>
-				<p class="m-0">Live Mode: ${result.profile.config.live_mode}</p>
-				<p class="m-0">Debug: ${result.profile.config.debug}</p>
-				<p class="m-0">Log Level: ${result.profile.config.loglevel}</p>
+			$('div#profile-card div#board-type').html(`
+				<p class="m-0">Scoreboard Type: ${result.profile.boardType.board}</p>
+				
 			`);
+			if (result.scoreboard_status != true) {
+				$('div#scoreboard-status').html(`
+					<p class="m-0 status">Scoreboard Status: Supervisor Process Not Running <img src="/static/scoreboard/x-square-fill.svg" class="x-square-fill" width="24" height="24"></p>
+				`);
+				$('#sb-toggle').bootstrapToggle('off', true);
+			} else {
+				$('div#scoreboard-status').html(`
+					<p class="m-0 status">Scoreboard Status: Running <img src="/static/scoreboard/check-square-fill.svg" class="x-square-fill" width="24" height="24"></p>
+				`);
+				$('#sb-toggle').bootstrapToggle('on', true);
+			};
 		})
 		.catch(error => {
 			console.log(error);
@@ -108,10 +112,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		.then(response => response.json())
 		.then(result => {
 			console.log(result);
-			if (result.backup != true) {
+			if (result.backup != true || result.error != undefined) {
 				document.querySelector('#message').innerHTML = `
 					<div class="alert alert-danger alert-dismissible fade show">
-						<strong>Error!</strong> <small>File save unsuccessful! Attempted to save file as ${result.path}</small>
+						<strong>Error!</strong> <small>${result.error}</small>
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -345,17 +349,6 @@ function sysinfo() {
 			<p class="resource mt-n1 mb-0">${result.disk}</p>
 		</div>
 		`);
-		if (result.scoreboard_status != true) {
-			$('div#scoreboard-status').html(`
-				<p class="m-0 status">Scoreboard Status: Supervisor Process Not Running <img src="/static/scoreboard/x-square-fill.svg" class="x-square-fill" width="24" height="24"></p>
-			`);
-			$('#sb-toggle').bootstrapToggle('off', true);
-		} else {
-			$('div#scoreboard-status').html(`
-				<p class="m-0 status">Scoreboard Status: Running <img src="/static/scoreboard/check-square-fill.svg" class="x-square-fill" width="24" height="24"></p>
-			`);
-			$('#sb-toggle').bootstrapToggle('on', true);
-		};
 	})
 	.catch(error => {
 		console.log(error);

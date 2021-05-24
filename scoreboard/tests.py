@@ -3,8 +3,7 @@ from django.test import Client, TestCase, override_settings
 from django.conf import settings
 from constance import config
 from constance.test import override_config
-from scoreboard.services import conf_path, conf_default, schema
-from scoreboard.models import Settings
+from scoreboard.models import Settings, BoardType
 
 
 # Test Various GUI Functions
@@ -13,20 +12,6 @@ class Tests(unittest.TestCase):
         tz = settings.TIME_ZONE
         valid_tzs = pytz.common_timezones
         self.assertIn(tz, valid_tzs)
-
-    # Checks conf_path() base on constance path configuration.
-    @override_config(SCOREBOARD_DIR=os.path.join(config.GUI_DIR, "testing"))
-    def test_conf_path_exists(self):
-        path = conf_path()
-        self.assertIsNotNone(path)
-
-    # TO DO: Add test for conf_default() here.
-
-    # Tests that schema() returns based on constance path configuration.
-    @override_config(SCOREBOARD_DIR=os.path.join(config.GUI_DIR, "testing"))
-    def test_get_schema(self):
-        self.assertIsNotNone(schema())
-
 
 # Test Server Responses
 class SimpleTest(TestCase):
@@ -63,33 +48,24 @@ class SettingsTestCase(TestCase):
     # Setup Testing Settings instances.
     def setUp(self):
 
-        # Default Config Provided with services.conf_default() function.
-        Settings.objects.create(name="Test Profile1", config=conf_default(), isActive=True)
+        # Creates initial NHL board for testing
+        BoardType.objects.create(pk='NHL')
+
         # Sample Config Provided with GUI
         Settings.objects.create(name="Test Profile2", config=self.conf1(), isActive=True)
         # Dummy confs)
         Settings.objects.create(name="Test Profile3", config=self.conf2, isActive=False)
         Settings.objects.create(name="Test Profile4", config=self.conf3, isActive=True)
-        
-    @unittest.expectedFailure
-    def test_config_cannot_be_null(self):
-        Settings.objects.create(name="Test Profile5", isActive=True)
-        self.fail('Settings.config cannot be none.')
-  
-    @unittest.expectedFailure
-    def test_config_cannot_be_empty(self):
-        Settings.objects.create(name="Test Profile6", config="", isActive=True)
-        self.fail('Settings.config cannot be empty string')
 
     # Confirm the following actions based on test setup. Checks custom GUI model logic.
     def test_count_settings(self):
-        self.assertEqual(Settings.objects.all().count(), 4)
+        self.assertEqual(Settings.objects.all().count(), 3)
 
     def test_count_active(self):
         self.assertEqual(Settings.objects.filter(isActive=1).count(), 1)
 
     def test_backup_save(self):
-        p1 = Settings.objects.get(name="Test Profile1").save_to_file()
+        p1 = Settings.objects.get(name="Test Profile2").save_to_file()
         self.assertTrue(os.path.isfile(p1))
 
     # Removes created test files.
@@ -97,5 +73,5 @@ class SettingsTestCase(TestCase):
         if os.path.isfile(os.path.join(config.GUI_DIR, "testing/config/config.json")):
             os.remove("testing/config/config.json")
 
-        if os.path.isfile(os.path.join(config.GUI_DIR, "testing/config/test-profile1.config.json")):
-            os.remove("testing/config/test-profile1.config.json")
+        if os.path.isfile(os.path.join(config.GUI_DIR, "testing/Test-Profile2.config.json")):
+            os.remove("testing/Test-Profile2.config.json")

@@ -5,13 +5,13 @@ from django.views.generic import ListView
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponseRedirect, JsonResponse
-from django.core.exceptions import FieldError
+from django.core.exceptions import FieldError, ValidationError
 from constance import config
 from time import sleep
 
 from .forms import SettingsDetailForm
 from django_jsonforms.forms import JSONSchemaForm
-from .models import Settings
+from .models import Settings, BoardType
 from . import services
 import json, os, subprocess
 
@@ -32,17 +32,18 @@ def index(request):
 def command(request):
     data = json.loads(request.body)
 
-    # Command to start/stop the scoreboard
+    # Command to start/stop the active scoreboard
+    profile = Settings.objects.get(isActive=1)
     if request.method == "PUT" and data.get("sb_command"):
         try:
             if data.get("sb_command") == "sb_start":
-                command = ["sudo supervisorctl restart " + config.SUPERVISOR_PROGRAM_NAME]
+                command = ["sudo supervisorctl restart boards:" + profile.boardType.supervisorName]
             else:
-                command = ["sudo supervisorctl stop " + config.SUPERVISOR_PROGRAM_NAME]
+                command = ["sudo supervisorctl stop boards:" + profile.boardType.supervisorName]
             
             subprocess.check_call(command, shell=True)
             sleep(3)
-            status = services.proc_status()
+            status = profile.boardType.proc_status()
 
             if data.get("sb_command") == "sb_start" and status:
                 return JsonResponse({
@@ -111,21 +112,21 @@ def command(request):
         try:
             command = ["sleep 5 ; sudo reboot"]
             subprocess.check_call(command, shell=True)
-            
+            return JsonResponse({
+                "reboot": True
+            }, status=202)
+
         except subprocess.CalledProcessError:
             return JsonResponse({
                 "reboot": False,
             }, status=400)
-        else:
-            return JsonResponse({
-                "reboot": True
-            }, status=202)
+            
 
     if request.method == "PUT" and data.get("shutdown"):
         try:
             command = "sleep 5 ; sudo shutdown -h now"
             subprocess.check_call(command, shell=True)
-            
+
         except subprocess.CalledProcessError:
             return JsonResponse({
                 "shutdown": False
@@ -134,7 +135,8 @@ def command(request):
             return JsonResponse({
                 "shutdown": True
             }, status=202)
-                    
+
+
 class SettingsList(ListView):
     model = Settings
 
@@ -144,16 +146,14 @@ def active_profile(request):
     if request.method == "GET":
         try:
             profile = Settings.objects.get(isActive=1)
-            scoreboard_status = services.proc_status()
             return JsonResponse({
                 "profile": profile.serialize(),
-                "scoreboard_status": scoreboard_status
+                "scoreboard_status": profile.boardType.proc_status()
             }, status=200)
 
-        except Exception:
+        except Exception as e:
             return JsonResponse({
-                "profile": "NO PROFILE FOUND",
-                "scoreboard_status": scoreboard_status
+                "error": str(e)
             }, status=200)
 
 @login_required
@@ -163,14 +163,12 @@ def resource_monitor(request):
         cputemp = services.cputemp()
         disk = services.disk()
         memory = services.memory()
-        scoreboard_status = services.proc_status()
 
         return JsonResponse({
             "cpu": cpu,
             "cputemp": cputemp,
             "disk": disk,
-            "memory": memory,
-            "scoreboard_status": scoreboard_status
+            "memory": memory
         }, status=200)
 
 @login_required
@@ -178,22 +176,16 @@ def profiles(request, id):
     if request.method == "GET":
         profile = get_object_or_404(Settings, pk=id)
         if profile.id != 1 or profile.name.lower() != "default":
-            # Settings Forms are instantiated with form_options and schema functions from services.py
-            schema = services.schema()
-            startval = profile.config
-            options = services.form_options(startval)
-
             return render(request, "scoreboard/settings_edit.html", {
-                "detailform": SettingsDetailForm(instance=profile),
-                "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True),
+                "detailform": SettingsDetailForm(initial={"name":profile.name, "isActive": profile.isActive}),
+                "JSONform": JSONSchemaForm(schema=profile.boardType.schema(), options=services.form_options(profile.config), ajax=True),
                 "profile_id": profile.pk,
                 "profile_name": profile.name
             })
         else:
             messages.error(request, "Cannot edit the default profile!")
             return HttpResponseRedirect(reverse('profiles_list'))
-        
-    # Add checks to see if fille actions have taken place, not just Django DB actions. (JS AJAX calls need changed as well.)
+
     elif request.method == "PUT":
         profile = get_object_or_404(Settings, pk=id)
         data = json.loads(request.body)
@@ -217,15 +209,14 @@ def profiles(request, id):
         if data.get("backup"):
             try:
                 path = profile.save_to_file().strip()
-                message = "Profile saved to " + path
                 return JsonResponse({
                     "backup": True,
                     "path": path
                 }, status=202)
-            except Exception:
+            except ValueError as error:
                 return JsonResponse({
                     "backup": False,
-                    "path": path
+                    "error": str(error)
                 }, status=400)
 
         if data.get("delete"):
@@ -244,44 +235,60 @@ def profiles(request, id):
                 }, status=400)
 
     elif request.method == "POST":
-        profile = get_object_or_404(Settings, pk=id)
-        detailform = SettingsDetailForm(request.POST, instance=profile)
-        new_config = json.loads(request.POST['json'].encode().decode('utf-8-sig'))
+        try:
+            profile = get_object_or_404(Settings, pk=id)
+            detailform = SettingsDetailForm(request.POST)
+            new_config = json.loads(request.POST['json'])
 
-        if detailform.is_valid():
-            profile.config = new_config
-            profile.save(update_fields=['config'])
-            detailform.save()
-            message = "Your profile has been updated." + notes[profile.isActive]
-            messages.success(request, message)
+            if detailform.is_valid():
+                profile.name = detailform.cleaned_data['name']
+                profile.isActive = detailform.cleaned_data['isActive']
+                profile.config = new_config
+                profile.save(update_fields=['config', 'name', 'isActive'])
+                message = "Your profile has been updated." + notes[profile.isActive]
+                messages.success(request, message)
+                return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+
+            messages.error(request, detailform.non_field_errors)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": detailform.non_field_errors, })
+
+        except Exception as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+        except ValidationError as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+        except ValueError as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+        except FieldError as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
             return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
 
 @login_required
-def profiles_create(request):
+def profiles_create(request, board):
+    board_type = get_object_or_404(BoardType, pk=board)
     if request.method == "GET":
-        schema = services.schema()
-        startval = services.conf_default()
-        options = services.form_options(startval)
-
-        # Settings Forms are instantiated in forms.py
-        detailform = SettingsDetailForm()
         return render(request, "scoreboard/settings_create.html", {
-            "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True),
-            "detailform": detailform,
+            "detailform": SettingsDetailForm(initial={'isActive': 1}),
+            "JSONform": JSONSchemaForm(schema=board_type.schema(), options=services.form_options({}), ajax=True),
+            "boardtype": board,
         })
-        
+
     if request.method == "POST":
         detailform = SettingsDetailForm(request.POST)
-        # The request data for the config json must be encoded and then decoded again as below due to a BOM error.
-        # Without this the form submissions are saved as slash escaped strings... but why? Possibly due to jsonforms encoding methods.
-        new_config = json.loads(request.POST['json'].encode().decode('utf-8-sig'))
-
-        if detailform.is_valid():
-            
+        detailform.is_valid()
+        try:
+            # The request data for the config json must be encoded and then decoded again as below due to a BOM error.
+            # Without this the form submissions are saved as slash escaped strings... but why? Possibly due to jsonforms encoding methods.
+            new_config = json.loads(request.POST['json'].encode().decode('utf-8-sig'))
             name = detailform.cleaned_data['name']
             isActive = detailform.cleaned_data['isActive']
-
-            new_settings = Settings.objects.create(name=name, isActive=isActive, config=new_config)
+            new_settings = Settings.objects.create(name=name, isActive=isActive, config=new_config, boardType=board_type)
             new_settings.save()
 
             message = "Your profile has been saved." + notes[isActive]
@@ -289,24 +296,23 @@ def profiles_create(request):
 
             return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
 
-        elif FieldError:
-            schema = services.schema()
-            startval = json.loads(request.POST['json'])
-            options = services.form_options(startval)
-
-            # JSONResponse to refill form? This isnt working.
-            return render(request, "scoreboard/settings_create.html", {
-                "error": "Profile with this name exists.",
-                "detailform": SettingsDetailForm(request.POST),
-                "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True)
-            })
-        else:
-            return render(request, "scoreboard/settings_create.html", {
-                "error": "Invalid data. Please check your submission.",
-                "detailform": SettingsDetailForm(request.POST),
-                "JSONform": JSONSchemaForm(schema=schema, options=options, ajax=True)
-            })
-            
+        except Exception as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+        except ValidationError as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+        except ValueError as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+        except FieldError as e:
+            message = "Warning. ({})".format(e)
+            messages.info(request, message)
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+        
 
 def login_view(request):
     if request.method == "POST":

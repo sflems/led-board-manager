@@ -12,6 +12,7 @@
                         <tr>
                             <th scope="col" class="text-center">Status</th>
                             <th scope="col" style="text-align:left">Name</th>
+                            <th scope="col" style="text-align:left">Type</th>
                             <th scope="col" style="text-align:center" id="edit_col"></th>
                             <th scope="col" style="text-align:center" id="delete_col"></th>
                         </tr>
@@ -30,6 +31,9 @@
                                     </td>
                                     <td class="modal-link align-middle" data-toggle="modal" data-target="#configModal" data-json="{{ profile.config|pprint }}">
                                         {{ profile.name }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ profile.boardType }}
                                     </td>
                                     <td style="text-align:center">
                                     <ul class="mb-0">

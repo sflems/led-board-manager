@@ -1,0 +1,63 @@
+{
+    "$id": "#/properties/boards/properties/stonks",
+    "type": "object",
+    "title": "Stonks",
+    "default": {},
+    "description": "Settings for the stonks board.",
+    "properties": {
+        "tickers": {
+            "$id": "#/properties/boards/properties/stonks/properties/tickers",
+            "type": "array",
+            "title": "tickers",
+            "description": "List of stonk tickers to display.",
+            "default": [
+                "DOGE-USD",
+                "MMM",
+                "TSLA",
+                "BTC-USD",
+                "ETH-USD",
+                "AAPL",
+                "AMD",
+                "DIS"
+            ],
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/boards/properties/stonks/properties/tickers/items",
+                "type": "string",
+                "title": "Ticker",
+                "description": "Stonk ticker.",
+                "default": "BTC-USD"
+            }
+        },
+        "rotation_rate": {
+            "$id": "#/properties/boards/properties/stonks/properties/rotation_rate",
+            "type": "integer",
+            "title": "Rotation Rate",
+            "description": "How long, in seconds, each stock stays on the display before switching to the next stock. The total display time = tickers multiplied by the rotation_rate.",
+            "default": 6,
+            "maxValue": 120,
+            "minValue": 2
+
+        },
+        "chart_enabled": {
+            "$id": "#/properties/boards/properties/stonks/properties/chart_enabled",
+            "type": "boolean",
+            "title": "Chart",
+            "description": "Determines whether a chart will be displayed. If this is false, then the data fetch for chart data will not occur.",
+            "default": true
+        },
+        "logo_enabled": {
+            "$id": "#/properties/boards/properties/stonks/properties/logo_enabled",
+            "type": "boolean",
+            "title": "Stonk Logo",
+            "description": "Setting to enable/disable the stonk ticker (i.e. company) logo.",
+            "default": false
+        }
+    },
+    "required": [
+        "tickers",
+        "rotation_rate",
+        "chart_enabled",
+        "logo_enabled"
+    ]
+}

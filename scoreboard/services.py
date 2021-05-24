@@ -1,26 +1,17 @@
-
 import json, os, psutil, requests, subprocess
 from gpiozero import CPUTemperature
 from django import template
 from django.utils.formats import localize
 from django.http import Http404
+from django.db.models.signals import post_save
 from django.dispatch import receiver
-from constance import config, settings
+from django.conf import settings
+from constance import config
+from constance import settings as configsettings
 from constance.signals import admin_form_save
 
+from .models import BoardType
 from sh import git
-
-# Supervisor Commands for NHL Led Scoreboard
-def proc_status():
-    proc_status = False
-    command = "sudo supervisorctl status " + config.SUPERVISOR_PROGRAM_NAME
-    process = subprocess.run(command, shell=True, capture_output=True)
-
-    # Checks if bytes type string RUNNING is found in output(bytes type).
-    if b'RUNNING' in process.stdout:
-        proc_status = True
-
-    return proc_status
 
 # Supervisor Commands for NHL Led Scoreboard
 def gui_status():
@@ -37,8 +28,10 @@ def gui_status():
 # defines the users home/user/nhl-led-scoreboard/config folder path.
 def conf_path():
     path = os.path.join(config.SCOREBOARD_DIR, 'config/')
-    if not os.path.isdir(path):
-        error = "Scoreboard config directory not found. Check SCOREBOARD_DIR (path) configuration in Admin Panel. Configured path: \"" + conf_path() + "\""
+    if settings.TEST_MODE == True:
+        return os.path.join(config.GUI_DIR, 'testing', 'config/')
+    elif not os.path.isdir(path):
+        error = "Scoreboard config directory not found. Check SCOREBOARD_DIR (path) configuration in Admin Panel. Configured path: \"" + path + "\""
         raise ValueError(error)
     else:
         return path
@@ -75,7 +68,7 @@ def form_options(startval):
     options = {
         "startval": startval,
         "theme": "bootstrap4",
-        "object_layout": "default",
+        "object_layout": "grid",
         "template": "default",
         "show_errors": "interaction",
         "required_by_default": 0,
@@ -83,16 +76,16 @@ def form_options(startval):
         "display_required_only": 0,
         "remove_empty_properties": 0,
         "keep_oneof_values": 0,
-        "ajax": 1,
+        "ajax": 0,
         "ajaxCredentials": 0,
         "show_opt_in": 0,
-        "disable_edit_json": 1,
+        "disable_edit_json": 0,
         "disable_collapse": 0,
         "disable_properties": 1,
         "disable_array_add": 0,
         "disable_array_reorder": 0,
         "disable_array_delete": 0,
-        "enable_array_copy": 0,
+        "enable_array_copy": 1,
         "array_controls_top": 1,
         "disable_array_delete_all_rows": 1,
         "disable_array_delete_last_row": 1,
@@ -113,8 +106,12 @@ def render_sv_config(data, ctx):
 
 # Listens for Constance settings update. If signal rcv'd, the below functions run to update supervisor-daemon.conf and reload.
 @receiver(admin_form_save)
+@receiver(post_save, sender=BoardType)
 def constance_updated(sender, **kwargs):
-    return sv_template()
+    if not settings.TEST_MODE:
+        # Update supervisor confs
+        command = "sudo supervisorctl update"
+        return sv_template(), subprocess.run(command, shell=True)
 
 def sv_template():
     # Interpret paths relative to the project directory.
@@ -123,10 +120,10 @@ def sv_template():
 
     # Read and process the source file. Import flags from constance and save to supervisor config.
     flags = []
-    flag_fields = settings.CONFIG_FIELDSETS['Scoreboard Flags']['fields']
+    flag_fields = configsettings.CONFIG_FIELDSETS['Scoreboard Flags']['fields']
     for flag in flag_fields:
         key = flag.lower().replace('_', '-')
-        default = settings.CONFIG[str(flag)][0]
+        default = configsettings.CONFIG[str(flag)][0]
         value = str(getattr(config, flag))
         default_args = ["led-brightness", "led-gpio-mapping", "led-slowdown-gpio", "led-rows", "led-cols", "updatecheck", ]
         basic_args = ["led-show-refresh", "updatecheck", ]
@@ -151,20 +148,19 @@ def sv_template():
         elif is_modified():
             render_flag()
 
+    # Add optional board args here to convert to flags.
+    boards = BoardType.objects.all()
+    boardsList = []
+    for board in BoardType.objects.all():
+        boardsList.append(board.supervisorName)
+
     # Renders from daemon template with config and flags passed in as context.
     with open(path, "r") as f:
-        templated = render_sv_config(f.read(), {'config': config, 'flags': flags, })
+        templated = render_sv_config(f.read(), {'config': config, 'flags': flags, 'boards': boards, 'boardslist': boardsList })
 
     # Write it out to the corresponding .conf file.
     with open(templated_path, "w") as f:
         f.write(str(templated, 'utf-8'))
-
-    # Resart supervisor if supervisor process found. Checks if keys belong to GUI or scoreboard to restart respective process.
-    command = "sudo supervisorctl update " + config.SUPERVISOR_PROGRAM_NAME
-    subprocess.call(command, shell=True,)
-   
-    command = "sudo supervisorctl update " + config.SUPERVISOR_GUI_NAME
-    subprocess.call(command, shell=True,)
 
     # Copy metadata if necessary.
     return templated_path
