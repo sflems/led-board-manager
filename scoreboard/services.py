@@ -108,9 +108,10 @@ def render_sv_config(data, ctx):
 @receiver(admin_form_save)
 @receiver(post_save, sender=BoardType)
 def constance_updated(sender, **kwargs):
-    # Update supervisor confs
-    command = "sudo supervisorctl update"
-    return sv_template(), subprocess.run(command, shell=True)
+    if not settings.TEST_MODE:
+        # Update supervisor confs
+        command = "sudo supervisorctl update"
+        return sv_template(), subprocess.run(command, shell=True)
 
 def sv_template():
     # Interpret paths relative to the project directory.
