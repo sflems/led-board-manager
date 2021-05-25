@@ -36,8 +36,9 @@ Designed as a solution to manage the NHL LED Scoreboard project by [Joel Joannis
 
 The app uses a Django webserver to manage profiles in a simple SQLite database. Users can access the web interface which can be hosted on their local machine or network. The current `config.schema.json` found in the `nhl-led-scoreboard/config` directory generates an easy to use form to create a `config.json` file. It saves a new `config.json` in the `nhl-led-scoreboard/config` directory and restarts your board process to implement any changes on the fly! 
 
-JSON can also be edited manually in the `/admin` interface. __Be Careful!__ The entries in the admin panel are currently __not__ validated against the config schema. This allows you to enter custom configurations during testing. The admin app also has the ability to backup configurations to file from the dashboard and set various scoreboard flags on the fly.
+JSON can also be edited manually in the `/admin` interface. The admin app also has the ability to backup configurations to file from the dashboard and set various scoreboard flags on the fly.
 
+Boards and their paths/settings may also be added or configured in the admin panel.
 _____________
 
 ## Features
@@ -58,11 +59,13 @@ _____________
   - Reboot
   - Shutdown
 - Admin Dashboard
-  - Boards Management
+  - Boards Management (NHL / NFL / MLB / etc.)
   - Profiles Management
   - User Management
   - Scoreboard Flags (ie. `--led-brightness`, `--led-gpio-mapping`, `--update-check`, etc.)
   - WebGUI Defaults (ie. Default paths, Supervisor `[program:names]`)
+- REST API (W.I.P.)
+  - Interact with the board management backend API routes. (via http://`YOUR_IP`:9002/api)
 
 _____________
 
@@ -156,6 +159,11 @@ If you have the [NFL Board](https://github.com/mikemountain/nfl-led-scoreboard) 
 cp ~/led-board-manager/scoreboard/static/schema/nfl.config.schema.json ~/nfl-led-scoreboard/config.schema.json
 ```
 
+Follow either command with:
+```
+sudo supervisorctl reread
+```
+
 __See also: [Usage Instructions](#usage)__
 
 _____________
@@ -195,6 +203,10 @@ cp ~/led-board-manager/scoreboard/static/schema/mlb.config.schema.json ~/mlb-led
 If you have the [NFL Board](https://github.com/mikemountain/nfl-led-scoreboard) installed (in default location):
 ```
 cp ~/led-board-manager/scoreboard/static/schema/nfl.config.schema.json ~/nfl-led-scoreboard/config.schema.json
+```
+Follow either command with:
+```
+sudo supervisorctl reread
 ```
 
 ###### Sample configurations can be found in the [`nhl-led-scoreboard-img`](https://github.com/falkyre/nhl-led-scoreboard-img/tree/master/stage2/06-supervisor/files) project, by [@falkyre](https://github.com/falkyre).
