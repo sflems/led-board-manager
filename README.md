@@ -401,13 +401,15 @@ __Please change this password!__ You can do this by visiting `YOUR IP:PORT/admin
 _____________
 
 ## Info / Troubleshooting
+- `403 ERROR` when trying to access site: The Django CSRF method uses cookies to send the token with form submissions. Try adding your device IP to the allowed site cookies in your browser settings.
+
 - After updating, it may be necessary to update the database. See [Updates](#updates) for more info.
 
 - When a config is activated, the config.json contents are replaced with an updated configuration. You can do this on the profiles page. Your previous config.json is still "active" until you activate one here.
 
 - When a profile is backed up, a file is created in the same folder as `profile_name.config.json`. It's path and name are displayed as a message in the browser. Deleted profiles do not delete the config.json files; it only removes them from the Django Sqlite database. 
 
-- The GUI Defaults (ie Scoreboard path, Supervisor Program Name, etc.) can be changed in the Constance admin panel. Alternatively, they can be modified manually in the `Capstone/settings.py` file under the `CONSTANCE_CONFIG` variable.
+- The GUI Defaults (ie Scoreboard path, Supervisor Program Name, etc.) can be changed in the admin panel. Alternatively, they can be modified manually in the `Capstone/settings.py` file under the `CONSTANCE_CONFIG` variable.
 
 - Scoreboard Flags (ie. `--led-brightness`, `--led-gpio-mapping`, `--update-check`, , etc.) can be changed here too. ___With supervisor installed___, the GUI will update the supervisor config with any changed flags and restart the process!
 
