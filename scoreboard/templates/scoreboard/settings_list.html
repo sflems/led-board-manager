@@ -10,17 +10,17 @@
                 <table class="table table-striped table-hover" id="config-table">
                         <thead class="thead-dark">
                         <tr>
-                            <th scope="col" class="text-center">Status</th>
-                            <th scope="col" style="text-align:left">Name</th>
-                            <th scope="col" style="text-align:left">Type</th>
-                            <th scope="col" style="text-align:center" id="edit_col"></th>
-                            <th scope="col" style="text-align:center" id="delete_col"></th>
+                            <th scope="col" class="align-middle text-center px-1">Status</th>
+                            <th scope="col" class="align-middle text-left px-1">Name</th>
+                            <th scope="col" class="align-middle text-center px-1">Type</th>
+                            <th scope="col" class="align-middle text-center px-1" id="edit_col"></th>
+                            <th scope="col" class="align-middle text-center px-1" id="delete_col"></th>
                         </tr>
                         </thead>
                         <tbody>
                             {% for profile in object_list %}
-                                <tr class="profile-info ">
-                                    <td scope="row" class="modal-link align-middle text-center" data-toggle="modal" data-target="#configModal" data-json="{{ profile.config|pprint }}">
+                                <tr class="profile-info">
+                                    <td scope="row" class="modal-link align-middle text-center p-1" data-toggle="modal" data-target="#configModal" data-json="{{ profile.config|pprint }}">
                                         {% if profile.isActive %}
                                             <img src={% static 'scoreboard/check-square-fill.svg' %} width="32" height="32" class="check-square-fill">
                                             </img>
@@ -29,35 +29,29 @@
                                             </img>
                                         {% endif %}                                            
                                     </td>
-                                    <td class="modal-link align-middle" data-toggle="modal" data-target="#configModal" data-json="{{ profile.config|pprint }}">
+                                    <td class="modal-link align-middle text-left p-1 pl-2" data-toggle="modal" data-target="#configModal" data-json="{{ profile.config|pprint }}">
                                         {{ profile.name }}
                                     </td>
-                                    <td class="align-middle">
+                                    <td class="align-middle p-1 text-center">
                                         {{ profile.boardType }}
                                     </td>
-                                    <td style="text-align:center">
-                                    <ul class="mb-0">
-                                        {% if not profile.isActive %}
-                                            <button href="#" id="activate" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-block btn-sm btn-success b-2">Activate</button>
-                                        {% endif %}
-                                        {% if profile.name != "Default" %}
+                                    <td class="p-1 text-center">
+                                        <ul class="mb-0 p-0">
+                                            {% if not profile.isActive %}
+                                                <button href="#" id="activate" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-block btn-sm btn-success b-2">Activate</button>
+                                            {% endif %}
                                             <button href="#" id="edit" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-block btn-sm btn-outline-dark mb-2">Edit</button>
                                             <button href="#" id="backup" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" class="btn btn-block btn-sm btn-outline-dark mb-0">Backup</button>
-                                        {% endif %}
-                                    </ul>
+                                        </ul>
                                     </td>
-                                    <td class="align-middle text-center">
-                                        {% if not profile.isActive and profile.name.lower != "default" %}
-
-                                            <!-- Delete Profile Modal -->
-                                            <button type="button" id="deleteModalbutton" class="btn btn-outline-danger" data-toggle="modal" data-target="#staticBackdrop" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" >
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="mt-n1 bi bi-file-earmark-x" viewBox="0 0 16 16">
-                                                    <path d="M6.854 7.146a.5.5 0 1 0-.708.708L7.293 9l-1.147 1.146a.5.5 0 0 0 .708.708L8 9.707l1.146 1.147a.5.5 0 0 0 .708-.708L8.707 9l1.147-1.146a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146z"/>
-                                                    <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
-                                                </svg>
-                                            </button>
-
-                                        {% endif %}
+                                    <td class="align-middle text-center p-1">
+                                        <!-- Delete Profile Modal -->
+                                        <button type="button" id="deleteModalbutton" class="btn btn-outline-danger" data-toggle="modal" data-target="#staticBackdrop" data-id="{{ profile.id }}" data-editurl="{% url 'profiles' profile.id %}" >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="mt-n1 bi bi-file-earmark-x" viewBox="0 0 16 16">
+                                                <path d="M6.854 7.146a.5.5 0 1 0-.708.708L7.293 9l-1.147 1.146a.5.5 0 0 0 .708.708L8 9.707l1.146 1.147a.5.5 0 0 0 .708-.708L8.707 9l1.147-1.146a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146z"/>
+                                                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                                            </svg>
+                                        </button>
                                     </td>
                                 </tr>
                             {% empty %}

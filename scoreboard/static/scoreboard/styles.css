@@ -41,6 +41,13 @@
          url('/static/fonts/NHLWASHI.ttf') format("truetype");
   }
 
+/* Smaller Mobile Fonts */
+@media (max-width: 575.98px) {
+    body {
+        font-size: 87%;
+    }
+}
+
 /* Heading Fonts */
 h1, h2, h3, h4, h5, th {
     font-family: 'NHLEWas_';
@@ -91,7 +98,7 @@ div#configModal div.modal-body {
 
 @media (max-width: 575.98px) {
     div#configModal div.modal-body {
-        font-size: 50%;
+        font-size: 70%;
     }
 }
 
@@ -118,6 +125,8 @@ div#configModal div.modal-body {
 }
 
 /* Tables */
+
+
 .table-nostriped {
     background-color:transparent!important;
 }

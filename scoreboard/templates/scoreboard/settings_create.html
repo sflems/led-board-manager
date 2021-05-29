@@ -5,7 +5,7 @@
 {% block form %}
 	<div class="page-nav row mt-3 justify-content-center">
 		<div class="col">
-			<h3 class="form-title text-center">Create a Profile</h3>
+			<h4 class="form-title text-center">Create a Profile</h4>
 				<form id="" class="m-n1" action="{% url 'create' boardtype %}" method="post">
 				{% csrf_token %}
 				{{ detailform.name|as_crispy_field }}

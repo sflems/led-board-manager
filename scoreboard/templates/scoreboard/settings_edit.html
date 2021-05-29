@@ -5,8 +5,8 @@
 {% block form %}
 	<div class="page-nav row mt-3 justify-content-center">
 		<div class="col">
-			<h3 class="form-title text-center">Updating:</h3>
-			<h3 class="form-title text-center">{{ profile_name }}</h3>
+			<h4 class="form-title text-center">Updating:</h4>
+			<h4 class="form-title text-center">{{ profile_name }}</h4>
 			<form id="settingsform" class="m-n1" action="{% url 'profiles' profile_id %}" method="post">
 				{% csrf_token %}
 				{{ detailform.name|as_crispy_field }}
