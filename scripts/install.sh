@@ -7,11 +7,10 @@ set -e
 
 # Gets the current working dir. 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-TARGET="$( cd ../nhl-led-scoreboard && pwd )"
-echo "Working directory: "$DIR >&3
-echo "Target: "$TARGET >&3
+# TARGET="$( cd "${DIR}/../../nhl-led-scoreboard" && pwd )" 
+WORKING="$( cd "${DIR}/.." && pwd )"
+echo "Working directory: "$WORKING >&3 && cd ${WORKING}
 
-cd $DIR
 
 # A permission issue in the past was solved by creating the file on install and granting the permissions.
 echo "Touching .secret.txt and updating permissions..." >&3
@@ -30,6 +29,6 @@ env/bin/python3 manage.py migrate >&3
 env/bin/python3 manage.py loaddata teams.json >&3
 
 echo "SETUP COMPLETED!!!" >&3
-echo "Start the Web GUI server with 'env/bin/activate && gunicorn Capstone.wsgi -b 0:9002' or './autorun.sh'" >&3
+echo "Start the Web GUI server with 'source env/bin/activate && gunicorn Capstone.wsgi -b 0:9002' or './autorun.sh'" >&3
 
 exit 0

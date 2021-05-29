@@ -135,7 +135,7 @@ _To run the server in a development environment, `python3-venv` can be a solutio
 ```
 sudo apt install python3-venv
 python3 -m venv env
-./install.sh
+./scripts/install.sh
 ```
 Once finished, you can start the server with:
 ```
@@ -268,7 +268,7 @@ We're going to use the Raspberry Pi's `/etc/rc.local` file to start our script o
 Enter `sudo nano /etc/rc.local` to add the following line before `exit 0`:
 
 ```
-su pi -c '/home/pi/led-board-manager/autorun.sh >> /tmp/scoreboard-gui.log 2>&1'
+su pi -c '/home/pi/led-board-manager/scripts/autorun.sh >> /tmp/scoreboard-gui.log 2>&1'
 ```
 ...substituting your own username for `pi`, if changed. This method will also create a log file for the server: `/tmp/scoreboard-gui.log`. You can tail the log with the following command:
 
@@ -289,7 +289,7 @@ git pull
 
 _When updating, or if stated in the release notes, it may be necessary to run the update script from the `led-board-manager` directory._
 ```
-./update.sh
+./scripts/update.sh
 ``` 
 Then, restart the web server.
 
@@ -301,7 +301,7 @@ python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py load data teams.json
 ```
-Then, restart the web server. You can `deactivate` the `(env)` if you are using the `./autorun.sh` script or `supervisor`.
+Then, restart the web server. You can `deactivate` the `(env)` if you are using the `./scripts/autorun.sh` script or `supervisor`.
 
 ## Removal / Uninstall
 ##### To remove the webserver:
@@ -342,7 +342,7 @@ gunicorn Capstone.wsgi -b 0:9002
 ```
 
 ### To start the webserver with a script:
-Simply run `./autorun.sh` from the same location.
+Simply run `./scripts/autorun.sh` from the same location.
 
 This command, and the default configuration, start the server on `0.0.0.0` and port `9002` making it available to any connected devices on your local network. Alternatively, you can run the server on a different port, e.g. `0:8000`, `0:PORT`, or available to _just_ the `localhost` machine by running:
 ```
@@ -432,7 +432,8 @@ _____________
   |
   ├── scoreboard/                 <-- Scoreboard Django App Directory
   |   |
-  │   ├── fixtures/               <-- Contains teams.json DB initialization data as well as sample config JSON files for the nhl-led-scoreboard.
+  │   └── fixtures/               <-- Contains teams.json DB initialization data as well as sample config JSON files for the nhl-led-scoreboard.
+  |             
   │       ├── config.json
   │       ├── config.schema.json
   │       └── teams.json
@@ -455,18 +456,23 @@ _____________
   │   ├── urls.py                 <-- Scoreboard specific URLs setup.
   │   └── views.py                <-- Views created for scoreboard app.
   |
+  ├── scripts/                      <-- Scripts Directory
+  |   ├── autorun.sh                <-- Server start script.
+  |   ├── install.sh                <-- App install script. Automates django installation / installs requirements, and sets up database.
+  |   └── update.sh                 <-- Script used to simplify if required in an update. Runs migration/loaddata commands, etc.
+  |
+  ├── staticfiles/                  <-- Django staticfiles collection directory.
+  ├── testing/                      <-- Directory for testing purposes.
   ├── .secret.txt                   <-- Created by secret-key-generator for key randomization.
-  ├── autorun.sh                    <-- Server start script.
   ├── db.sqlite3                    <-- led-board-manager database.
-  ├── install.sh                    <-- App install script. Automates django installation / installs requirements, and sets up database.
   ├── LICENSE
   ├── manage.py                     <-- Django manage.py file used to operate project.
   ├── README.md                     <-- Just RTFM.
   ├── requirements.txt              <-- Project requirements, used by pip and install.sh.
   ├── TODO.txt                      <-- To-do list.
-  ├── update.sh                     <-- Script used to simplify if required in an update. Runs migration/loaddata commands, etc.
   └── webgui-log.out                <-- Log created by install.sh script. 
   ```
+  
 _____________
 
 ## Screenshots / Demo
