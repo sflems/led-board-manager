@@ -429,4 +429,6 @@ _____________
 ###### Settings Admin
   <img src="/assets/images/LED Scoreboard Configurator - Settings Admin.png" alt="LED Scoreboard Configurator - Settings Admin" width="100%"/>
 
+###### Boards Admin
+  <img src="/assets/images/LED Scoreboard Configurator - Boards Admin.png" alt="LED Scoreboard Configurator - Boards Admin" width="100%"/>
 ### Please let me know if you experience any bugs, feature suggestions or issues. Enjoy!
