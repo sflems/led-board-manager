@@ -23,26 +23,30 @@ print('\nEnter the full path to `NHL-LED-Scoreboard`. ')
 nhl_path = input(print('Leave blank for "/home/pi/nhl-led-scoreboard": '))
 
 if nhl_path == "":
-    nhl_path = "/home/pi/nhl-led-scoreboard"
+    nhl_path = path_verify("/home/pi/nhl-led-scoreboard")
 else:
     nhl_path = path_verify(nhl_path)
-    new_file = []
 
+new_file = []
 with open(cwd + "/Capstone/settings.py", 'r') as f:
-    for line in f.read():
-        if not "NHL_SCOREBOARD_PATH =" in line:
+    for line in f:
+        if "NHL_SCOREBOARD_PATH = " in line:
+            line = 'NHL_SCOREBOARD_PATH = "{}"\n'.format(nhl_path)
+            new_file.append(line)
+        elif "GUI_PATH = " in line:
+            line = 'GUI_PATH = "{}"\n'.format(cwd)
             new_file.append(line)
         else:
-            line = 'NHL_SCOREBOARD_PATH = "{}"'.format(nhl_path)
             new_file.append(line)
     f.close()
 
 with open(cwd + "/Capstone/settings.py", 'w') as f:
-    for line in new_file:
-        f.write(line)
+    output = "".join(new_file)
+    f.write(output)
     f.close()
 
-print(f"INFO: NHL scoreboard path has been configured to: `{nhl_path}`.\n")
+print(f"INFO: Capstone.settings.NHL_SCOREBOARD_PATH has been configured to: `{nhl_path}`.")
+print(f"INFO: Capstone.settings.GUI_PATH has been configured to: `{cwd}`.\n")
 
 # Prompt for additional boards
 questions = [

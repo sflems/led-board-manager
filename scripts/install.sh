@@ -12,6 +12,7 @@ WORKING="$( cd "${DIR}/.." && pwd )"
 echo "$(tput bold)Working directory:$(tput sgr0) "$WORKING >&3 && cd ${WORKING}
 
 # Modify the nhl-led-scoreboard source to inject Stonks
+echo "Getting installer requirements..." >&3
 env/bin/python3 -m pip install inquirer >&3
 env/bin/python3 scripts/install_modify.py >&3
 
