@@ -26,7 +26,8 @@
     - [Accessing the Server](#to-access-the-server)
     - [To Stop the Server](#to-stop-the-server)
     - [Default Login](#default-admin-login)
-    - [Info & Troubleshooting](#info--troubleshooting)
+    - [Info](#info)
+    - [Troubleshooting](#troubleshooting)
   - [Screenshots](#screenshots--demo)
 
 _____________
@@ -136,6 +137,7 @@ _To run the server in a development environment, `python3-venv` can be a solutio
 sudo apt install python3-venv
 python3 -m venv env
 ./scripts/install.sh
+sudo supervisorctl reread
 ```
 Once finished, you can start the server with:
 ```
@@ -156,7 +158,12 @@ __See also: [Usage Instructions](#usage)__
 _____________
 
 ## Manual Installation:
+#### From the `/home/pi` directory:
+###### (or the same location as your `nhl-led-scoreboard` directory)
+
 ```
+git clone --recursive https://github.com/sflems/led-board-manager.git
+cd led-board-manager
 touch .secret.txt
 chmod g+w .secret.txt
 ```
@@ -210,7 +217,7 @@ Your shell should have the `(env)` prepended if active:
 (env) pi@raspberrypi:~/led-board-manager $ 
 ```
 
-_To exit the `(env)` at any time __after__ installing and running the `loaddata` step, enter the command `deactivate` in the terminal._
+_To exit the `(env)` at any time __after__ installing and running the `test` step, enter the command `deactivate` in the terminal._
 
 ##### Install the app requirements and dependencies from the included requirements.txt file:
 `pip3 install -r requirements.txt`
@@ -223,6 +230,7 @@ First, run:
  python3 manage.py makemigrations
  python3 manage.py migrate
  python3 manage.py loaddata teams.json
+ python3 manage.py test
  ```
 
 Either follow the next step to setup server autostart, or see [usage instructions](#usage) for more details.
@@ -239,8 +247,10 @@ Add...
 ###### Example:
 ```
 [include]
-files = /etc/supervisor/conf.d/*.conf /home/pi/led-board-manager/supervisor-daemon.conf
+files = conf.d/*.conf /home/pi/led-board-manager/supervisor-daemon.conf
 ```
+
+Then run command `sudo supervisorctl reread`
 
 _To finish the easy GUI install method, [return to the steps above.](#install-and-start-python3-venv)_
 
@@ -281,7 +291,8 @@ source env/bin/activate
 pip3 install -r requirements.txt
 python3 manage.py makemigrations
 python3 manage.py migrate
-python3 manage.py load data teams.json
+python3 manage.py loaddata teams.json
+python3 manage.py test
 ```
 Then, restart the web server. You can `deactivate` the `(env)` if you are using the `./scripts/autorun.sh` script or `supervisor`.
 
@@ -299,12 +310,12 @@ Any profiles backed up from the GUI and the `config.json` file will remain in th
 ##### Remove the Supervisor Configuration if present. Change the following:
 ```
 [include]
-files = /etc/supervisor/conf.d/*.conf /home/pi/led-board-manager/supervisor-daemon.conf
+files = conf.d/*.conf /home/pi/led-board-manager/supervisor-daemon.conf
 ```
 Back to:
 ```
 [include]
-files = /etc/supervisor/conf.d/*.conf
+files = conf.d/*.conf
 ```
 
 ##### Remove the `rc.local` Configuration if present:
@@ -319,8 +330,7 @@ __Be sure to back up any previous configurations before use!!!__
 
 To start the server manually, and from the `led-board-manager` directory, enter:
 ```
-source env/bin/activate
-gunicorn Capstone.wsgi -b 0:9002
+source env/bin/activate && gunicorn Capstone.wsgi -b 0:9002
 ```
 
 ### To start the webserver with a script:
@@ -382,22 +392,26 @@ __Please change this password!__ You can do this by visiting `YOUR IP:PORT/admin
 
 _____________
 
-## Info / Troubleshooting
+## Info 
+- The supervisor configuration is updated when saving flag settings or BoardType settings in the admin panel.
+- When a profile is activated, the appropriate `config.json` contents are replaced with an updated configuration. You can do this on the profiles page. Your previous config.json is still "active" until you activate one here.
+- When a profile is backed up, a file is created in the same folder as `profile_name.config.json`. It's path and name are displayed as a message in the browser. 
+- Deleted profiles do not delete the `config.json` files; it only removes them from the Django Sqlite database. 
 - The `supervisor-daemon.conf` used by the `led-board-manager` app prefixes any configured BoardTypes with `boards:`.
-  - You can these programs are grouped in supervisor with the `boards:` prefix.
+  - These programs are grouped in supervisor with the `boards:` prefix.
   - `sudo supervisorctl restart scoreboard` would become `sudo supervisorctl restart boards:scoreboard`.
+- The GUI Defaults (ie Scoreboard path, Supervisor Program Name, etc.) can be changed in the admin panel. Alternatively, they can be modified manually in the `Capstone/settings.py` file under the `CONSTANCE_CONFIG` variable.
+  - Scoreboard Flags (ie. `--led-brightness`, `--led-gpio-mapping`, `--update-check`, , etc.) can be changed here too. ___With supervisor installed___, the GUI will update the supervisor config with any changed flags and update.
 
+## Troubleshooting
+- After updating, it may be necessary to update the database. See [Updates](#updates) for more info.
 - `403 ERROR` when trying to access site: The Django CSRF method uses cookies to send a CSRF token with form submissions. Try adding your device IP to the allowed site cookies in your browser settings. If this doesn't work, please open an [issue](https://github.com/sflems/led-board-manager/issues).
 
-- After updating, it may be necessary to update the database. See [Updates](#updates) for more info.
 
-- When a config is activated, the config.json contents are replaced with an updated configuration. You can do this on the profiles page. Your previous config.json is still "active" until you activate one here.
 
-- When a profile is backed up, a file is created in the same folder as `profile_name.config.json`. It's path and name are displayed as a message in the browser. Deleted profiles do not delete the config.json files; it only removes them from the Django Sqlite database. 
 
-- The GUI Defaults (ie Scoreboard path, Supervisor Program Name, etc.) can be changed in the admin panel. Alternatively, they can be modified manually in the `Capstone/settings.py` file under the `CONSTANCE_CONFIG` variable.
 
-- Scoreboard Flags (ie. `--led-brightness`, `--led-gpio-mapping`, `--update-check`, , etc.) can be changed here too. ___With supervisor installed___, the GUI will update the supervisor config with any changed flags and restart the process!
+
 
 - File Structure
   ```
