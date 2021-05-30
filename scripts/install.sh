@@ -17,22 +17,25 @@ env/bin/python3 -m pip install inquirer >&3
 env/bin/python3 scripts/install_modify.py >&3
 
 # A permission issue in the past was solved by creating the file on install and granting the permissions.
-echo "Touching .secret.txt and updating permissions..." >&3
-
 # The .secret.txt file is automatically generated and saved here. It may also need to have the appropriate write permissions as well.
+echo "Touching .secret.txt and updating permissions..." >&3
 touch .secret.txt >&3 && chmod g+w .secret.txt >&3 && echo "SUCCESS: Created and updated .secret.txt" >&3 || { echo "ERROR: Unable to create .secret.txt. Check webgui-log.out for details." >&3; exit 1; }
 
 # Install the app requirements and dependencies from the included requirements.txt file:
-echo "Installing requirements.txt. This may take a few moments..." >&3
+echo "Installing WebGUI requirements.txt. This may take a few moments..." >&3
 env/bin/python3 -m pip install --ignore-installed -r requirements.txt >&3
 
-# Create Django DB and load default data.
+# Create Django DB, load default data and run tests.
 echo "Generating WebGUI database and loading initial data..." >&3
 env/bin/python3 manage.py makemigrations >&3
 env/bin/python3 manage.py migrate >&3
 env/bin/python3 manage.py loaddata teams.json >&3
 
+echo "Running Django tests..." >&3
+env/bin/python3 manage.py test && echo "...done. " >&3
+
+# Yay!?
 echo "$(tput bold)SETUP COMPLETED!!!" >&3
-echo "Start the Web GUI server with $(tput bold)'source env/bin/activate && gunicorn Capstone.wsgi -b 0:9002'$(tput sgr0) or $(tput bold)'./autorun.sh'$(tput sgr0)" >&3
+echo "$(tput sgr0)Start the Web GUI server with $(tput bold)'source env/bin/activate && gunicorn Capstone.wsgi -b 0:9002'$(tput sgr0) or $(tput bold)'./autorun.sh'$(tput sgr0)" >&3
 
 exit 0

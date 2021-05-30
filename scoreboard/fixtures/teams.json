@@ -139,10 +139,10 @@
     "model": "scoreboard.team",
     "pk": 8,
     "fields": {
-      "name": "Montréal Canadiens",
+      "name": "Montreal Canadiens",
       "abbreviation": "MTL",
       "teamName": "Canadiens",
-      "locationName": "Montréal",
+      "locationName": "Montreal",
       "jsonLink": "https://statsapi.web.nhl.com/api/v1/teams/8",
       "officialSiteUrl": "http://www.canadiens.com/"
     }
@@ -437,17 +437,37 @@
           "end_of_day": "8:00",
           "location": "",
           "live_game_refresh_rate": 10,
-          "teams": ["Canadiens"],
+          "teams": [
+            "Canadiens"
+          ],
           "sog_display_frequency": 4,
           "goal_animations": {
             "pref_team_only": true
           }
         },
         "states": {
-          "off_day": ["scoreticker", "standings", "team_summary", "clock"],
-          "scheduled": ["standings", "team_summary", "scoreticker", "clock"],
-          "intermission": ["scoreticker", "team_summary"],
-          "post_game": ["standings", "team_summary", "scoreticker", "clock"]
+          "off_day": [
+            "scoreticker",
+            "standings",
+            "team_summary",
+            "clock"
+          ],
+          "scheduled": [
+            "standings",
+            "team_summary",
+            "scoreticker",
+            "clock"
+          ],
+          "intermission": [
+            "scoreticker",
+            "team_summary"
+          ],
+          "post_game": [
+            "standings",
+            "team_summary",
+            "scoreticker",
+            "clock"
+          ]
         },
         "boards": {
           "scoreticker": {
@@ -475,11 +495,17 @@
           "covid19": {
             "worldwide_enabled": false,
             "country_enabled": false,
-            "country": ["USA"],
+            "country": [
+              "USA"
+            ],
             "us_state_enabled": false,
-            "us_state": ["New York"],
+            "us_state": [
+              "New York"
+            ],
             "canada_enabled": false,
-            "canada_prov": ["Quebec"]
+            "canada_prov": [
+              "Quebec"
+            ]
           },
           "weather": {
             "enabled": false,

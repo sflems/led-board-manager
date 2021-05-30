@@ -196,9 +196,10 @@ CONSTANCE_CONFIG_FIELDSETS = {
     },
     'WebGUI Configuration': (
         'GUI_DIR',
+        'SUPERVISOR_GUI_NAME',
         'MONITOR_INTERVAL',
         'SCOREBOARD_DIR',
-        'SUPERVISOR_GUI_NAME',
+        
     ),
 }
 

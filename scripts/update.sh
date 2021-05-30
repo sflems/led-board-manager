@@ -11,16 +11,18 @@ WORKING="$( cd "${DIR}/.." && pwd )"
 echo "$(tput bold)Working directory:$(tput sgr0) "$WORKING >&3 && cd ${WORKING}
 
 # Install the app requirements and dependencies from the included requirements.txt file:
-echo "Installing requirements.txt. This may take a few moments..." >&3
+echo "Installing WebGUI requirements.txt. This may take a few moments..." >&3
 env/bin/python3 -m pip install -U -r requirements.txt >&3
 
-# Create Django DB and load default data.
+# Create Django DB, load default data, and run tests.
 echo "Updating WebGUI database and loading initial data..." >&3
 env/bin/python3 manage.py makemigrations >&3
 env/bin/python3 manage.py migrate >&3
-env/bin/python3 manage.py loaddata teams.json
+
+echo "Running Django tests..." >&3
+env/bin/python3 manage.py test && echo "...done. " >&3
 
 echo "$(tput bold)UPDATE COMPLETED!!!" >&3
-echo "Start the Web GUI server with $(tput bold)'source env/bin/activate && gunicorn Capstone.wsgi -b 0:9002'$(tput sgr0) or $(tput bold)'./autorun.sh'$(tput sgr0)" >&3
+echo "$(tput sgr0)Start the Web GUI server with $(tput bold)'source env/bin/activate && gunicorn Capstone.wsgi -b 0:9002'$(tput sgr0) or $(tput bold)'./autorun.sh'$(tput sgr0)" >&3
 
 exit 0

@@ -2,6 +2,7 @@
 
 import os.path
 import inquirer
+import json
 import shutil
 import sys
 
@@ -27,6 +28,7 @@ if nhl_path == "":
 else:
     nhl_path = path_verify(nhl_path)
 
+# Update Capstone/settings.py with scoreboard path.
 new_file = []
 with open(cwd + "/Capstone/settings.py", 'r') as f:
     for line in f:
@@ -45,6 +47,16 @@ with open(cwd + "/Capstone/settings.py", 'w') as f:
     f.write(output)
     f.close()
 
+with open(f"{cwd}/scoreboard/fixtures/teams.json", "r") as f:
+    loading_data = json.load(f)
+    for item in loading_data:
+        if "pk" in item.keys() and item['pk'] == "NHL":
+            item['fields']['path'] = nhl_path
+
+with open(f"{cwd}/scoreboard/fixtures/teams.json", "w") as json_out:
+    json.dump(loading_data, json_out, indent=2)
+    json_out.close()
+
 print(f"INFO: Capstone.settings.NHL_SCOREBOARD_PATH has been configured to: `{nhl_path}`.")
 print(f"INFO: Capstone.settings.GUI_PATH has been configured to: `{cwd}`.\n")
 
@@ -57,6 +69,7 @@ questions = [
 ]
 answers = inquirer.prompt(questions)
 
+# Update MLB BoardType.path
 if "MLB-LED-Scoreboard" in answers["boards"]:
     print('Enter the full path to `MLB-LED-Scoreboard`. ')
     mlb_path = input(print('Leave blank for "/home/pi/mlb-led-scoreboard": '))
@@ -64,7 +77,17 @@ if "MLB-LED-Scoreboard" in answers["boards"]:
         mlb_path = "/home/pi/mlb-led-scoreboard"
     else:
         mlb_path = path_verify(mlb_path)
-    print(f"INFO: Working path is: {mlb_path}")
+    print(f"INFO: MLB BoardType.path has been configured to: `{mlb_path}`.")
+    
+    with open(f"{cwd}/scoreboard/fixtures/teams.json", "r") as f:
+        loading_data = json.load(f)
+        for item in loading_data:
+            if "pk" in item.keys() and item['pk'] == "MLB":
+                item['fields']['path'] = mlb_path
+
+    with open(f"{cwd}/scoreboard/fixtures/teams.json", "w") as json_out:
+        json.dump(loading_data, json_out, indent=2)
+        json_out.close()
 
     # Copy MLB schema to working directory.
     print(f"Copying 'mlb.config.schema.json' to `{mlb_path}`... ", end='')
@@ -74,6 +97,7 @@ if "MLB-LED-Scoreboard" in answers["boards"]:
     )
     print("done.\n")
 
+# Update NFL BoardType.path
 if "NFL-LED-Scoreboard" in answers["boards"]:
     print('Enter the full path to `NFL-LED-Scoreboard`. ')
     nfl_path = input(print('Leave blank for "/home/pi/nfl-led-scoreboard": '))
@@ -81,7 +105,17 @@ if "NFL-LED-Scoreboard" in answers["boards"]:
         nfl_path = "/home/pi/nfl-led-scoreboard"
     else:
         nfl_path = path_verify(nfl_path)
-    print(f"INFO: Working path is: {nfl_path}")
+    print(f"INFO: NFL BoardType.path has been configured to: `{nfl_path}`.")
+
+    with open(f"{cwd}/scoreboard/fixtures/teams.json", "r") as f:
+        loading_data = json.load(f)
+        for item in loading_data:
+            if "pk" in item.keys() and item['pk'] == "NFL":
+                item['fields']['path'] = nfl_path
+
+    with open(f"{cwd}/scoreboard/fixtures/teams.json", "w") as json_out:
+        json.dump(loading_data, json_out, indent=2)
+        json_out.close()
 
     # Copy MLB schema to working directory.
     print(f"Copying 'nfl.config.schema.json' to `{nfl_path}`... ", end='')
