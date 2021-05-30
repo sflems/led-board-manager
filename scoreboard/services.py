@@ -25,43 +25,6 @@ def gui_status():
 
     return proc_status
 
-# defines the users home/user/nhl-led-scoreboard/config folder path.
-def conf_path():
-    path = os.path.join(config.SCOREBOARD_DIR, 'config/')
-    if settings.TEST_MODE == True:
-        return os.path.join(config.GUI_DIR, 'testing', 'config/')
-    elif not os.path.isdir(path):
-        error = "Scoreboard config directory not found. Check SCOREBOARD_DIR (path) configuration in Admin Panel. Configured path: \"" + path + "\""
-        raise ValueError(error)
-    else:
-        return path
-
-# Opens default config from current config in the nhl-led-scoreboard folder if found, otherwise from static config, and then loads into Settings Profile
-# TRY TO GET DEFAULT FROM SCOREBOARD .default DIR, then fallback.
-def conf_default():
-    config_file = os.path.join(conf_path(), ".default", "config.json.sample")
-    if not os.path.exists(config_file):
-        config_file = os.path.join(config.GUI_DIR, "scoreboard/static/schema/config.json")
-    with open(config_file, "r") as f:
-        conf = json.load(f)
-        return conf
-
-
-# Defines config schema used by the current led-scoreboard version.
-# File is opened, converted from binary to a python/django object and then used as a callable object.
-def schema():
-    try:
-        path = os.path.join(conf_path(), "config.schema.json")
-
-        if not os.path.isfile(path):
-            path = os.path.join(config.GUI_DIR, "scoreboard/static/schema/config.schema.json")
-
-        with open(path, "r") as f:
-            conf = json.load(f)
-            return conf
-    except FileNotFoundError:
-        raise Http404("\"config.schema.json\" not found. Check SCOREBOARD_DIR (path) configuration in Admin Panel. Configured path: \"" + conf_path() + "\"")
-
 # Options for JSON created settings form.
 # startval takes in current settings (NOT VALIDATED AGAINST SCHEMA). Others modify which JSON editing options are visible to users, themes, etc.
 def form_options(startval):
