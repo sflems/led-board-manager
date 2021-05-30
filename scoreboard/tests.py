@@ -32,12 +32,12 @@ class SimpleTest(TestCase):
 
 # Settings Model / Config Tests
 @override_settings(TEST_MODE=True)
-@override_config(SCOREBOARD_DIR=os.path.join(config.GUI_DIR, "testing"))
+@override_config(SCOREBOARD_DIR=os.path.join(settings.BASE_DIR, "testing"))
 class SettingsTestCase(TestCase):
 
     # Dummy Confs used in setUp().
     def conf1(self):
-        with open(os.path.join(config.GUI_DIR, "scoreboard/static/schema/config.json.sample"), "r") as f:
+        with open(os.path.join(settings.BASE_DIR, "scoreboard/static/schema/config.json.sample"), "r") as f:
             conf = json.load(f)
             return conf
 
@@ -70,8 +70,8 @@ class SettingsTestCase(TestCase):
 
     # Removes created test files.
     def tearDown(self):
-        if os.path.isfile(os.path.join(config.GUI_DIR, "testing/config/config.json")):
+        if os.path.isfile(os.path.join(settings.BASE_DIR, "testing/config/config.json")):
             os.remove("testing/config/config.json")
 
-        if os.path.isfile(os.path.join(config.GUI_DIR, "testing/Test-Profile2.config.json")):
+        if os.path.isfile(os.path.join(settings.BASE_DIR, "testing/Test-Profile2.config.json")):
             os.remove("testing/Test-Profile2.config.json")
