@@ -151,20 +151,6 @@ Password: `scoreboard`
 
 If you can't access the server and are using a firewall such as `ufw` or `iptables`, be sure to allow access _to your local network only_ over the `9002` port (or whatever you set it to if so). If you have ports 80/443 open on your Pi/Router, this site WILL be accessable by all, so be sure to have your firewall(s) in order. 
 
-If you have the [MLB Board](https://github.com/MLB-LED-Scoreboard/mlb-led-scoreboard) installed (in default location):
-```
-cp ~/led-board-manager/scoreboard/static/schema/mlb.config.schema.json ~/mlb-led-scoreboard/config.schema.json
-```
-If you have the [NFL Board](https://github.com/mikemountain/nfl-led-scoreboard) installed (in default location):
-```
-cp ~/led-board-manager/scoreboard/static/schema/nfl.config.schema.json ~/nfl-led-scoreboard/config.schema.json
-```
-
-Follow either command with:
-```
-sudo supervisorctl reread
-```
-
 __See also: [Usage Instructions](#usage)__
 
 _____________
