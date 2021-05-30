@@ -219,15 +219,11 @@ _To exit the `(env)` at any time __after__ installing and running the `loaddata`
 
 First, run:
 
-`python3 manage.py makemigrations`
-
-Followed by:
-
-`python3 manage.py migrate`
-
-And lastly:
-
-`python3 manage.py loaddata teams.json`
+ ```
+ python3 manage.py makemigrations
+ python3 manage.py migrate
+ python3 manage.py loaddata teams.json
+ ```
 
 Either follow the next step to setup server autostart, or see [usage instructions](#usage) for more details.
 
@@ -298,7 +294,7 @@ Then, restart the web server. You can `deactivate` the `(env)` if you are using 
 cd
 sudo rm -rfv led-board-manager
 ```
-Any profiles backed up from the GUI and the config file will remain in the `config/` directory.
+Any profiles backed up from the GUI and the `config.json` file will remain in the `config/` directories.
 
 ##### Remove the Supervisor Configuration if present. Change the following:
 ```
@@ -387,7 +383,11 @@ __Please change this password!__ You can do this by visiting `YOUR IP:PORT/admin
 _____________
 
 ## Info / Troubleshooting
-- `403 ERROR` when trying to access site: The Django CSRF method uses cookies to send the token with form submissions. Try adding your device IP to the allowed site cookies in your browser settings.
+- The `supervisor-daemon.conf` used by the `led-board-manager` app prefixes any configured BoardTypes with `boards:`.
+  - You can these programs are grouped in supervisor with the `boards:` prefix.
+  - `sudo supervisorctl restart scoreboard` would become `sudo supervisorctl restart boards:scoreboard`.
+
+- `403 ERROR` when trying to access site: The Django CSRF method uses cookies to send a CSRF token with form submissions. Try adding your device IP to the allowed site cookies in your browser settings. If this doesn't work, please open an [issue](https://github.com/sflems/led-board-manager/issues).
 
 - After updating, it may be necessary to update the database. See [Updates](#updates) for more info.
 
@@ -445,6 +445,7 @@ _____________
   ├── scripts/                      <-- Scripts Directory
   |   ├── autorun.sh                <-- Server start script.
   |   ├── install.sh                <-- App install script. Automates django installation / installs requirements, and sets up database.
+  |   ├── install_modify.py         <-- App install helper script. Used to copy schemas for additional boards.
   |   └── update.sh                 <-- Script used to simplify if required in an update. Runs migration/loaddata commands, etc.
   |
   ├── staticfiles/                  <-- Django staticfiles collection directory.
