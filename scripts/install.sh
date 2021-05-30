@@ -12,7 +12,8 @@ WORKING="$( cd "${DIR}/.." && pwd )"
 echo "$(tput bold)Working directory:$(tput sgr0) "$WORKING >&3 && cd ${WORKING}
 
 # Modify the nhl-led-scoreboard source to inject Stonks
-python3 scripts/install_modify.py >&3
+env/bin/python3 -m pip install inquirer >&3
+env/bin/python3 scripts/install_modify.py >&3
 
 # A permission issue in the past was solved by creating the file on install and granting the permissions.
 echo "Touching .secret.txt and updating permissions..." >&3

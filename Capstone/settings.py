@@ -74,8 +74,8 @@ INSTALLED_APPS = [
 ]
 
 # These paths can be hard coded for specific usage or as fix if server breaks on change.
-scoreboard_path = os.path.dirname(BASE_DIR) + "/nhl-led-scoreboard"
-gui_path = os.path.dirname(BASE_DIR) + "/led-board-manager"
+NHL_SCOREBOARD_PATH = os.path.dirname(BASE_DIR) + "/nhl-led-scoreboard"
+GUI_PATH = os.path.dirname(BASE_DIR) + "/led-board-manager"
 
 # Admin Field Modifcations go here.
 CONSTANCE_ADDITIONAL_FIELDS = {
@@ -126,9 +126,9 @@ CONSTANCE_ADDITIONAL_FIELDS = {
 }
 
 CONSTANCE_CONFIG = {
-    'GUI_DIR': (gui_path, 'Path to GUI Directory', 'disabled'),
+    'GUI_DIR': (GUI_PATH, 'Path to GUI Directory', 'disabled'),
     'MONITOR_INTERVAL': (10, 'Resource monitor system ping interval in seconds.', 'monitor_min'),
-    'SCOREBOARD_DIR': (scoreboard_path, 'Path to NHL LED Scoreboard Directory. Change in Capstone/settings.py', 'disabled'),
+    'SCOREBOARD_DIR': (NHL_SCOREBOARD_PATH, 'Path to NHL LED Scoreboard Directory. Change in Capstone/settings.py', 'disabled'),
     'SUPERVISOR_PROGRAM_NAME': ('scoreboard', 'ie. [program:scoreboard] from /etc/supervisor/conf.d/scoreboard.conf', 'good_slug'),
     'SUPERVISOR_GUI_NAME': ('led-board-manager', 'ie. [program:scoreboard-webgui] from /etc/supervisor/conf.d/scoreboard-webgui.conf', 'good_slug'),
 
