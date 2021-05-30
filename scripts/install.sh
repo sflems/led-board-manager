@@ -9,7 +9,7 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 # TARGET="$( cd "${DIR}/../../nhl-led-scoreboard" && pwd )" 
 WORKING="$( cd "${DIR}/.." && pwd )"
-echo "Working directory: "$WORKING >&3 && cd ${WORKING}
+echo "$(tput bold)Working directory:$(tput sgr0) "$WORKING >&3 && cd ${WORKING}
 
 # Modify the nhl-led-scoreboard source to inject Stonks
 python3 scripts/install_modify.py >&3
@@ -30,7 +30,7 @@ env/bin/python3 manage.py makemigrations >&3
 env/bin/python3 manage.py migrate >&3
 env/bin/python3 manage.py loaddata teams.json >&3
 
-echo "SETUP COMPLETED!!!" >&3
-echo "Start the Web GUI server with 'source env/bin/activate && gunicorn Capstone.wsgi -b 0:9002' or './autorun.sh'" >&3
+echo "$(tput bold)SETUP COMPLETED!!!" >&3
+echo "Start the Web GUI server with $(tput bold)'source env/bin/activate && gunicorn Capstone.wsgi -b 0:9002'$(tput sgr0) or $(tput bold)'./autorun.sh'$(tput sgr0)" >&3
 
 exit 0

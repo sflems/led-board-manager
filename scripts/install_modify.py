@@ -6,13 +6,14 @@ import shutil
 import json
 
 cwd = os.path.os.getcwd()
+print("")
 
 # Verify the path
 def path_verify(path):
     if path[-1] == '/':
         path = path[0:-1]
     if not os.path.isdir(path):
-        print(f"\nERROR: Supplied path does not exist - {path}")
+        print(f"\nWARNING: Supplied path does not exist - {path}. Schema copy failed.")
         quit()
     return path
 
@@ -26,31 +27,35 @@ questions = [
 answers = inquirer.prompt(questions)
 
 if "MLB-LED-Scoreboard" in answers["boards"]:
-    print('')
     print('Enter the full path to `MLB-LED-Scoreboard`. ')
-    mlb_path = input('Leave blank for "/home/pi/mlb-led-scoreboard": ')
+    mlb_path = input(print('Leave blank for "/home/pi/mlb-led-scoreboard": '))
     if mlb_path == "":
         mlb_path = "/home/pi/mlb-led-scoreboard"
     else:
         path_verify(mlb_path)
-    print(f"INFO: Working path is: {mlb_path}\n")
+    print(f"INFO: Working path is: {mlb_path}")
 
     # Copy MLB schema to working directory.
     print(f"Copying 'mlb.config.schema.json' to `{mlb_path}`... ", end='')
-    shutil.copyfile(f'{cwd}/scoreboard/static/schema/mlb.config.schema.json',f"{mlb_path}/config.schema.json")
-    print("done.")
+    shutil.copyfile(
+        f'{cwd}/scoreboard/static/schema/mlb.config.schema.json',
+        f"{mlb_path}/config.schema.json"
+    )
+    print("done.\n")
 
 if "NFL-LED-Scoreboard" in answers["boards"]:
-    print('')
     print('Enter the full path to `NFL-LED-Scoreboard`. ')
-    nfl_path = input('Leave blank for "/home/pi/nfl-led-scoreboard": ')
+    nfl_path = input(print('Leave blank for "/home/pi/nfl-led-scoreboard": '))
     if nfl_path == "": 
         nfl_path = "/home/pi/nfl-led-scoreboard"
     else:
         path_verify(nfl_path)
-    print(f"INFO: Working path is: {nfl_path}\n")
+    print(f"INFO: Working path is: {nfl_path}")
 
     # Copy MLB schema to working directory.
     print(f"Copying 'nfl.config.schema.json' to `{nfl_path}`... ", end='')
-    shutil.copyfile(f'{cwd}/scoreboard/static/schema/nfl.config.schema.json', f"{nfl_path}/config.schema.json")
-    print("done.")
+    shutil.copyfile(
+        f'{cwd}/scoreboard/static/schema/nfl.config.schema.json',
+        f"{nfl_path}/config.schema.json"
+    )
+    print("done.\n")
