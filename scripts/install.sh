@@ -11,6 +11,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 WORKING="$( cd "${DIR}/.." && pwd )"
 echo "Working directory: "$WORKING >&3 && cd ${WORKING}
 
+# Modify the nhl-led-scoreboard source to inject Stonks
+python3 scripts/install_modify.py >&3
 
 # A permission issue in the past was solved by creating the file on install and granting the permissions.
 echo "Touching .secret.txt and updating permissions..." >&3
