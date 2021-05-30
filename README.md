@@ -401,7 +401,7 @@ _____________
   - These programs are grouped in supervisor with the `boards:` prefix.
   - `sudo supervisorctl restart scoreboard` would become `sudo supervisorctl restart boards:scoreboard`.
 - The GUI Defaults (ie Scoreboard path, Supervisor Program Name, etc.) can be changed in the admin panel. Alternatively, they can be modified manually in the `Capstone/settings.py` file under the `CONSTANCE_CONFIG` variable.
-  - Scoreboard Flags (ie. `--led-brightness`, `--led-gpio-mapping`, `--update-check`, , etc.) can be changed here too.
+  - Scoreboard Flags (ie. `--led-brightness`, `--led-gpio-mapping`, `--update-check`, etc.) can be changed here too.
 
 ## Troubleshooting
 - After updating, it may be necessary to update the database. See [Updates](#updates) for more info.
@@ -410,7 +410,7 @@ _____________
 _____________
 
 ## Screenshots / Demo
-##### It's Mobile Freindly Too! (Responsive)
+##### It's Mobile Friendly Too! (Responsive)
 I encourage anyone interested to take a quick peek at the demo on YouTube:
 
 [![Web GUI YouTube Demo Video](https://img.youtube.com/vi/5byJf5v6Hnc/0.jpg)](https://www.youtube.com/watch?v=5byJf5v6Hnc)
