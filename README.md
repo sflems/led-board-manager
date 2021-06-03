@@ -20,14 +20,14 @@
     - [Manual Installation](https://github.com/sflems/led-board-manager/wiki/Manual-Installation)
     - [Autostarting the Webserver](https://github.com/sflems/led-board-manager/wiki/Auto-Starting-the-server-@-Boot)
     - [Updates](#updates)
-    - [Removal / Uninstall](#removal--uninstall)
+    - [Removal / Uninstall](https://github.com/sflems/led-board-manager/wiki/Uninstall)
   - [Usage](#usage)
     - [Starting the Server](#to-start-the-webserver)
     - [Accessing the Server](#to-access-the-server)
     - [To Stop the Server](#to-stop-the-server)
     - [Default Login](#default-admin-login)
     - [Info](#info)
-    - [Troubleshooting](#troubleshooting)
+    - [Troubleshooting](https://github.com/sflems/led-board-manager/wiki/Troubleshooting)
   - [Screenshots](#screenshots--demo)
 
 _____________
@@ -158,7 +158,7 @@ __See also: [Usage Instructions](#usage)__
 _____________
 
 ## Manual Installation:
-See the wiki for complete [Installation Instructions](https://github.com/sflems/led-board-manager/wiki/Manual-Installation).
+See the wiki for the [Manual Installation](https://github.com/sflems/led-board-manager/wiki/Manual-Installation) steps.
 
 ## Auto-Starting the server @ boot: 
 See the wiki for the complete [Auto-Start Instructions](https://github.com/sflems/led-board-manager/wiki/Auto-Starting-the-server-@-Boot).
@@ -190,34 +190,6 @@ python3 manage.py loaddata teams.json
 python3 manage.py test
 ```
 Then, restart the web server. You can `deactivate` the `(env)` if you are using the `./scripts/autorun.sh` script or `supervisor`.
-
-## Removal / Uninstall
-##### To remove the webserver:
-
-`deactivate` the `(env)`, then:
-
-```
-cd
-sudo rm -rfv led-board-manager
-```
-Any profiles backed up from the GUI and the `config.json` file will remain in the `config/` directories.
-
-##### Remove the Supervisor Configuration if present. Change the following:
-```
-[include]
-files = conf.d/*.conf /home/pi/led-board-manager/supervisor-daemon.conf
-```
-Back to:
-```
-[include]
-files = conf.d/*.conf
-```
-
-##### Remove the `rc.local` Configuration if present:
-```
-sudo nano /etc/rc.local
-```
-...and remove the server's autorun.sh script line.
 
 ## Usage
 __Be sure to back up any previous configurations before use!!!__
@@ -297,10 +269,6 @@ _____________
   - `sudo supervisorctl restart scoreboard` would become `sudo supervisorctl restart boards:scoreboard`.
 - The GUI Defaults (ie Scoreboard path, Supervisor Program Name, etc.) can be changed in the admin panel. Alternatively, they can be modified manually in the `Capstone/settings.py` file under the `CONSTANCE_CONFIG` variable.
   - Scoreboard Flags (ie. `--led-brightness`, `--led-gpio-mapping`, `--update-check`, etc.) can be changed here too.
-
-## Troubleshooting
-- After updating, it may be necessary to update the database. See [Updates](#updates) for more info.
-- `403 ERROR` when trying to access site: The Django CSRF method uses cookies to send a CSRF token with form submissions. Try adding your device IP to the allowed site cookies in your browser settings. If this doesn't work, please open an [issue](https://github.com/sflems/led-board-manager/issues).
 
 _____________
 
