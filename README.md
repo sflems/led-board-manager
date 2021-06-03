@@ -17,17 +17,17 @@
   - [Requirements](#requirements)
   - [Installation](#installation)
     - [First Steps](#first-steps)
-    - [Manual Installation](#manual-installation)
-    - [Autostarting the Webserver](#auto-starting-the-server--boot)
+    - [Manual Installation](https://github.com/sflems/led-board-manager/wiki/Manual-Installation)
+    - [Autostarting the Webserver](https://github.com/sflems/led-board-manager/wiki/Auto-Starting-the-server-@-Boot)
     - [Updates](#updates)
-    - [Removal / Uninstall](#removal--uninstall)
+    - [Removal / Uninstall](https://github.com/sflems/led-board-manager/wiki/Uninstall)
   - [Usage](#usage)
     - [Starting the Server](#to-start-the-webserver)
     - [Accessing the Server](#to-access-the-server)
     - [To Stop the Server](#to-stop-the-server)
     - [Default Login](#default-admin-login)
     - [Info](#info)
-    - [Troubleshooting](#troubleshooting)
+    - [Troubleshooting](https://github.com/sflems/led-board-manager/wiki/Troubleshooting)
   - [Screenshots](#screenshots--demo)
 
 _____________
@@ -158,115 +158,10 @@ __See also: [Usage Instructions](#usage)__
 _____________
 
 ## Manual Installation:
-#### From the `/home/pi` directory:
-###### (or the same location as your `nhl-led-scoreboard` directory)
-
-```
-git clone --recursive https://github.com/sflems/led-board-manager.git
-cd led-board-manager
-touch .secret.txt
-chmod g+w .secret.txt
-```
-
-##### Install `supervisor` (as root): 
-###### Skip to [Auto-Starting the Server](#auto-starting-the-server--boot) if you have an active `supervisor' installation.
-```
-su
-mkdir /etc/supervisor && cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
-chmod 644 /etc/supervisor/supervisord.conf
-
-mkdir /etc/supervisor/conf.d && cp /home/pi/led-board-manager/scoreboard/static/supervisor/scoreboard.conf /etc/supervisor/conf.d/scoreboard.conf
-chmod 644 /etc/supervisor/conf.d/scoreboard.conf
-
-cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
-chmod 644
-
-python3 -m pip install supervisor
-
-systemctl unmask supervisord
-systemctl enable supervisord 
-su pi
-
-mv sample.supervisor-daemon.conf supervisor-daemon.conf
-```
-
-If you have the [MLB Board](https://github.com/MLB-LED-Scoreboard/mlb-led-scoreboard) installed (in default location):
-```
-cp ~/led-board-manager/scoreboard/static/schema/mlb.config.schema.json ~/mlb-led-scoreboard/config.schema.json
-```
-If you have the [NFL Board](https://github.com/mikemountain/nfl-led-scoreboard) installed (in default location):
-```
-cp ~/led-board-manager/scoreboard/static/schema/nfl.config.schema.json ~/nfl-led-scoreboard/config.schema.json
-```
-Follow either command with:
-```
-sudo supervisorctl reread
-```
-
-###### Sample configurations can be found in the [`nhl-led-scoreboard-img`](https://github.com/falkyre/nhl-led-scoreboard-img/tree/master/stage2/06-supervisor/files) project, by [@falkyre](https://github.com/falkyre).
-
-##### Install `python3-venv` and create the Web Gui environment: 
-```
-sudo apt install python3-venv
-python3 -m venv env
-source env/bin/activate
-```
-
-Your shell should have the `(env)` prepended if active:
-```
-(env) pi@raspberrypi:~/led-board-manager $ 
-```
-
-_To exit the `(env)` at any time __after__ installing and running the `test` step, enter the command `deactivate` in the terminal._
-
-##### Install the app requirements and dependencies from the included requirements.txt file:
-`pip3 install -r requirements.txt`
-
-##### Once complete, we'll make, migrate and fill our sqlite3 database with the supplied teams data in the fixtures folder:
-
-First, run:
-
- ```
- python3 manage.py makemigrations
- python3 manage.py migrate
- python3 manage.py loaddata teams.json
- python3 manage.py test
- ```
-
-Either follow the next step to setup server autostart, or see [usage instructions](#usage) for more details.
+See the wiki for the [Manual Installation](https://github.com/sflems/led-board-manager/wiki/Manual-Installation) steps.
 
 ## Auto-Starting the server @ boot: 
-#### OPTION 1: Create a Supervisor Config to start the GUI with Gunicorn (PREFERRED):
-
-Add...
-```
-/home/pi/led-board-manager/supervisor-daemon.conf
-```
-...__to the end of the `files =` line__, under the`[Include]` section of your `/etc/supervisor/supervisord.conf` with just a space between the two paths. This will tell supervisor to use the updated program configurations that the webgui generates. To disable this feature, simply remove this line.
-
-###### Example:
-```
-[include]
-files = conf.d/*.conf /home/pi/led-board-manager/supervisor-daemon.conf
-```
-
-Then run command `sudo supervisorctl reread`
-
-_To finish the easy GUI install method, [return to the steps above.](#install-and-start-python3-venv)_
-
-#### OPTION 2: Create a script and use `rc.local` to autostart the devserver on startup:
-We're going to use the Raspberry Pi's `/etc/rc.local` file to start our script on boot. In the `/led-board-manager` folder, create a new file using:
-
-Enter `sudo nano /etc/rc.local` to add the following line before `exit 0`:
-
-```
-su pi -c '/home/pi/led-board-manager/scripts/autorun.sh >> /tmp/scoreboard-gui.log 2>&1'
-```
-...substituting your own username for `pi`, if changed. This method will also create a log file for the server: `/tmp/scoreboard-gui.log`. You can tail the log with the following command:
-
-`tail -f -n 100 /tmp/scoreboard-gui.log`
-
-Alternatively, you can setup a [crontab](https://www.raspberrypi.org/documentation/linux/usage/cron.md), [systemd](https://www.raspberrypi.org/documentation/linux/usage/systemd.md), or another method of your choice to autostart the app.
+See the wiki for the complete [Auto-Start Instructions](https://github.com/sflems/led-board-manager/wiki/Auto-Starting-the-server-@-Boot).
 
 ## Updates
 The latest update notes can be found under the [project releases](https://github.com/sflems/led-board-manager/releases). 
@@ -295,34 +190,6 @@ python3 manage.py loaddata teams.json
 python3 manage.py test
 ```
 Then, restart the web server. You can `deactivate` the `(env)` if you are using the `./scripts/autorun.sh` script or `supervisor`.
-
-## Removal / Uninstall
-##### To remove the webserver:
-
-`deactivate` the `(env)`, then:
-
-```
-cd
-sudo rm -rfv led-board-manager
-```
-Any profiles backed up from the GUI and the `config.json` file will remain in the `config/` directories.
-
-##### Remove the Supervisor Configuration if present. Change the following:
-```
-[include]
-files = conf.d/*.conf /home/pi/led-board-manager/supervisor-daemon.conf
-```
-Back to:
-```
-[include]
-files = conf.d/*.conf
-```
-
-##### Remove the `rc.local` Configuration if present:
-```
-sudo nano /etc/rc.local
-```
-...and remove the server's autorun.sh script line.
 
 ## Usage
 __Be sure to back up any previous configurations before use!!!__
@@ -402,10 +269,6 @@ _____________
   - `sudo supervisorctl restart scoreboard` would become `sudo supervisorctl restart boards:scoreboard`.
 - The GUI Defaults (ie Scoreboard path, Supervisor Program Name, etc.) can be changed in the admin panel. Alternatively, they can be modified manually in the `Capstone/settings.py` file under the `CONSTANCE_CONFIG` variable.
   - Scoreboard Flags (ie. `--led-brightness`, `--led-gpio-mapping`, `--update-check`, etc.) can be changed here too.
-
-## Troubleshooting
-- After updating, it may be necessary to update the database. See [Updates](#updates) for more info.
-- `403 ERROR` when trying to access site: The Django CSRF method uses cookies to send a CSRF token with form submissions. Try adding your device IP to the allowed site cookies in your browser settings. If this doesn't work, please open an [issue](https://github.com/sflems/led-board-manager/issues).
 
 _____________
 
