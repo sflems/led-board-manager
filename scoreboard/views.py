@@ -14,6 +14,10 @@ from django_jsonforms.forms import JSONSchemaForm
 from .models import Settings, BoardType
 from . import services
 import json, os, subprocess
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 # For Profile Activation Messages
 notes = [
@@ -51,6 +55,7 @@ def command(request):
                     "sb_status": status,
                 }, status=202)
             elif data.get("sb_command") == "sb_start" and not status:
+                logger.error("Unable to start scoreboard process.")
                 return JsonResponse({
                     "sb_success": False,
                     "sb_status": status,
@@ -63,13 +68,15 @@ def command(request):
                     "sb_status": status,
                 }, status=202)
             elif data.get("sb_command") == "sb_stop" and status:
+                logger.error("Unable to stop scoreboard process, or no running process found.")
                 return JsonResponse({
                     "sb_success": False,
                     "sb_status": status,
                     "error": "Unable to stop scoreboard process, or no running process found."
                 }, status=400)
-        
+
         except subprocess.CalledProcessError as error:
+            logger.error(str(error))
             return JsonResponse({
                 "sb_success": False,
                 "error": str(error),
@@ -79,8 +86,9 @@ def command(request):
         try:
             # Autostart toggle option for autostart.sh or supervisor here
             pass
-        
-        except subprocess.CalledProcessError:
+
+        except subprocess.CalledProcessError as error:
+            logger.error(str(error))
             return JsonResponse({
                 "autostart": False,
             }, status=400)
@@ -95,19 +103,14 @@ def command(request):
                 command = ["sleep 5 ; kill " + str(os.getpid())]
             else:
                 command = ["sleep 5 ; sudo supervisorctl stop " + config.SUPERVISOR_GUI_NAME]
-            
+
             subprocess.check_call(command, shell=True)
-        
-        except subprocess.CalledProcessError:
+
+        except (subprocess.CalledProcessError, ValueError, ValidationError):
             return JsonResponse({
                 "stopserver": False,
             }, status=400)
 
-        except ValueError:
-            return JsonResponse({
-                "stopserver": False,
-            }, status=400)
-             
     if request.method == "PUT" and data.get("reboot"):
         try:
             command = ["sleep 5 ; sudo reboot"]
@@ -152,6 +155,7 @@ def active_profile(request):
             }, status=200)
 
         except Exception as e:
+            logger.exception(str(e))
             return JsonResponse({
                 "error": str(e)
             }, status=200)
@@ -194,12 +198,13 @@ def profiles(request, id):
             try:
                 if not profile.isActive:
                     profile.isActive = True
-                    profile.save()
+                    profile.save(update_fields=['isActive'])
                     messages.success(request, "\"" + profile.name + "\" activated.")
                     return JsonResponse({
                         "activated": True
                     }, status=202)
-            except ValueError as error:
+            except (ValueError, ValidationError) as error:
+                logger.error(str(error))
                 return JsonResponse({
                     "activated": False,
                     "profile": profile.name,
@@ -213,7 +218,7 @@ def profiles(request, id):
                     "backup": True,
                     "path": path
                 }, status=202)
-            except ValueError as error:
+            except (ValueError, ValidationError) as error:
                 return JsonResponse({
                     "backup": False,
                     "error": str(error)
@@ -228,7 +233,8 @@ def profiles(request, id):
                 return JsonResponse({
                     "delete": True,
                 }, status=202)
-            except Exception:
+            except Exception as e:
+                logger.exception(str(e))
                 return JsonResponse({
                     "delete": False,
                     "profile": profile.name,
@@ -248,26 +254,22 @@ def profiles(request, id):
                 message = "Your profile has been updated." + notes[profile.isActive]
                 messages.success(request, message)
                 return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+            
+            errors = detailform.non_field_errors
 
-            messages.error(request, detailform.non_field_errors)
-            return HttpResponseRedirect(reverse("profiles_list"), {"message": detailform.non_field_errors, })
+            if "__all__" in detailform.non_field_errors:
+                errors = detailform.non_field_errors["__all__"]
+            
+            messages.error(request, errors)
+            logger.error(str(errors))
+            return HttpResponseRedirect(reverse("profiles_list"), {"message": errors })
 
-        except Exception as e:
+        except (Exception, ValidationError, ValueError, FieldError) as e:
             message = "Warning. ({})".format(e)
             messages.info(request, message)
+            logger.exception(message)
             return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
-        except ValidationError as e:
-            message = "Warning. ({})".format(e)
-            messages.info(request, message)
-            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
-        except ValueError as e:
-            message = "Warning. ({})".format(e)
-            messages.info(request, message)
-            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
-        except FieldError as e:
-            message = "Warning. ({})".format(e)
-            messages.info(request, message)
-            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+
 
 @login_required
 def profiles_create(request, board):
@@ -296,23 +298,11 @@ def profiles_create(request, board):
 
             return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
 
-        except Exception as e:
+        except (Exception, ValidationError, ValueError, FieldError) as e:
             message = "Warning. ({})".format(e)
             messages.info(request, message)
             return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
-        except ValidationError as e:
-            message = "Warning. ({})".format(e)
-            messages.info(request, message)
-            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
-        except ValueError as e:
-            message = "Warning. ({})".format(e)
-            messages.info(request, message)
-            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
-        except FieldError as e:
-            message = "Warning. ({})".format(e)
-            messages.info(request, message)
-            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
-        
+
 
 def login_view(request):
     if request.method == "POST":

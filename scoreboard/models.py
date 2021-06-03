@@ -7,14 +7,20 @@ from django.dispatch import receiver
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.conf import settings as appSettings
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 # Default User Class
 class User(AbstractUser):
     pass
 
+
 # User Profile
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_profile")
+
 
 # @receivers create or update Profile model on User model create/update
 @receiver(post_save, sender=User)
@@ -28,6 +34,7 @@ def save_user_profile(sender, instance, **kwargs):
         instance.user_profile.save()
     except ObjectDoesNotExist:
         UserProfile.objects.create(user=instance)
+
 
 # Fixtures - import from JSON with manage.py loaddata
 class Team(models.Model):
@@ -44,19 +51,20 @@ class Team(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def save(self, *args, **kwargs):
         return
 
     def delete(self, *args, **kwargs):
         return
 
+
 class BoardType(models.Model):
     # Board Choices - NHL/NFL/MLB/custom
     MLB = "MLB"
     NFL = 'NFL'
     NHL = "NHL"
-    
+
     board = models.CharField(
         max_length=16,
         default=NHL,
@@ -162,10 +170,8 @@ class Settings(models.Model):
 
     def clean(self):
         super().clean()
-        try:
-            fastjsonschema.validate(self.boardType.schema(), self.config)
-        except fastjsonschema.JsonSchemaException as e:
-            raise ValidationError(e)
+        fastjsonschema.validate(self.boardType.schema(), self.config)
+        
 
     def save_to_file(self):
         keepcharacters = (' ', '.', '_')
@@ -188,10 +194,11 @@ class Settings(models.Model):
 def pre_save(sender, instance, *args, **kwargs):
 
     # Validate config
-    try: 
+    try:
         instance.full_clean()
-    except Exception as e:
-        raise ValueError(e)
+    except (fastjsonschema.JsonSchemaException, Exception) as e:
+        logger.exception(e)
+        raise ValidationError(e)
 
     # Raise exception if config directory not found.
     if not os.path.isdir(instance.boardType.conf_dir()):
@@ -205,7 +212,6 @@ def pre_save(sender, instance, *args, **kwargs):
             profile.save()
 
 
-    
 # Saves config file to nhl-led-scoreboard directory if set as active
 @receiver(post_save, sender=Settings)
 def post_save(sender, instance, **kwargs):
