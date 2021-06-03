@@ -236,37 +236,7 @@ First, run:
 Either follow the next step to setup server autostart, or see [usage instructions](#usage) for more details.
 
 ## Auto-Starting the server @ boot: 
-#### OPTION 1: Create a Supervisor Config to start the GUI with Gunicorn (PREFERRED):
-
-Add...
-```
-/home/pi/led-board-manager/supervisor-daemon.conf
-```
-...__to the end of the `files =` line__, under the`[Include]` section of your `/etc/supervisor/supervisord.conf` with just a space between the two paths. This will tell supervisor to use the updated program configurations that the webgui generates. To disable this feature, simply remove this line.
-
-###### Example:
-```
-[include]
-files = conf.d/*.conf /home/pi/led-board-manager/supervisor-daemon.conf
-```
-
-Then run command `sudo supervisorctl reread`
-
-_To finish the easy GUI install method, [return to the steps above.](#install-and-start-python3-venv)_
-
-#### OPTION 2: Create a script and use `rc.local` to autostart the devserver on startup:
-We're going to use the Raspberry Pi's `/etc/rc.local` file to start our script on boot. In the `/led-board-manager` folder, create a new file using:
-
-Enter `sudo nano /etc/rc.local` to add the following line before `exit 0`:
-
-```
-su pi -c '/home/pi/led-board-manager/scripts/autorun.sh >> /tmp/scoreboard-gui.log 2>&1'
-```
-...substituting your own username for `pi`, if changed. This method will also create a log file for the server: `/tmp/scoreboard-gui.log`. You can tail the log with the following command:
-
-`tail -f -n 100 /tmp/scoreboard-gui.log`
-
-Alternatively, you can setup a [crontab](https://www.raspberrypi.org/documentation/linux/usage/cron.md), [systemd](https://www.raspberrypi.org/documentation/linux/usage/systemd.md), or another method of your choice to autostart the app.
+See the wiki for the complete [Auto-Start instructions](https://github.com/sflems/led-board-manager/wiki/Auto-Starting-the-server-@-Boot).
 
 ## Updates
 The latest update notes can be found under the [project releases](https://github.com/sflems/led-board-manager/releases). 
