@@ -17,8 +17,8 @@
   - [Requirements](#requirements)
   - [Installation](#installation)
     - [First Steps](#first-steps)
-    - [Manual Installation](#manual-installation)
-    - [Autostarting the Webserver](#auto-starting-the-server--boot)
+    - [Manual Installation](https://github.com/sflems/led-board-manager/wiki/Manual-Installation)
+    - [Autostarting the Webserver](https://github.com/sflems/led-board-manager/wiki/Auto-Starting-the-server-@-Boot)
     - [Updates](#updates)
     - [Removal / Uninstall](#removal--uninstall)
   - [Usage](#usage)
@@ -158,85 +158,10 @@ __See also: [Usage Instructions](#usage)__
 _____________
 
 ## Manual Installation:
-#### From the `/home/pi` directory:
-###### (or the same location as your `nhl-led-scoreboard` directory)
-
-```
-git clone --recursive https://github.com/sflems/led-board-manager.git
-cd led-board-manager
-touch .secret.txt
-chmod g+w .secret.txt
-```
-
-##### Install `supervisor` (as root): 
-###### Skip to [Auto-Starting the Server](#auto-starting-the-server--boot) if you have an active `supervisor' installation.
-```
-su
-mkdir /etc/supervisor && cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
-chmod 644 /etc/supervisor/supervisord.conf
-
-mkdir /etc/supervisor/conf.d && cp /home/pi/led-board-manager/scoreboard/static/supervisor/scoreboard.conf /etc/supervisor/conf.d/scoreboard.conf
-chmod 644 /etc/supervisor/conf.d/scoreboard.conf
-
-cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
-chmod 644
-
-python3 -m pip install supervisor
-
-systemctl unmask supervisord
-systemctl enable supervisord 
-su pi
-
-mv sample.supervisor-daemon.conf supervisor-daemon.conf
-```
-
-If you have the [MLB Board](https://github.com/MLB-LED-Scoreboard/mlb-led-scoreboard) installed (in default location):
-```
-cp ~/led-board-manager/scoreboard/static/schema/mlb.config.schema.json ~/mlb-led-scoreboard/config.schema.json
-```
-If you have the [NFL Board](https://github.com/mikemountain/nfl-led-scoreboard) installed (in default location):
-```
-cp ~/led-board-manager/scoreboard/static/schema/nfl.config.schema.json ~/nfl-led-scoreboard/config.schema.json
-```
-Follow either command with:
-```
-sudo supervisorctl reread
-```
-
-###### Sample configurations can be found in the [`nhl-led-scoreboard-img`](https://github.com/falkyre/nhl-led-scoreboard-img/tree/master/stage2/06-supervisor/files) project, by [@falkyre](https://github.com/falkyre).
-
-##### Install `python3-venv` and create the Web Gui environment: 
-```
-sudo apt install python3-venv
-python3 -m venv env
-source env/bin/activate
-```
-
-Your shell should have the `(env)` prepended if active:
-```
-(env) pi@raspberrypi:~/led-board-manager $ 
-```
-
-_To exit the `(env)` at any time __after__ installing and running the `test` step, enter the command `deactivate` in the terminal._
-
-##### Install the app requirements and dependencies from the included requirements.txt file:
-`pip3 install -r requirements.txt`
-
-##### Once complete, we'll make, migrate and fill our sqlite3 database with the supplied teams data in the fixtures folder:
-
-First, run:
-
- ```
- python3 manage.py makemigrations
- python3 manage.py migrate
- python3 manage.py loaddata teams.json
- python3 manage.py test
- ```
-
-Either follow the next step to setup server autostart, or see [usage instructions](#usage) for more details.
+See the wiki for complete [Installation Instructions](https://github.com/sflems/led-board-manager/wiki/Manual-Installation).
 
 ## Auto-Starting the server @ boot: 
-See the wiki for the complete [Auto-Start instructions](https://github.com/sflems/led-board-manager/wiki/Auto-Starting-the-server-@-Boot).
+See the wiki for the complete [Auto-Start Instructions](https://github.com/sflems/led-board-manager/wiki/Auto-Starting-the-server-@-Boot).
 
 ## Updates
 The latest update notes can be found under the [project releases](https://github.com/sflems/led-board-manager/releases). 
