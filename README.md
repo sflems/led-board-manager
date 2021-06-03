@@ -294,4 +294,5 @@ _____________
 
 ###### Boards Admin
   <img src="/assets/images/LED Scoreboard Configurator - Boards Admin.png" alt="LED Scoreboard Configurator - Boards Admin" width="100%"/>
-### Please let me know if you experience any bugs, feature suggestions or issues. Enjoy!
+
+### Please let me know if you experience any bugs, have any feature suggestions or issues. Enjoy!
