@@ -98,7 +98,7 @@ class BoardType(models.Model):
             return self.path
 
     def main(self):
-        if os.path.isdir(self.path + "/src"):
+        if os.path.isdir(os.path.join(self.path, "src")):
             return os.path.join(".", "src", "main.py")
         else:
             return os.path.join(".", "main.py")
