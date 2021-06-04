@@ -1,8 +1,6 @@
 import json, os, pytz, unittest
 from django.test import Client, TestCase, override_settings
 from django.conf import settings
-from constance import config
-from constance.test import override_config
 from scoreboard.models import Settings, BoardType
 
 
@@ -30,6 +28,13 @@ class SimpleTest(TestCase):
         response = client.post('/login?next=/', {'username': 'admin', 'password': 'scoreboard'})
         self.assertEqual(response.status_code, 200)
 
+    def test_context(self):
+        client = Client()
+        response = client.post('/login?next=/', {'username': 'admin', 'password': 'scoreboard'})
+        self.assertListEqual(response.context['BOARDS'], [])
+        self.assertRegex(response.context['VERSION'], r'^v[0-9]+.[0-9]+.[0-9]+$')
+        self.assertIsNotNone(response.context['UPDATE'])
+
 # Settings Model / Config Tests
 @override_settings(TEST_MODE=True)
 class SettingsTestCase(TestCase):
@@ -48,17 +53,27 @@ class SettingsTestCase(TestCase):
     def setUp(self):
 
         # Creates initial NHL board for testing
-        BoardType.objects.create(pk='NHL', supervisorName="NHLscoreboard")
+        BoardType.objects.create(
+            pk='NHL',
+            path=os.path.join(settings.BASE_DIR, "testing"),
+            supervisorName="NHLscoreboard"
+        )
+        BoardType.objects.create(
+            pk='NHL2',
+            path=os.path.join(settings.BASE_DIR, "testing", "config"),
+            supervisorName="NHLscoreboard2"
+        )
 
         # Sample Config Provided with GUI
         Settings.objects.create(name="Test Profile2", config=self.conf1(), isActive=True)
         # Dummy confs)
-        Settings.objects.create(name="Test Profile3", config=self.conf2, isActive=False)
-        Settings.objects.create(name="Test Profile4", config=self.conf3, isActive=True)
+        Settings.objects.create(pk=3, boardType=BoardType.objects.get(
+            pk='NHL2'), name="Test Profile3", config=self.conf2, isActive=False)
+        Settings.objects.create(pk=4, name="Test Profile4", config=self.conf3, isActive=True)
 
     def test_board_type(self):
         bt = BoardType.objects.get(pk='NHL')
-        self.assertEqual(bt.path, "/home/pi/")
+        self.assertEqual(bt.path, os.path.join(settings.BASE_DIR, "testing"))
         self.assertEqual(bt.pythonVersion, '3')
         self.assertEqual(bt.supervisorName, "NHLscoreboard")
 
@@ -67,6 +82,7 @@ class SettingsTestCase(TestCase):
 
     def test_board_type_main(self):
         self.assertEqual("./main.py", BoardType.objects.get(pk='NHL').main())
+        self.assertEqual("./src/main.py", BoardType.objects.get(pk='NHL2').main())
 
     def test_board_type_schema(self):
         bt = BoardType.objects.get(pk='NHL').schema()
@@ -78,9 +94,15 @@ class SettingsTestCase(TestCase):
         bt = BoardType.objects.get(pk='NHL')
         self.assertEqual(p.config, bt.configJSON())
 
+    def test_board_type_str(self):
+        self.assertEqual(BoardType.objects.get(pk="NHL").__str__(), "NHL")
+
     # Confirm the following actions based on test setup. Checks custom GUI model logic.
     def test_count_settings(self):
         self.assertEqual(Settings.objects.all().count(), 3)
+
+    def test_settings_str(self):
+        self.assertEqual(Settings.objects.get(pk=4).__str__(), "Test Profile4 Profile")
 
     def test_count_active(self):
         self.assertEqual(Settings.objects.filter(isActive=1).count(), 1)

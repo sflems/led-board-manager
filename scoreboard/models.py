@@ -92,9 +92,7 @@ class BoardType(models.Model):
         db_table = 'boardTypes'
 
     def conf_dir(self):
-        if appSettings.TEST_MODE:
-            return os.path.join(appSettings.BASE_DIR, "testing", "config")
-        elif os.path.isdir(self.path + "/config"):
+        if os.path.isdir(self.path + "/config"):
             return os.path.join(self.path, "config")
         else:
             return self.path
