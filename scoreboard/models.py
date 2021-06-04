@@ -109,8 +109,8 @@ class BoardType(models.Model):
         schemaPath = os.path.join(self.conf_dir(), 'config.schema.json')
         if os.path.isfile(schemaPath):
             with open(schemaPath, "r") as f:
-                        schema = json.load(f)
-                        return schema
+                schema = json.load(f)
+                return schema
         return {}
 
     def configJSON(self):
@@ -171,16 +171,11 @@ class Settings(models.Model):
     def clean(self):
         super().clean()
         fastjsonschema.validate(self.boardType.schema(), self.config)
-        
 
     def save_to_file(self):
         keepcharacters = (' ', '.', '_')
         filename = "".join(c for c in self.name if c.isalnum() or c in keepcharacters).rstrip().replace(" ", "-") + ".config.json"
-
-        if not appSettings.TEST_MODE:
-            filepath = os.path.join(self.boardType.conf_dir(), filename)
-        else:
-            filepath = os.path.join(appSettings.BASE_DIR, "testing", filename)
+        filepath = os.path.join(self.boardType.conf_dir(), filename)
 
         if os.path.isfile(filepath):
             raise ValueError("File with this name already exists. (' {} ')".format(filename))
