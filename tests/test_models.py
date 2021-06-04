@@ -1,5 +1,5 @@
 import json, os, pytz, unittest
-from django.test import Client, TestCase, override_settings
+from django.test import TestCase, override_settings
 from django.conf import settings
 from scoreboard.models import Settings, BoardType
 
@@ -10,30 +10,6 @@ class Tests(unittest.TestCase):
         tz = settings.TIME_ZONE
         valid_tzs = pytz.common_timezones
         self.assertIn(tz, valid_tzs)
-
-# Test Server Responses
-class SimpleTest(TestCase):
-    def test_index_redirect(self):
-        client = Client()
-        response = client.get('/')
-        self.assertRedirects(response, '/login?next=/')
-
-    def test_login_page(self):
-        client = Client()
-        response = client.get('/login?next=/')
-        self.assertEqual(response.status_code, 200)
-
-    def test_default_login(self):
-        client = Client()
-        response = client.post('/login?next=/', {'username': 'admin', 'password': 'scoreboard'})
-        self.assertEqual(response.status_code, 200)
-
-    def test_context(self):
-        client = Client()
-        response = client.post('/login?next=/', {'username': 'admin', 'password': 'scoreboard'})
-        self.assertListEqual(response.context['BOARDS'], [])
-        self.assertRegex(response.context['VERSION'], r'^v[0-9]+.[0-9]+.[0-9]+$')
-        self.assertIsNotNone(response.context['UPDATE'])
 
 # Settings Model / Config Tests
 @override_settings(TEST_MODE=True)
