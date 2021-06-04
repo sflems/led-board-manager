@@ -13,17 +13,13 @@ from constance.signals import admin_form_save
 from .models import BoardType
 from sh import git
 
+
 # Supervisor Commands for NHL Led Scoreboard
 def gui_status():
-    proc_status = False
     command = "sudo supervisorctl status " + config.SUPERVISOR_GUI_NAME
     process = subprocess.run(command, shell=True, capture_output=True)
 
-    # Checks if bytes type string RUNNING is found in output(bytes type).
-    if b'RUNNING' in process.stdout:
-        proc_status = True
-
-    return proc_status
+    return b'RUNNING' in process.stdout
 
 # Options for JSON created settings form.
 # startval takes in current settings (NOT VALIDATED AGAINST SCHEMA). Others modify which JSON editing options are visible to users, themes, etc.
