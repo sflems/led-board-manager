@@ -34,8 +34,12 @@ env/bin/python3 manage.py loaddata teams.json >&3
 echo "Running Django tests..." >&3
 env/bin/python3 manage.py test && echo "...done. " >&3
 
+echo "Updating supervisor configurations..." >&3
+sudo supervisorctl reread && echo "...(1/2) - done. " >&3
+sudo supervisorctl update all && echo "...(2/2) - done. " >&3
+
 # Yay!?
 echo "$(tput bold)SETUP COMPLETED!!!" >&3
-echo "$(tput sgr0)Start the Web GUI server with $(tput bold)'source env/bin/activate && gunicorn Capstone.wsgi -b 0:9002'$(tput sgr0) or $(tput bold)'./autorun.sh'$(tput sgr0)" >&3
+echo "$(tput sgr0)Start the Web GUI server with $(tput bold)'source env/bin/activate && gunicorn Capstone.wsgi -b 0:9002'$(tput sgr0) or $(tput bold)'./scripts/autorun.sh'$(tput sgr0)" >&3
 
 exit 0
