@@ -136,9 +136,10 @@ def team_abbrev(id):
 def todays_games():
     url = 'https://statsapi.web.nhl.com/api/v1/schedule?expand=schedule.linescore'
     response = requests.get(url)
-    games = response.json()
-    games = games['dates'][0]['games']
-    return games
+    gamesData = response.json()
+    if len(gamesData['dates']) > 0:
+        return gamesData['dates'][0]['games']
+    return []
 
 # Pi System Stats Functions
 # Imported from https://learn.pimoroni.com/tutorial/networked-pi/raspberry-pi-system-stats-python and modified for this use case.
