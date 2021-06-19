@@ -9,7 +9,7 @@ from django.conf import settings as appSettings
 
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('django')
 
 
 # Default User Class

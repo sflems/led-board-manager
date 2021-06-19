@@ -47,6 +47,7 @@ def sb_version():
 
 VERSION = sb_version()
 
+
 # Allows server to be hosted on local subnet with unrestricted IPs. Make sure your firewall is accepting local network traffic only!!!
 # This can be modified for your local subnet i.e. for subnet 192.168.0.0/16:
 # ALLOWED_HOSTS = ['192.168.{}.{}'.format(i,j) for i in range(256) for j in range(256)]
@@ -328,13 +329,45 @@ CORS_ALLOWED_ORIGINS = [
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+    'filters': {
+    'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
         },
     },
-    'root': {
-        'handlers': ['console'],
-        'level': 'INFO',
+    'formatters': {
+        'verbose': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{asctime}] [{process:d}] [{levelname}] {message}',        
+            'datefmt': '%Y-%m-%d %H:%M:%S %z',
+            'style': '{',
+        },
+        'simple': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'console_on_not_debug': {
+            'level': 'WARNING',
+            'filters': ['require_debug_false'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'console_on_not_debug'],
+            'propagate': False,
+        },
     },
 }

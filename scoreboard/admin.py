@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from .models import Settings, Team, User, BoardType
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('django')
 
 # Tests if a profile is selected as active. Otherwise sets to default profile.
 def delete_selected(SettingsAdmin, request, queryset):

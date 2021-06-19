@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.core.exceptions import FieldError, ValidationError
 from constance import config
+from django.conf import settings as appSettings
 from time import sleep
 
 from .forms import SettingsDetailForm
@@ -17,7 +18,8 @@ import json, os, subprocess
 import logging
 
 # Get an instance of a logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('django')
+logger.info("LED Board Manager Version: {}".format(appSettings.VERSION))
 
 # For Profile Activation Messages
 notes = [
@@ -262,13 +264,23 @@ def profiles(request, id):
             
             messages.error(request, errors)
             logger.error(str(errors))
-            return HttpResponseRedirect(reverse("profiles_list"), {"message": errors })
+            return render(request, "scoreboard/settings_create.html", {
+                "detailform": detailform,
+                "JSONform": JSONSchemaForm(schema=profile.boardType.schema(), options=services.form_options(profile.config), ajax=True),
+                "boardtype": profile.boardType.board,
+                "message": errors
+            })
 
         except (Exception, ValidationError, ValueError, FieldError) as e:
             message = "Warning. ({})".format(e)
             messages.info(request, message)
             logger.exception(message)
-            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+            return render(request, "scoreboard/settings_create.html", {
+                "detailform": detailform,
+                "JSONform": JSONSchemaForm(schema=profile.boardType.schema(), options=services.form_options(profile.config), ajax=True),
+                "boardtype": profile.boardType.board,
+                "message": message
+            })
 
 
 @login_required
@@ -301,7 +313,12 @@ def profiles_create(request, board):
         except (Exception, ValidationError, ValueError, FieldError) as e:
             message = "Warning. ({})".format(e)
             messages.info(request, message)
-            return HttpResponseRedirect(reverse("profiles_list"), {"message": message, })
+            return render(request, "scoreboard/settings_create.html", {
+                "detailform": detailform,
+                "JSONform": JSONSchemaForm(schema=board_type.schema(), options=services.form_options(new_config), ajax=True),
+                "boardtype": board,
+                "message": message,
+            })
 
 
 def login_view(request):
