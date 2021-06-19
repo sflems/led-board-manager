@@ -82,7 +82,7 @@ class BoardType(models.Model):
     )
 
     class PythonVersion(models.TextChoices):
-        TWO = ''
+        TWO = 2
         THREE = 3
     pythonVersion = models.CharField(default=3, max_length=1, blank=True, choices=PythonVersion.choices)
 
@@ -120,15 +120,10 @@ class BoardType(models.Model):
         return {}
 
     def proc_status(self):
-        proc_status = False
         command = "sudo supervisorctl status boards:" + self.supervisorName
         process = subprocess.run(command, shell=True, capture_output=True)
 
-        # Checks if bytes type string RUNNING is found in output(bytes type).
-        if b'RUNNING' in process.stdout:
-            proc_status = True
-
-        return proc_status
+        return b'RUNNING' in process.stdout
 
     def __str__(self):
         return self.board

@@ -183,7 +183,12 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'LED_RGB_SEQUENCE',
             'LED_PIXEL_MAPPER',
             'LED_ROW_ADDR_TYPE',
-            'LED_MULTIPLEXING',
+            'LED_MULTIPLEXING'
+        ),
+        'collapse': False
+    },
+    'NHL Flags': {
+        'fields': (
             'TERMINAL_MODE',
             'TESTING_MODE',
             'TESTSCCHAMPIONS',

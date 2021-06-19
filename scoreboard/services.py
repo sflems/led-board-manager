@@ -1,4 +1,5 @@
 import json, os, psutil, requests, subprocess
+from logging import StreamHandler
 from gpiozero import CPUTemperature
 from django import template
 from django.utils.formats import localize
@@ -38,7 +39,7 @@ def form_options(startval):
         "ajax": 0,
         "ajaxCredentials": 0,
         "show_opt_in": 0,
-        "disable_edit_json": 0,
+        "disable_edit_json": 1,
         "disable_collapse": 0,
         "disable_properties": 1,
         "disable_array_add": 0,
@@ -72,6 +73,7 @@ def constance_updated(sender, **kwargs):
         command = "sudo supervisorctl update"
         return sv_template(), subprocess.run(command, shell=True)
 
+
 def sv_template():
     # Interpret paths relative to the project directory.
     path = os.path.join(config.GUI_DIR, 'scoreboard/templates/scoreboard/daemon-template.conf')
@@ -79,7 +81,11 @@ def sv_template():
 
     # Read and process the source file. Import flags from constance and save to supervisor config.
     flags = []
+    nhl_flags = []
+    nhl_flag_fields = configsettings.CONFIG_FIELDSETS['NHL Flags']['fields']
     flag_fields = configsettings.CONFIG_FIELDSETS['Scoreboard Flags']['fields']
+
+    # Loop basic flags for all boards
     for flag in flag_fields:
         key = flag.lower().replace('_', '-')
         default = configsettings.CONFIG[str(flag)][0]
@@ -90,22 +96,50 @@ def sv_template():
         def is_modified():
             return localize(value) != localize(default)
 
-        def render_flag():
+        def render_flag(flaglist):
             if key in basic_args and value == "True":
                 full_flag = " --" + key
-                flags.append(full_flag)
+                flaglist.append(full_flag)
             elif key in basic_args:
                 full_flag = ""
-                flags.append(full_flag)
+                flaglist.append(full_flag)
             else:
                 full_flag = " --" + key + "=" + value
-                flags.append(full_flag)
+                flaglist.append(full_flag)
 
         if key in default_args:
-            render_flag()
+            render_flag(flags)
 
         elif is_modified():
-            render_flag()
+            render_flag(flags)
+
+    # Loop flags for NHL type boardss
+    for flag in nhl_flag_fields:
+        key = flag.lower().replace('_', '-')
+        default = configsettings.CONFIG[str(flag)][0]
+        value = str(getattr(config, flag))
+        default_args = ["updatecheck", ]
+        basic_args = ["updatecheck", ]
+
+        def is_modified():
+            return localize(value) != localize(default)
+
+        def render_flag(flaglist):
+            if key in basic_args and value == "True":
+                full_flag = " --" + key
+                flaglist.append(full_flag)
+            elif key in basic_args:
+                full_flag = ""
+                flaglist.append(full_flag)
+            else:
+                full_flag = " --" + key + "=" + value
+                flaglist.append(full_flag)
+
+        if key in default_args:
+            render_flag(nhl_flags)
+
+        elif is_modified():
+            render_flag(nhl_flags)
 
     # Add optional board args here to convert to flags.
     boards = BoardType.objects.all()
@@ -113,9 +147,10 @@ def sv_template():
     for board in BoardType.objects.all():
         boardsList.append(board.supervisorName)
 
+
     # Renders from daemon template with config and flags passed in as context.
     with open(path, "r") as f:
-        templated = render_sv_config(f.read(), {'config': config, 'flags': flags, 'boards': boards, 'boardslist': boardsList })
+        templated = render_sv_config(f.read(), {'config': config, 'flags': flags, 'nhl_flags': nhl_flags, 'boards': boards, 'boardslist': boardsList })
 
     # Write it out to the corresponding .conf file.
     with open(templated_path, "w") as f:
