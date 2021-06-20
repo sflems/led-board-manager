@@ -141,7 +141,7 @@ Once finished, you can start the server with:
 source env/bin/activate
 gunicorn Capstone.wsgi -b 0:9002
 ```
-If all is working, you should then be able to access the app @ `YOUR_IP:9002` in the browser. You can deactivate the enve with the command `deactivate`.
+If all is working, you should then be able to access the app @ `YOUR_IP:9002` in the browser. You can deactivate the env with the command `deactivate`.
 
 #### Default Login (Change me in the admin panel!)
 Username: `admin`

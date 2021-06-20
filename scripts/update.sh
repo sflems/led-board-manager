@@ -20,11 +20,12 @@ env/bin/python3 manage.py makemigrations >&3
 env/bin/python3 manage.py migrate >&3
 
 echo "Running Django tests..." >&3
-env/bin/python3 manage.py test && echo "...done. " >&3
+env/bin/python3 manage.py test >&3 && echo "...done. " >&3
 
 echo "Updating supervisor configurations..." >&3
-sudo supervisorctl reread && echo "...(1/2) - done. " >&3
-sudo supervisorctl update all && echo "...(2/2) - done. " >&3
+sudo supervisorctl reread >&3 && echo "...(1/3) - done. " >&3
+sudo supervisorctl reload >&3 && echo "...(2/3) - done. " >&3
+sudo supervisorctl update all >&3 && echo "...(3/3) - done. " >&3
 
 echo "$(tput bold)UPDATE COMPLETED!!!" >&3
 echo "$(tput sgr0)Start the Web GUI server with $(tput bold)'source env/bin/activate && gunicorn Capstone.wsgi -b 0:9002'$(tput sgr0) or $(tput bold)'./scripts/autorun.sh'$(tput sgr0)" >&3

@@ -20,7 +20,7 @@ def path_verify(path):
     return path
 
 # Ask user for the directory to the nhl-led-scoreboard path
-print('\nEnter the full path to `NHL-LED-Scoreboard`. ')
+print('\nEnter the full path to `NHL-LED-Scoreboard`. (Must contain "nhl".) ')
 nhl_path = input(print('Leave blank for "/home/pi/nhl-led-scoreboard": '))
 
 if nhl_path == "":

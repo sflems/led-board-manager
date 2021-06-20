@@ -32,11 +32,12 @@ env/bin/python3 manage.py migrate >&3
 env/bin/python3 manage.py loaddata teams.json >&3
 
 echo "Running Django tests..." >&3
-env/bin/python3 manage.py test && echo "...done. " >&3
+env/bin/python3 manage.py test >&3 && echo "...done. " >&3
 
 echo "Updating supervisor configurations..." >&3
-sudo supervisorctl reread && echo "...(1/2) - done. " >&3
-sudo supervisorctl update all && echo "...(2/2) - done. " >&3
+sudo supervisorctl reread >&3 && echo "...(1/3) - done. " >&3
+sudo supervisorctl reload >&3 && echo "...(2/3) - done. " >&3
+sudo supervisorctl update all >&3 && echo "...(3/3) - done. " >&3
 
 # Yay!?
 echo "$(tput bold)SETUP COMPLETED!!!" >&3
