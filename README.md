@@ -134,7 +134,7 @@ _To run the server in a development environment, `python3-venv` can be a solutio
 sudo apt install python3-venv
 python3 -m venv env
 ./scripts/install.sh
-sudo supervisorctl reread
+sudo supervisorctl reread && sudo supervisorctl reload
 ```
 Once finished, you can start the server with:
 ```
@@ -183,7 +183,6 @@ source env/bin/activate
 pip3 install -r requirements.txt
 python3 manage.py makemigrations
 python3 manage.py migrate
-python3 manage.py loaddata teams.json
 python3 manage.py test
 ```
 Then, restart the web server. You can `deactivate` the `(env)` if you are using the `./scripts/autorun.sh` script or `supervisor`.
