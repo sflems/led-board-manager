@@ -116,7 +116,7 @@ sudo mkdir /etc/supervisor && sudo cp /home/pi/led-board-manager/scoreboard/stat
 sudo chmod 644 /etc/supervisor/supervisord.conf
 
 sudo cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
-chmod 644 /etc/systemd/system/supervisord.service
+sudo chmod 644 /etc/systemd/system/supervisord.service
 
 sudo python3 -m pip install supervisor
 
