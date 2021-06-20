@@ -25,7 +25,7 @@ env/bin/python3 manage.py test >&3 && echo "...done. " >&3
 echo "Updating supervisor configurations..." >&3
 sudo supervisorctl reread >&3 && echo "...(1/3) - done. " >&3
 sudo supervisorctl reload >&3 && echo "...(2/3) - done. " >&3
-echo "Updating program configurations..." >&3
+echo "Updating program configurations" >&3
 sleep 3 && sudo supervisorctl update all >&3 && echo "...(3/3) - done. " >&3
 
 echo "$(tput bold)UPDATE COMPLETED!!!" >&3

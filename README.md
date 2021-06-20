@@ -101,27 +101,27 @@ __Be sure to back up any previous configurations before use!!!__
 #### From the `/home/pi` directory:
 ###### (or the same location as your `nhl-led-scoreboard` directory)
 
-```
+```bash
 git clone --recursive https://github.com/sflems/led-board-manager.git
 cd led-board-manager
 ```
+
 #### First Steps
 
 ##### Install `supervisor` (as root): 
 ###### You can skip to [Auto-Starting the Server](#auto-starting-the-server--boot) if you have an active `supervisor' installation. Then return here for the _easy_ install method.
-```
-su
-mkdir /etc/supervisor && cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
-chmod 644 /etc/supervisor/supervisord.conf
 
-cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
-chmod 644
+```bash
+sudo mkdir /etc/supervisor && sudo cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
+sudo chmod 644 /etc/supervisor/supervisord.conf
 
-python3 -m pip install supervisor
+sudo cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
+chmod 644 /etc/systemd/system/supervisord.service
 
-systemctl unmask supervisord
-systemctl enable supervisord 
-su pi
+sudo python3 -m pip install supervisor
+
+sudo systemctl unmask supervisord
+sudo systemctl enable supervisord
 
 mv sample.supervisor-daemon.conf supervisor-daemon.conf
 ```
@@ -130,17 +130,21 @@ mv sample.supervisor-daemon.conf supervisor-daemon.conf
 
 ###### Install and Start `python3-venv`: 
 _To run the server in a development environment, `python3-venv` can be a solution to create a separate "environment" for the server to run in._
-```
+
+```bash
 sudo apt install python3-venv
 python3 -m venv env
 ./scripts/install.sh
 sudo supervisorctl reread && sudo supervisorctl reload
 ```
+
 Once finished, you can start the server with:
-```
+
+```bash
 source env/bin/activate
 gunicorn Capstone.wsgi -b 0:9002
 ```
+
 If all is working, you should then be able to access the app @ `YOUR_IP:9002` in the browser. You can deactivate the env with the command `deactivate`.
 
 #### Default Login (Change me in the admin panel!)
@@ -164,7 +168,8 @@ See the wiki for the complete [Auto-Start Instructions](https://github.com/sflem
 The latest update notes can be found under the [project releases](https://github.com/sflems/led-board-manager/releases). 
 
 [Stop the server](#to-stop-the-server), then:
-```
+
+```bash
 cd led-board-manager/
 git reset --hard
 git checkout main
@@ -172,19 +177,23 @@ git pull
 ```
 
 _When updating, or if stated in the release notes, it may be necessary to run the update script from the `led-board-manager` directory._
-```
+
+```bash
 ./scripts/update.sh
 ``` 
+
 Then, restart the web server.
 
 Alternatively, manually enter the following commands:
-```
+
+```bash
 source env/bin/activate
 pip3 install -r requirements.txt
 python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py test
 ```
+
 Then, restart the web server. You can `deactivate` the `(env)` if you are using the `./scripts/autorun.sh` script or `supervisor`.
 
 ## Usage
@@ -192,7 +201,8 @@ __Be sure to back up any previous configurations before use!!!__
 ### To start the webserver:
 
 To start the server manually, and from the `led-board-manager` directory, enter:
-```
+
+```bash
 source env/bin/activate && gunicorn Capstone.wsgi -b 0:9002
 ```
 
@@ -200,7 +210,8 @@ source env/bin/activate && gunicorn Capstone.wsgi -b 0:9002
 Simply run `./scripts/autorun.sh` from the same location.
 
 This command, and the default configuration, start the server on `0.0.0.0` and port `9002` making it available to any connected devices on your local network. Alternatively, you can run the server on a different port, e.g. `0:8000`, `0:PORT`, or available to _just_ the `localhost` machine by running:
-```
+
+```bash
 source env/bin/activate
 gunicorn Capstone.wsgi -b 127.0.0.1:9002
 ```
@@ -229,7 +240,7 @@ In a terminal shell with the server running, `Ctrl` + `C` will terminate the pro
 ...Or to find the process IDs, enter `ps aux | grep gunicorn`
 
 Example response:
-```
+```bash
     user@raspi:~ $ ps aux | grep gunicorn
 --> user      6300 26.6  0.8  38236 33364 pts/0    S+   00:22   0:01 gunicorn Capstone.wsgi -b 0:9002
     user      6319  0.0  0.0   3160  1536 pts/1    S+   00:22   0:00 grep --color=auto gunicorn
