@@ -114,9 +114,6 @@ su
 mkdir /etc/supervisor && cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 chmod 644 /etc/supervisor/supervisord.conf
 
-mkdir /etc/supervisor/conf.d && cp /home/pi/led-board-manager/scoreboard/static/supervisor/scoreboard.conf /etc/supervisor/conf.d/scoreboard.conf
-chmod 644 /etc/supervisor/conf.d/scoreboard.conf
-
 cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
 chmod 644
 
