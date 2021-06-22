@@ -37,7 +37,7 @@ Designed as a solution to manage the NHL LED Scoreboard project by [Joel Joannis
 
 The app uses a Django webserver to manage profiles in a simple SQLite database. Users can access the web interface which can be hosted on their local machine or network. If a schema is found in a board's config directory, Django dynamically generates and validates an easy to use form to create a `config.json` file. It saves a new `config.json` in the appropriate `config` directory and restarts your board process to implement any changes on the fly! 
 
-JSON can also be edited manually in the `/admin` interface. The admin app also has the ability to backup configurations to file from the dashboard and set various scoreboard flags on the fly.
+JSON can also be edited manually in the `/admin` interface. The profiles dashboard also has the ability to backup configurations on the fly. The admin panel also has a section for global RGB Matrix flags/arguments.
 
 Boards and their paths/settings may also be added or configured in the admin panel.
 _____________
