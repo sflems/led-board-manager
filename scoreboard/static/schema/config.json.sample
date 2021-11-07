@@ -18,13 +18,10 @@
 
 	"states":{
 		"off_day": [
-			"scoreticker",
-			"standings",
 			"team_summary",
 			"clock"
 		],
 		"scheduled": [
-			"standings",
 			"team_summary",
 			"scoreticker",
 			"clock"
@@ -34,7 +31,6 @@
 			"team_summary"
 		],
 		"post_game": [
-			"standings",
 			"team_summary",
 			"scoreticker",
 			"clock"
@@ -52,8 +48,8 @@
                 },
 		"standings": {
 			"preferred_standings_only": true,
-			"standing_type": "wild_card",
-			"divisions": "north",
+			"standing_type": "division",
+			"divisions": "atlantic",
 			"conference": "eastern"
 		},
 		"clock": {
@@ -63,21 +59,6 @@
             "clock_rgb": "",
             "date_rgb": "",
             "flash_seconds": true
-		},
-        "covid19": {
-            "worldwide_enabled": false,
-            "country_enabled": false,
-            "country": [
-                "USA"
-            ],
-            "us_state_enabled": false,
-            "us_state": [
-                "New York"
-            ],
-            "canada_enabled": false,
-            "canada_prov": [
-                "Quebec"
-            ]
 		},
 		"weather": {
 			"enabled": false,
