@@ -109,7 +109,7 @@ cd led-board-manager
 #### First Steps
 
 ##### Install `supervisor` (as root): 
-###### You can skip to [Auto-Starting the Server](#auto-starting-the-server--boot) if you have an active `supervisor' installation. Then return here for the _easy_ install method.
+###### You can skip [to this step](#install-and-start-python3-venv) if you have an active `supervisor' installation.
 
 ```bash
 sudo mkdir /etc/supervisor && sudo cp /home/pi/led-board-manager/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
