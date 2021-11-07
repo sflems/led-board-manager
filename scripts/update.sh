@@ -18,6 +18,7 @@ env/bin/python3 -m pip install -U -r requirements.txt >&3
 echo "Updating WebGUI database and loading initial data..." >&3
 env/bin/python3 manage.py makemigrations >&3
 env/bin/python3 manage.py migrate >&3
+env/bin/python3 manage.py loaddata teams.json >&3
 
 echo "Running Django tests..." >&3
 env/bin/python3 manage.py test >&3 && echo "...done. " >&3
