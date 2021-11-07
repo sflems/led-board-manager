@@ -34,14 +34,10 @@ class SettingsAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         try:
             if obj.isActive:
-                
                 # Checks if there are other active profiles and deactivates them.
-                if Settings.objects.filter(isActive=True):
-                    active_profiles = Settings.objects.filter(isActive=True).exclude(name=obj.name)
-                    for profile in active_profiles:
-                        profile.isActive = False
-                        profile.save()
-
+                active_profiles = Settings.objects.filter(isActive=True).exclude(name=obj.name)
+                if active_profiles:
+                    active_profiles.update(isActive=False)
                 super().save_model(request, obj, form, change)
             else:
                 super().save_model(request, obj, form, change)

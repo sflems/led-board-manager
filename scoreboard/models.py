@@ -163,7 +163,8 @@ class Settings(models.Model):
 
     def clean(self):
         super().clean()
-        fastjsonschema.validate(self.boardType.schema(), self.config)
+        if self.isActive:
+            fastjsonschema.validate(self.boardType.schema(), self.config)
 
     def save_to_file(self):
         keepcharacters = (' ', '.', '_')
@@ -195,9 +196,7 @@ def pre_save(sender, instance, *args, **kwargs):
     # If config is marked as active, deactivate any other active configs.
     active_profiles = Settings.objects.filter(isActive=True).exclude(pk=instance.id)
     if instance.isActive and active_profiles:
-        for profile in active_profiles:
-            profile.isActive = False
-            profile.save()
+        active_profiles.update(isActive=False)
 
 
 # Saves config file to nhl-led-scoreboard directory if set as active

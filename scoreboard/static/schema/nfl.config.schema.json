@@ -1,5 +1,4 @@
 {
-  "definitions": {},
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/sflems/led-board-manager/staticfiles/schema/nfl.config.schema.json",
   "title": "NFL LED Scoreboard configuration",
@@ -70,7 +69,7 @@
               "TB",
               "TEN",
               "WAS"
-            ],
+            ]
           }
         }
       }
