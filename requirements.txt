@@ -31,7 +31,6 @@ pyrsistent==0.17.3
 pytz==2020.5
 redis==3.5.3
 requests==2.25.1
-RPi.GPIO==0.7.0
 secret-key-generator==0.0.7
 sh==1.14.1
 six==1.15.0
