@@ -8,6 +8,12 @@
 ##### NHL LED Scoreboard:
 [![GitHub release (latest by date)](https://badgen.net/github/release/riffnshred/nhl-led-scoreboard?label=Version)](https://github.com/riffnshred/nhl-led-scoreboard/releases/latest) [![Create Release - Image](https://github.com/falkyre/nhl-led-scoreboard-img/actions/workflows/main.yml/badge.svg)](https://github.com/falkyre/nhl-led-scoreboard-img/actions/workflows/main.yml)
 
+##### MLB LED Scoreboard:
+[![GitHub release (latest by date)](https://badgen.net/github/release/MLB-LED-Scoreboard/mlb-led-scoreboard?label=Version)](https://github.com/MLB-LED-Scoreboard/mlb-led-scoreboard/releases/latest)
+
+##### NHL LED Scoreboard:
+[![GitHub release (latest by date)](https://badgen.net/badge/icon/nfl-led-scoreboard?icon=github&label)](https://github.com/mikemountain/mlb-led-scoreboard/releases/latest)
+
 ## Table of Contents
   - [Description](#description)
   - [Features](#features)
