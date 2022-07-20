@@ -22,5 +22,5 @@ class ClientTest(TestCase):
         client = Client()
         response = client.post('/login?next=/', {'username': 'admin', 'password': 'scoreboard'})
         self.assertListEqual(response.context['BOARDS'], [])
-        self.assertRegex(response.context['VERSION'], r'^v[0-9]+.[0-9]+.[0-9]+$')
+        self.assertRegex(response.context['VERSION'], r'^v[0-9]+.[0-9]+.[0-9]+')
         self.assertIsNotNone(response.context['UPDATE'])
