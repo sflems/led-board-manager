@@ -213,12 +213,21 @@
                     "title": "always_display",
                     "description": "Display standings for the provided preferred_divisions.",
                     "default": false
+                },
+                "display_no_games_live": {
+                    "$id": "#/properties/standings/properties/display_no_games_live",
+                    "type": "boolean",
+                    "title": "display_no_games_live",
+                    "description": "Display standings when none of your games are currently live.",
+                    "default": true
                 }
+                
             },
             "required": [
                 "team_offday",
                 "mlb_offday",
-                "always_display"
+                "always_display",
+                "display_no_games_live"
             ]
         },
         "rotation": {
@@ -254,6 +263,13 @@
                     "title": "only_preferred",
                     "description": "Only rotate through games in your preferred_teams list.",
                     "default": false
+                },
+                "only_live": {
+                    "$id": "#/properties/rotation/properties/only_live",
+                    "type": "boolean",
+                    "title": "only_live",
+                    "description": "Only rotate through games which are currently playing. Can be composed with only_preferred.",
+                    "default": true
                 },
                 "rates": {
                     "id": "#/properties/rotation/properties/rates",
@@ -318,6 +334,7 @@
                 "scroll_until_finished",
                 "avoid_scrolling_partial_messages",
                 "only_preferred",
+                "only_live",
                 "rates",
                 "while_preferred_team_live"
             ]
@@ -389,7 +406,21 @@
             "type": "boolean",
             "title": "full_team_names",
             "description": "If true and on a 64-wide board, displays the full team name on the scoreboard instead of their abbreviation. This config option is ignored on 32-wide boards. Defaults to true when on a 64-wide board.",
-            "default": false
+            "default": true
+        },
+        "short_team_names_for_runs_hits": {
+            "$id": "#/properties/short_team_names_for_runs_hits",
+            "type": "boolean",
+            "title": "short_team_names_for_runs_hits",
+            "description": "If true and full_team_names is true and Runs Hits Errors is enabled, will use abreviated team names when Runs or Hits > 9.",
+            "default": true
+        },
+        "pregame_weather": {
+            "$id": "#/properties/pregame_weather",
+            "type": "boolean",
+            "title": "pregame_weather",
+            "description": "If true, displays pre-game weather.",
+            "default": true
         },
         "scrolling_speed": {
             "$id": "#/properties/scrolling_speed",
@@ -436,6 +467,8 @@
         "time_format",
         "end_of_day",
         "full_team_names",
+        "short_team_names_for_runs_hits",
+        "pregame_weather",
         "scrolling_speed",
         "debug",
         "demo_date"
