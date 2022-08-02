@@ -30,7 +30,7 @@
     "fields": {
       "path": "/home/pi/mlb-led-scoreboard",
       "supervisorName": "MLBscoreboard",
-      "pythonVersion": 2
+      "pythonVersion": 3
     }
   },
   {
