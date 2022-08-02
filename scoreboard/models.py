@@ -28,6 +28,7 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
 
+
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     try:
@@ -75,6 +76,8 @@ class BoardType(models.Model):
         max_length=64,
         default="/home/pi/",
     )
+
+    startupActive = models.BooleanField(default=False)
 
     supervisorName = models.CharField(
         max_length=32,
@@ -132,17 +135,19 @@ class BoardType(models.Model):
         return {
             "board": self.board,
             "path": self.path,
+            "startupActive": self.startupActive,
             "supervisorName": self.supervisorName,
             "activeConfig": self.configJSON(),
             "schema": self.schema(),
         }
+
 
 class Settings(models.Model):
     name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32)
     config = models.JSONField(default=dict, blank=True, null=True)
     isActive = models.BooleanField(_("Active"), default=1)
     boardType = models.ForeignKey(BoardType, on_delete=models.CASCADE, to_field="board", default="NHL")
-  
+
     class Meta:
         verbose_name = _("Profile")
         verbose_name_plural = _("Profiles")
@@ -195,14 +200,21 @@ def pre_save(sender, instance, *args, **kwargs):
 
     # If config is marked as active, deactivate any other active configs.
     active_profiles = Settings.objects.filter(isActive=True).exclude(pk=instance.id)
-    if instance.isActive and active_profiles:
-        active_profiles.update(isActive=False)
+    if instance.isActive:
+        if active_profiles:
+            active_profiles.update(isActive=False)
 
 
 # Saves config file to nhl-led-scoreboard directory if set as active
 @receiver(post_save, sender=Settings)
 def post_save(sender, instance, **kwargs):
     if instance.isActive:
+        active_boards = BoardType.objects.filter(board=instance.boardType)
+        inactive_boards = BoardType.objects.all().exclude(board=instance.boardType)
+
+        active_boards.update(startupActive=True)
+        inactive_boards.update(startupActive=False)
+
         with open(instance.boardType.conf_dir() + "/config.json", "w") as outfile:
             json.dump(instance.config, outfile, indent=4)
 
@@ -214,6 +226,6 @@ def post_save(sender, instance, **kwargs):
 
                 command2 = "sudo supervisorctl start boards:" + instance.boardType.supervisorName
                 subprocess.check_call(command2, shell=True)
-            
+
         except subprocess.CalledProcessError as error:
             raise Exception(error)

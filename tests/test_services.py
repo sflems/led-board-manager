@@ -39,3 +39,4 @@ class ServicesTests(TestCase):
             "prompt_before_delete": 1,
         }
         self.assertDictEqual(form_options({"test": "value"}), test_dict)
+        
