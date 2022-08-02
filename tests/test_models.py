@@ -43,15 +43,20 @@ class SettingsTestCase(TestCase):
         # Sample Config Provided with GUI
         Settings.objects.create(name="Test Profile2", config=self.conf1(), isActive=True)
         # Dummy confs)
-        Settings.objects.create(pk=3, boardType=BoardType.objects.get(
-            pk='NHL2'), name="Test Profile3", config=self.conf2, isActive=False)
-        Settings.objects.create(pk=4, name="Test Profile4", config=self.conf3, isActive=True)
+        Settings.objects.create(name="Test Profile3", boardType=BoardType.objects.get(
+            pk='NHL2'), config=self.conf2, isActive=False)
+        Settings.objects.create(name="Test Profile4", config=self.conf3, isActive=True)
 
     def test_board_type(self):
         bt = BoardType.objects.get(pk='NHL')
+        bt2 = BoardType.objects.get(pk='NHL2')
         self.assertEqual(bt.path, os.path.join(settings.BASE_DIR, "testing"))
         self.assertEqual(bt.pythonVersion, '3')
         self.assertEqual(bt.supervisorName, "NHLscoreboard")
+
+        # True from above active profile, defaults to false
+        self.assertTrue(bt.startupActive)
+        self.assertFalse(bt2.startupActive)
 
     def test_board_type_conf_dir(self):
         self.assertIn("led-board-manager/testing/config", BoardType.objects.get(pk='NHL').conf_dir())
@@ -70,18 +75,30 @@ class SettingsTestCase(TestCase):
         bt = BoardType.objects.get(pk='NHL')
         self.assertEqual(p.config, bt.configJSON())
 
-    def test_board_type_str(self):
-        self.assertEqual(BoardType.objects.get(pk="NHL").__str__(), "NHL")
-
     # Confirm the following actions based on test setup. Checks custom GUI model logic.
     def test_count_settings(self):
         self.assertEqual(Settings.objects.all().count(), 3)
 
     def test_settings_str(self):
-        self.assertEqual(Settings.objects.get(pk=4).__str__(), "Test Profile4 Profile")
+        self.assertEqual(Settings.objects.get(name='Test Profile4').__str__(), "Test Profile4 Profile")
+
+    def test_board_type_str(self):
+        self.assertEqual(BoardType.objects.get(pk="NHL").__str__(), "NHL")
 
     def test_count_active(self):
         self.assertEqual(Settings.objects.filter(isActive=1).count(), 1)
+
+    def test_active_profile_startup(self):
+        p = Settings.objects.filter(isActive=1).first()
+
+        self.assertEqual("Test Profile4", p.name)
+        self.assertEqual("NHL", p.boardType.board)
+        self.assertTrue(p.boardType.startupActive)
+
+    def test_inactive_profile_startup(self):
+        p = Settings.objects.get(name="Test Profile3")
+        b = BoardType.objects.get(board=p.boardType.board)
+        self.assertFalse(b.startupActive)
 
     def test_backup_save(self):
         p1 = Settings.objects.get(name="Test Profile2").save_to_file()

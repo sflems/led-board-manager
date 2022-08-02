@@ -1,18 +1,15 @@
-import json, os, psutil, requests, subprocess
-from logging import StreamHandler
+import os, psutil, requests, subprocess
 from gpiozero import CPUTemperature
 from django import template
 from django.utils.formats import localize
-from django.http import Http404
-from django.db.models.signals import post_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.conf import settings
 from constance import config
 from constance import settings as configsettings
 from constance.signals import admin_form_save
 
-from .models import BoardType
-from sh import git
+from .models import BoardType, Settings
 
 
 # Supervisor Commands for NHL Led Scoreboard
@@ -21,6 +18,7 @@ def gui_status():
     process = subprocess.run(command, shell=True, capture_output=True)
 
     return b'RUNNING' in process.stdout
+
 
 # Options for JSON created settings form.
 # startval takes in current settings (NOT VALIDATED AGAINST SCHEMA). Others modify which JSON editing options are visible to users, themes, etc.
@@ -53,6 +51,7 @@ def form_options(startval):
     }
     return options
 
+
 # The below functions render the supervisor config file with django template logic to allow constance variables.
 # Taken from  deprecated django-supervisor pypi module. See https://github.com/rfk/django-supervisor for reference.
 def render_sv_config(data, ctx):
@@ -64,9 +63,11 @@ def render_sv_config(data, ctx):
     c = template.Context(ctx)
     return t.render(c).encode("ascii")
 
+
 # Listens for Constance settings update. If signal rcv'd, the below functions run to update supervisor-daemon.conf and reload.
 @receiver(admin_form_save)
 @receiver(post_save, sender=BoardType)
+@receiver(post_save, sender=Settings)
 def constance_updated(sender, **kwargs):
     if not settings.TEST_MODE:
         # Update supervisor confs
@@ -145,12 +146,12 @@ def sv_template():
     boards = BoardType.objects.all()
     boardsList = []
     for board in BoardType.objects.all():
+        # Add supervisor name to board in list.
         boardsList.append(board.supervisorName)
-
 
     # Renders from daemon template with config and flags passed in as context.
     with open(path, "r") as f:
-        templated = render_sv_config(f.read(), {'config': config, 'flags': flags, 'nhl_flags': nhl_flags, 'boards': boards, 'boardslist': boardsList })
+        templated = render_sv_config(f.read(), {'config': config, 'flags': flags, 'nhl_flags': nhl_flags, 'boards': boards, 'boardslist': boardsList})
 
     # Write it out to the corresponding .conf file.
     with open(templated_path, "w") as f:
@@ -159,6 +160,7 @@ def sv_template():
     # Copy metadata if necessary.
     return templated_path
 
+
 # NHL API Functions
 # Gets the team abbreviation by id from the NHL API.
 def team_abbrev(id):
@@ -166,6 +168,7 @@ def team_abbrev(id):
     response = requests.get(url)
     team = response.json()
     return team
+
 
 # Gets todays games from the NHL API.
 def todays_games():
@@ -176,13 +179,16 @@ def todays_games():
         return gamesData['dates'][0]['games']
     return []
 
+
 # Pi System Stats Functions
 # Imported from https://learn.pimoroni.com/tutorial/networked-pi/raspberry-pi-system-stats-python and modified for this use case.
 def cpu():
     return str(psutil.cpu_percent()) + '%'
 
+
 def cputemp():
     return str(CPUTemperature().temperature) + '&deg;C'
+
 
 def memory():
     memory = psutil.virtual_memory()
@@ -190,6 +196,7 @@ def memory():
     available = round(memory.available/1024.0/1024.0, 1)
     total = round(memory.total/1024.0/1024.0, 1)
     return str(available) + 'MB free / ' + str(total) + 'MB total (' + str(memory.percent) + '%)'
+
 
 def disk():
     disk = psutil.disk_usage('/')
