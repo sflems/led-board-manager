@@ -94,9 +94,6 @@ if "MLB-LED-Scoreboard" in answers["boards"]:
         json.dump(loading_data, json_out, indent=2)
         json_out.close()
 
-    print(f'{cwd}/scoreboard/static/schema/mlb.config.schema.json')
-    print(f'{mlb_path}/config.schema.json')
-
     # Copy MLB schema to working directory.
     print(f"Copying 'mlb.config.schema.json' to `{mlb_path}`... ", end='')
     shutil.copyfile(
