@@ -157,7 +157,7 @@ mv sample.supervisor-daemon.conf supervisor-daemon.conf
 _To run the server in a development environment, `python3-venv` can be a solution to create a separate "environment" for the server to run in._
 
 ```bash
-sudo apt install python3-venv
+sudo apt install python3-venv python3-dev
 python3 -m venv env
 ./scripts/install.sh
 sudo supervisorctl reread && sudo supervisorctl reload
