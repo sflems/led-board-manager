@@ -23,6 +23,8 @@ touch .secret.txt >&3 && chmod g+w .secret.txt >&3 && echo "SUCCESS: Created and
 
 # Install the app requirements and dependencies from the included requirements.txt file:
 echo "Installing WebGUI requirements.txt. This may take a few moments..." >&3
+env/bin/python3 -m pip install --upgrade pip >&3
+env/bin/python3 -m pip install --upgrade setuptools >&3
 env/bin/python3 -m pip install --ignore-installed -r requirements.txt >&3
 
 # Create Django DB, load default data and run tests.
