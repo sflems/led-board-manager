@@ -12,6 +12,8 @@ sys.path.append(cwd)
 
 # Verify the path
 def path_verify(path):
+    if path[0] =="~":
+        path = os.path.expanduser(path)
     if path[-1] == '/':
         path = path[0:-1]
     if not os.path.isdir(path):
@@ -21,10 +23,10 @@ def path_verify(path):
 
 # Ask user for the directory to the nhl-led-scoreboard path
 print('\nEnter the full path to `NHL-LED-Scoreboard`. (Must contain "nhl".) ')
-nhl_path = input(print('Leave blank for "/home/pi/nhl-led-scoreboard": '))
+nhl_path = input(print('Leave blank for "~/nhl-led-scoreboard": '))
 
 if nhl_path == "":
-    nhl_path = path_verify("/home/pi/nhl-led-scoreboard")
+    nhl_path = path_verify("~/nhl-led-scoreboard")
 else:
     nhl_path = path_verify(nhl_path)
 
@@ -69,15 +71,18 @@ questions = [
 ]
 answers = inquirer.prompt(questions)
 
+print(answers)
+
 # Update MLB BoardType.path
 if "MLB-LED-Scoreboard" in answers["boards"]:
     print('Enter the full path to `MLB-LED-Scoreboard`. ')
-    mlb_path = input(print('Leave blank for "/home/pi/mlb-led-scoreboard": '))
+    mlb_path = input(print('Leave blank for "~/mlb-led-scoreboard": '))
     if mlb_path == "":
-        mlb_path = "/home/pi/mlb-led-scoreboard"
+        mlb_path = path_verify("~/mlb-led-scoreboard")
     else:
         mlb_path = path_verify(mlb_path)
     print(f"INFO: MLB BoardType.path has been configured to: `{mlb_path}`.")
+
     
     with open(f"{cwd}/scoreboard/fixtures/teams.json", "r") as f:
         loading_data = json.load(f)
@@ -88,6 +93,9 @@ if "MLB-LED-Scoreboard" in answers["boards"]:
     with open(f"{cwd}/scoreboard/fixtures/teams.json", "w") as json_out:
         json.dump(loading_data, json_out, indent=2)
         json_out.close()
+
+    print(f'{cwd}/scoreboard/static/schema/mlb.config.schema.json')
+    print(f'{mlb_path}/config.schema.json')
 
     # Copy MLB schema to working directory.
     print(f"Copying 'mlb.config.schema.json' to `{mlb_path}`... ", end='')
@@ -100,9 +108,9 @@ if "MLB-LED-Scoreboard" in answers["boards"]:
 # Update NFL BoardType.path
 if "NFL-LED-Scoreboard" in answers["boards"]:
     print('Enter the full path to `NFL-LED-Scoreboard`. ')
-    nfl_path = input(print('Leave blank for "/home/pi/nfl-led-scoreboard": '))
+    nfl_path = input(print('Leave blank for "~/nfl-led-scoreboard": '))
     if nfl_path == "":
-        nfl_path = "/home/pi/nfl-led-scoreboard"
+        nfl_path = path_verify("~/nfl-led-scoreboard")
     else:
         nfl_path = path_verify(nfl_path)
     print(f"INFO: NFL BoardType.path has been configured to: `{nfl_path}`.")
