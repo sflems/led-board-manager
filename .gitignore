@@ -121,3 +121,4 @@ media/
 *.pyc
 webgui-log.out
 RPiB2.code-workspace
+staticfiles/
