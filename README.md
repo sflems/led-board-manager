@@ -136,6 +136,7 @@ cd led-board-manager
 ###### You can skip [to this step](#install-and-start-python3-venv) if you have an active `supervisor' installation.
 
 ```bash
+echo "files = $HOME/led-board-manager/supervisor-daemon.conf" >> scoreboard/static/supervisor/supervisord.conf
 sudo mkdir /etc/supervisor && sudo cp ~/led-board-manager/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 sudo chmod 644 /etc/supervisor/supervisord.conf
 
@@ -145,7 +146,7 @@ sudo chmod 644 /etc/systemd/system/supervisord.service
 sudo python3 -m pip install supervisor
 
 sudo systemctl unmask supervisord
-sudo systemctl enable supervisord
+sudo systemctl enable --now supervisord
 
 mv sample.supervisor-daemon.conf supervisor-daemon.conf
 ```

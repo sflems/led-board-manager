@@ -31,7 +31,8 @@ env/bin/python3 -m pip install --ignore-installed -r requirements.txt >&3
 echo "Generating WebGUI database and loading initial data..." >&3
 env/bin/python3 manage.py makemigrations >&3 || echo "...FAILED. " >&3
 env/bin/python3 manage.py migrate >&3 || echo "...FAILED. " >&3
-env/bin/python3 manage.py loaddata teams.json >&3 || echo "...FAILED. " >&3
+env/bin/python3 manage.py loaddata teams.json >&3 # Ignores possible import issues. ie admin or profiles exist
+env/bin/python3 manage.py collectstatic >&3 || echo "...FAILED. " >&3
 
 echo "Running Django tests..." >&3
 env/bin/python3 manage.py test >&3 && echo "...done. " >&3 || echo "...FAILED. " >&3
