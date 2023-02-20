@@ -19,6 +19,7 @@ echo "Updating WebGUI database and loading initial data..." >&3
 env/bin/python3 manage.py makemigrations >&3 || echo "...FAILED. " >&3
 env/bin/python3 manage.py migrate >&3 || echo "...FAILED. " >&3
 env/bin/python3 manage.py loaddata teams.json >&3 ||
+env/bin/python3 manage.py collectstatic --noinput >&3 ||
 
 echo "Running Django tests..." >&3
 env/bin/python3 manage.py test >&3 && echo "...done. " >&3 || echo "...FAILED. " >&3
