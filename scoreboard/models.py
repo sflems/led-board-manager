@@ -73,7 +73,7 @@ class BoardType(models.Model):
     )
 
     path = models.CharField(
-        max_length=64,
+        max_length=128,
         default="/home/pi/",
     )
 
