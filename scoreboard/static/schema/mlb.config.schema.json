@@ -250,13 +250,6 @@
                     "description": "If scrolling text takes longer than the rotation rate, wait to rotate until scrolling is done.",
                     "default": true
                 },
-                "avoid_scrolling_partial_messages": {
-                    "$id": "#/properties/rotation/properties/avoid_scrolling_partial_messages",
-                    "type": "boolean",
-                    "title": "avoid_scrolling_partial_messages",
-                    "description": "If scrolling text would be interrupted mid scroll by a rotation, don't start scrolling. Text will always be scrolled at least once.",
-                    "default": false
-                },
                 "only_preferred": {
                     "$id": "#/properties/rotation/properties/only_preferred",
                     "type": "boolean",
@@ -414,6 +407,14 @@
             "title": "short_team_names_for_runs_hits",
             "description": "If true and full_team_names is true and Runs Hits Errors is enabled, will use abreviated team names when Runs or Hits > 9.",
             "default": true
+        },
+        "preferred_game_update_delay_in_10s_of_seconds": {
+            "$id": "#/properties/preferred_game_update_delay_in_10s_of_seconds",
+            "type": "integer",
+            "title": "preferred_game_update_delay_in_10s_of_seconds",
+            "description": "Sets how long to wait before updating the preferred game. Must be positive integer.",
+            "minimum": 0,
+            "default":0
         },
         "pregame_weather": {
             "$id": "#/properties/pregame_weather",
