@@ -74,7 +74,7 @@ class BoardType(models.Model):
 
     path = models.CharField(
         max_length=128,
-        default="/home/pi/",
+        default=os.path.expanduser("~"),
     )
 
     startupActive = models.BooleanField(default=False)
@@ -141,12 +141,17 @@ class BoardType(models.Model):
             "schema": self.schema(),
         }
 
+@receiver(pre_save, sender=BoardType)
+def pre_save_board_type(sender, instance, *args, **kwargs):
+    if instance.path.startswith("~"):
+        stripped = instance.path.strip("~")
+        instance.path = os.path.expanduser("~") + stripped
 
 class Settings(models.Model):
     name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32)
     config = models.JSONField(default=dict, blank=True, null=True)
     isActive = models.BooleanField(_("Active"), default=1)
-    boardType = models.ForeignKey(BoardType, on_delete=models.CASCADE, to_field="board", default="NHL")
+    boardType = models.ForeignKey(BoardType, related_name="profiles", on_delete=models.CASCADE, to_field="board", default="NHL")
 
     class Meta:
         verbose_name = _("Profile")
@@ -196,7 +201,7 @@ def pre_save(sender, instance, *args, **kwargs):
 
     # Raise exception if config directory not found.
     if not os.path.isdir(instance.boardType.conf_dir()):
-        raise ValueError("Config directory not found.")
+        raise ValueError("Config directory not found. Dir: " + instance.boardType.conf_dir())
 
     # If config is marked as active, deactivate any other active configs.
     active_profiles = Settings.objects.filter(isActive=True).exclude(pk=instance.id)

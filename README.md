@@ -136,19 +136,13 @@ cd led-board-manager
 ###### You can skip [to this step](#install-and-start-python3-venv) if you have an active `supervisor' installation.
 
 ```bash
-echo "files = $HOME/led-board-manager/supervisor-daemon.conf" >> scoreboard/static/supervisor/supervisord.conf
-sudo mkdir /etc/supervisor && sudo cp ~/led-board-manager/scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
+sudo apt update >&3
+sudo apt install -y supervisor >&3
+
+sudo cp scoreboard/static/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
+sudo sed -i -E "s#/home/pi/#$HOME/#g" /etc/supervisor/supervisord.conf
+sudo sed -i -E "s#=pi:pi\$#=$USER:$USER#g" /etc/supervisor/supervisord.conf
 sudo chmod 644 /etc/supervisor/supervisord.conf
-
-sudo cp ~/led-board-manager/scoreboard/static/supervisor/supervisord.service /etc/systemd/system/supervisord.service
-sudo chmod 644 /etc/systemd/system/supervisord.service
-
-sudo python3 -m pip install supervisor
-
-sudo systemctl unmask supervisord
-sudo systemctl enable --now supervisord
-
-mv sample.supervisor-daemon.conf supervisor-daemon.conf
 ```
 
 ###### Sample configurations can be found in the [`nhl-led-scoreboard-img`](https://github.com/falkyre/nhl-led-scoreboard-img/tree/master/stage2/06-supervisor/files) project, by [@falkyre](https://github.com/falkyre).
@@ -161,7 +155,6 @@ _To run the server in a development environment, `python3-venv` can be a solutio
 sudo apt install python3-venv python3-dev
 python3 -m venv env
 ./scripts/install.sh
-sudo supervisorctl reread && sudo supervisorctl reload
 ```
 
 Once finished, you can start the server with:

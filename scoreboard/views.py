@@ -31,8 +31,8 @@ notes = [
 @login_required
 def index(request):
 
-    games = services.todays_games()
-    return render(request, "scoreboard/index.html", {"games": games, })
+    # games = services.todays_games()
+    return render(request, "scoreboard/index.html", {"games": [], })
 
 @login_required
 def command(request):

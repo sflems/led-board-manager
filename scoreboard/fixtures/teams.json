@@ -28,7 +28,7 @@
     "model": "scoreboard.boardtype",
     "pk": "MLB",
     "fields": {
-      "path": "/home/pi/mlb-led-scoreboard",
+      "path": "~/mlb-led-scoreboard",
       "supervisorName": "MLBscoreboard",
       "pythonVersion": 3
     }
@@ -37,7 +37,7 @@
     "model": "scoreboard.boardtype",
     "pk": "NFL",
     "fields": {
-      "path": "/home/pi/nfl-led-scoreboard",
+      "path": "~/nfl-led-scoreboard",
       "supervisorName": "NFLscoreboard",
       "pythonVersion": 2
     }
@@ -46,7 +46,7 @@
     "model": "scoreboard.boardtype",
     "pk": "NHL",
     "fields": {
-      "path": "/home/pi/nhl-led-scoreboard",
+      "path": "~/nhl-led-scoreboard",
       "supervisorName": "scoreboard",
       "pythonVersion": 3
     }

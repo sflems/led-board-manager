@@ -4,7 +4,8 @@ from django.contrib.auth.decorators import login_required
 from . import views
 
 urlpatterns = [
-    path("", views.index, name="index"),
+    #path("", views.index, name="index"),
+    path("", login_required(views.SettingsList.as_view()), name="index"), 
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
 
