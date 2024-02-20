@@ -151,7 +151,7 @@ class Settings(models.Model):
     name = models.CharField(_("Config Name"), default="Custom Profile Name", max_length=32)
     config = models.JSONField(default=dict, blank=True, null=True)
     isActive = models.BooleanField(_("Active"), default=1)
-    boardType = models.ForeignKey(BoardType, on_delete=models.CASCADE, to_field="board", default="NHL")
+    boardType = models.ForeignKey(BoardType, related_name="profiles", on_delete=models.CASCADE, to_field="board", default="NHL")
 
     class Meta:
         verbose_name = _("Profile")
