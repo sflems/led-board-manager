@@ -2,6 +2,7 @@ import os, psutil, requests, subprocess
 from gpiozero import CPUTemperature
 from django import template
 from django.utils.formats import localize
+from django.db.models import Count
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.conf import settings
@@ -143,15 +144,11 @@ def sv_template():
             render_flag(nhl_flags)
 
     # Add optional board args here to convert to flags.
-    boards = BoardType.objects.all()
-    boardsList = []
-    for board in BoardType.objects.all():
-        # Add supervisor name to board in list.
-        boardsList.append(board.supervisorName)
+    boards = BoardType.objects.annotate(num_profiles=Count('profiles')).filter(num_profiles__gt=0)
 
     # Renders from daemon template with config and flags passed in as context.
     with open(path, "r") as f:
-        templated = render_sv_config(f.read(), {'config': config, 'flags': flags, 'nhl_flags': nhl_flags, 'boards': boards, 'boardslist': boardsList})
+        templated = render_sv_config(f.read(), {'config': config, 'flags': flags, 'nhl_flags': nhl_flags, 'boards': boards})
 
     # Write it out to the corresponding .conf file.
     with open(templated_path, "w") as f:
