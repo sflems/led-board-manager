@@ -75,8 +75,8 @@ INSTALLED_APPS = [
 ]
 
 # These paths can be hard coded for specific usage or as fix if server breaks on change.
-NHL_SCOREBOARD_PATH = os.path.expanduser("~/nhl-led-scoreboard")
-GUI_PATH = os.path.expanduser("~/led-board-manager")
+NHL_SCOREBOARD_PATH = "/home/piboy/nhl-led-scoreboard"
+GUI_PATH = "/home/piboy/led-board-manager"
 
 # Admin Field Modifcations go here.
 CONSTANCE_ADDITIONAL_FIELDS = {

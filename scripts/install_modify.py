@@ -71,8 +71,6 @@ questions = [
 ]
 answers = inquirer.prompt(questions)
 
-print(answers)
-
 # Update MLB BoardType.path
 if "MLB-LED-Scoreboard" in answers["boards"]:
     print('Enter the full path to `MLB-LED-Scoreboard`. ')
