@@ -49,16 +49,6 @@ with open(cwd + "/Capstone/settings.py", 'w') as f:
     f.write(output)
     f.close()
 
-with open(f"{cwd}/scoreboard/fixtures/teams.json", "r") as f:
-    loading_data = json.load(f)
-    for item in loading_data:
-        if "pk" in item.keys() and item['pk'] == "NHL":
-            item['fields']['path'] = nhl_path
-
-with open(f"{cwd}/scoreboard/fixtures/teams.json", "w") as json_out:
-    json.dump(loading_data, json_out, indent=2)
-    json_out.close()
-
 print(f"INFO: Capstone.settings.NHL_SCOREBOARD_PATH has been configured to: `{nhl_path}`.")
 print(f"INFO: Capstone.settings.GUI_PATH has been configured to: `{cwd}`.\n")
 
@@ -81,17 +71,6 @@ if "MLB-LED-Scoreboard" in answers["boards"]:
         mlb_path = path_verify(mlb_path)
     print(f"INFO: MLB BoardType.path has been configured to: `{mlb_path}`.")
 
-    
-    with open(f"{cwd}/scoreboard/fixtures/teams.json", "r") as f:
-        loading_data = json.load(f)
-        for item in loading_data:
-            if "pk" in item.keys() and item['pk'] == "MLB":
-                item['fields']['path'] = mlb_path
-
-    with open(f"{cwd}/scoreboard/fixtures/teams.json", "w") as json_out:
-        json.dump(loading_data, json_out, indent=2)
-        json_out.close()
-
     # Copy MLB schema to working directory.
     print(f"Copying 'mlb.config.schema.json' to `{mlb_path}`... ", end='')
     shutil.copyfile(
@@ -109,16 +88,6 @@ if "NFL-LED-Scoreboard" in answers["boards"]:
     else:
         nfl_path = path_verify(nfl_path)
     print(f"INFO: NFL BoardType.path has been configured to: `{nfl_path}`.")
-
-    with open(f"{cwd}/scoreboard/fixtures/teams.json", "r") as f:
-        loading_data = json.load(f)
-        for item in loading_data:
-            if "pk" in item.keys() and item['pk'] == "NFL":
-                item['fields']['path'] = nfl_path
-
-    with open(f"{cwd}/scoreboard/fixtures/teams.json", "w") as json_out:
-        json.dump(loading_data, json_out, indent=2)
-        json_out.close()
 
     # Copy MLB schema to working directory.
     print(f"Copying 'nfl.config.schema.json' to `{nfl_path}`... ", end='')
