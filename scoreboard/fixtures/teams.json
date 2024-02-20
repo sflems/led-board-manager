@@ -46,7 +46,7 @@
     "model": "scoreboard.boardtype",
     "pk": "NHL",
     "fields": {
-      "path": "~/nhl-led-scoreboard",
+      "path": "/home/piboy/nhl-led-scoreboard",
       "supervisorName": "scoreboard",
       "pythonVersion": 3
     }
