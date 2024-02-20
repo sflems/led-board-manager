@@ -23,40 +23,54 @@ touch .secret.txt >&3 && chmod g+w .secret.txt >&3 && echo "SUCCESS: Created and
 
 # Install the app requirements and dependencies from the included requirements.txt file:
 echo "Installing WebGUI requirements.txt. This may take a few moments..." >&3
-#env/bin/python3 -m pip install --upgrade pip setuptools >&3 || echo "...$(tput bold)$(tput setaf 1)FAILED. " >&3
-#env/bin/python3 -m pip install --ignore-installed -r requirements.txt >&3 || echo "...$(tput bold)$(tput setaf 1)FAILED. " >&3
-
-#echo "Updating supervisor configurations..." >&3
-# Replace 'pi' with '$USER' in the file in place
-#cp sample.supervisor-daemon.conf supervisor-daemon.conf >&3
-#sed -i -E "s#/home/pi/#$HOME/#g" supervisor-daemon.conf >&3
-#sed -i -E "s#=pi\$#=$USER#g" supervisor-daemon.conf >&3
-#sudo service supervisor restart >&3
+if env/bin/python3 -m pip install --upgrade pip setuptools  >&3 && env/bin/python3 -m pip install --ignore-installed -r requirements.txt >&3; then
+    echo "...done. " >&3
+else
+    echo "...$(tput bold)$(tput setaf 1)FAILED. " >&3
+    exit 1
+fi
 
 # Create Django DB, load default data and run tests.
 echo "Generating WebGUI database and loading initial data..." >&3
-env/bin/python3 manage.py makemigrations >&3 || echo "...$(tput bold)$(tput setaf 1)FAILED. " >&3
-env/bin/python3 manage.py migrate >&3 || echo "...$(tput bold)$(tput setaf 1)FAILED. " >&3
-env/bin/python3 manage.py loaddata teams.json >&3 || echo "...$(tput bold)$(tput setaf 3)IMPORT ISSUE: See webgui-log.out for details. This can happen if you have an existing DB.$(tput setaf 7)$(tput sgr0)" >&3 # Ignores possible import issues. ie admin or profiles exist
-env/bin/python3 manage.py collectstatic --noinput >&3 || echo "...$(tput bold)$(tput setaf 1)FAILED. " >&3
 
-sudo ln /home/$USER/led-board-manager/supervisor-daemon.conf /etc/supervisor/conf.d/boardmanager.conf
+if ! [ env/bin/python3 manage.py makemigrations >&3 && env/bin/python3 manage.py migrate >&3 ]; then
+    echo "...$(tput bold)$(tput setaf 1)FAILED. " >&3
+    exit 1
+fi
+
+env/bin/python3 manage.py loaddata teams.json >&3 || echo "...$(tput bold)$(tput setaf 3)IMPORT ISSUE: See webgui-log.out for details. This can happen if you have an existing DB.$(tput setaf 7)$(tput sgr0)" >&3 # Ignores possible import issues. ie admin or profiles exist
+
+if ! env/bin/python3 manage.py collectstatic --noinput; then
+    echo "...$(tput bold)$(tput setaf 1)FAILED. " >&3
+    exit 1
+fi
+
+if sudo ln -s /home/$USER/led-board-manager/supervisor-daemon.conf /etc/supervisor/conf.d/boardmanager.conf >&3; then
+    echo "...done. " >&3
+else
+    sudo rm /etc/supervisor/conf.d/boardmanager.conf
+    if sudo ln -s /home/$USER/led-board-manager/supervisor-daemon.conf /etc/supervisor/conf.d/boardmanager.conf >&3; then
+        echo "...done. " >&3
+    else
+        echo "...$(tput bold)$(tput setaf 1)FAILED. " >&3
+        exit 1
+    fi
+fi
 
 echo "Running Django tests..." >&3
-
 if env/bin/python3 manage.py test  >&3; then
-    echo "...done. "  >&3
+    echo "...done. " >&3
 else
-    echo "...$(tput bold)$(tput setaf 1)FAILED. "  >&3
+    echo "...$(tput bold)$(tput setaf 1)FAILED. " >&3
     exit 1
 fi
 
 echo "Updating program configurations" >&3
 
-if sudo supervisorctl reload >&3 && sleep 3 && sudo supervisorctl update >&3; then
-    echo "...done. "  >&3
+if sudo supervisorctl update; then
+    echo "...done. " >&3
 else
-    echo "...$(tput bold)$(tput setaf 1)FAILED. "  >&3
+    echo "...$(tput bold)$(tput setaf 1)FAILED. " >&3
     exit 1
 fi
 
