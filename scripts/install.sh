@@ -13,7 +13,7 @@ echo "$(tput bold)Working directory:$(tput sgr0) "$WORKING >&3 && cd ${WORKING}
 
 # Modify the nhl-led-scoreboard source to inject Stonks
 echo "Getting installer requirements..." >&3
-env/bin/python3 -m pip install inquirer >&3
+env/bin/python3 -m pip install inquirer
 env/bin/python3 scripts/install_modify.py >&3
 
 # A permission issue in the past was solved by creating the file on install and granting the permissions.
@@ -53,14 +53,7 @@ fi
 
 echo "Updating program configurations" >&3
 
-if sudo supervisorctl reload >&3 && echo "...(1/2) - done. " >&3; then
-    echo "...done. "  >&3
-else
-    echo "...$(tput bold)$(tput setaf 1)FAILED. "  >&3
-    exit 1
-fi
-
-if sleep 3 && sudo supervisorctl update >&3; then
+if sudo supervisorctl reload >&3 && sleep 3 && sudo supervisorctl update >&3; then
     echo "...done. "  >&3
 else
     echo "...$(tput bold)$(tput setaf 1)FAILED. "  >&3
@@ -68,8 +61,8 @@ else
 fi
 
 # Yay!?
-echo "$(tput sgr0)No failures? SETUP COMPLETED!!!" >&3
-echo "$(tput sgr0)Supervisor: $(tput sgr0)http://$(hostname -I | awk '{print $1}'):9001" >&3
-echo "$(tput sgr0)LED Board Manager: $(tput sgr0)http://$(hostname -I | awk '{print $1}'):9002" >&3
+echo "$(tput bold)No failures? SETUP COMPLETED!!!" >&3
+echo "$(tput bold)Supervisor: $(tput sgr0)http://$(hostname -I | awk '{print $1}'):9001" >&3
+echo "$(tput bold)LED Board Manager: $(tput sgr0)http://$(hostname -I | awk '{print $1}'):9002" >&3
 
 exit 0
